@@ -23,11 +23,6 @@ public class Category {
     @Column
     private String logo;     //the link to the logo
 
-
-    /* ---- Relations ---- */
-
-
-
     /* ----Getters and Setters---- */
 
     public long getId() {

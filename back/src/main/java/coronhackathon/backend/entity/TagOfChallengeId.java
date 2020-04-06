@@ -12,9 +12,10 @@ public class TagOfChallengeId implements Serializable {
     private long challengeId;
     private long tagId;
 
-    public TagOfChallengeId(){}
+    public TagOfChallengeId() {
+    }
 
-    public TagOfChallengeId(long challengeId, long tagId){
+    public TagOfChallengeId(long challengeId, long tagId) {
         super();
         this.tagId = tagId;
         this.challengeId = challengeId;

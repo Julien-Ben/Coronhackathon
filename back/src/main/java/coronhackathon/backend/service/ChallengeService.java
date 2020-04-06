@@ -56,6 +56,6 @@ public class ChallengeService {
     public List<Challenge> getNineChallenges() {
         List<Challenge> all = getAllChallenges();
         Collections.shuffle(all);
-        return all.subList(0,Math.min(9,all.size()));
+        return all.subList(0, Math.min(9, all.size()));
     }
 }

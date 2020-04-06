@@ -12,9 +12,10 @@ public class HasCompletedId implements Serializable {
     private long userId;
     private long challengeId;
 
-    public HasCompletedId(){}
+    public HasCompletedId() {
+    }
 
-    public HasCompletedId(long userId, long challengeId){
+    public HasCompletedId(long userId, long challengeId) {
         super();
         this.userId = userId;
         this.challengeId = challengeId;

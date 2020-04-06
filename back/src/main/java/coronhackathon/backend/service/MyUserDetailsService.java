@@ -21,6 +21,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
     //
     public UserDetails loadUserByUsername(String username)
             throws UsernameNotFoundException {
@@ -28,7 +29,7 @@ public class MyUserDetailsService implements UserDetailsService {
         Optional<User> ouser = userRepository.findByUsername(username);
         if (!ouser.isPresent()) {
             throw new UsernameNotFoundException(
-                    "No user found with username: "+ username);
+                    "No user found with username: " + username);
         }
         User user = ouser.get();
 
@@ -41,8 +42,8 @@ public class MyUserDetailsService implements UserDetailsService {
 
         List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
         auths.add(new SimpleGrantedAuthority("USER"));
-        return  new org.springframework.security.core.userdetails.User
-                (user.getUsername(),user.getPwdHash(),
+        return new org.springframework.security.core.userdetails.User
+                (user.getUsername(), user.getPwdHash(),
                         /*
                         enabled, accountNonExpired,
                         credentialsNonExpired, accountNonLocked,

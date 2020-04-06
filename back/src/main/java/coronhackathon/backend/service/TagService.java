@@ -13,11 +13,11 @@ public class TagService {
     @Autowired
     private TagRepository tagRepository;
 
-    public Optional<Tag> getTag(long tagId){
+    public Optional<Tag> getTag(long tagId) {
         return tagRepository.findById(tagId);
     }
 
-    public Optional<Tag> getTagByName(String name){
+    public Optional<Tag> getTagByName(String name) {
         return tagRepository.findByName(name);
     }
 

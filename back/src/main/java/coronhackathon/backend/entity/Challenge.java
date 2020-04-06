@@ -23,10 +23,6 @@ public class Challenge {
     @Column(nullable = false)
     private long categoryId;
 
-    /* ---- Relations ---- */
-
-
-
     /* ----Getters and Setters---- */
 
     public long getId() {

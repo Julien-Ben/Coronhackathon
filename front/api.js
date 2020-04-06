@@ -1,7 +1,7 @@
 import axios from "axios";
 
  export const API = axios.create({
-  baseURL: 'http://192.168.1.113:8080', //Set your IPV4 here
+  baseURL: 'http://192.168.1.17:8080', //Set your IPV4 here
   withCredentials: true,
 })
 

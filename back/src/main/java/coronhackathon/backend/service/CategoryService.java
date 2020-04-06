@@ -21,10 +21,10 @@ public class CategoryService {
         categoryRepository.save(category);
     }
 
-    public long getIdFromName(String name){
+    public long getIdFromName(String name) {
         Optional<Category> oc = categoryRepository.findByName(name);
-        if( !oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category with name : "+name +" does not exist");
+        if (!oc.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category with name : " + name + " does not exist");
         return oc.get().getId();
     }
 
