@@ -16,8 +16,6 @@ public class ChallengeService {
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
     private CategoryService categoryService;
 
     public void addChallenge(Challenge challenge) {
