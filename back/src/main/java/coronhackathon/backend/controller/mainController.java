@@ -198,7 +198,7 @@ public class mainController {
 
     /**
      * Returns a list with all the challenges that are in a category
-     * @param categoryId a category of challenges
+     * @param name a category of challenges
      * @return a list with all the challenge of a category
      */
     @RequestMapping(path = "/api/getChallengeByCategoryName/{name}", method = RequestMethod.GET)
@@ -224,6 +224,7 @@ public class mainController {
     public void addChallenge(@RequestBody Challenge challenge) {
         challengeService.addChallenge(challenge);
     }
+
 
 
     /* ----Category---- */
@@ -355,6 +356,7 @@ public class mainController {
     public List<Challenge> getChallengesByTag(@PathVariable long tagId){
         return tagOfChallengeService.getChallengesOfTag(tagId);
     }
+
 
     /**
      * Retrieve all the tag that has a Challenge

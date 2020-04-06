@@ -16,8 +16,6 @@ public class ChallengeService {
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private CategoryRepository categoryRepository;
-    @Autowired
     private CategoryService categoryService;
 
     public void addChallenge(Challenge challenge) {
@@ -33,13 +31,13 @@ public class ChallengeService {
     }
 
     public List<Challenge> getChallengeByCategory(long categoryId) {
-        return null;
+        return challengeRepository.findByCategoryId(categoryId);
     }
 
     public List<Challenge> getChallengeByCategory(String name) {
-        return null;
+        return challengeRepository.findByCategoryId(categoryService.getIdFromName(name));
     }
-    
+
     public Optional<Challenge> getChallengeByName(String name) {
         return challengeRepository.findByName(name);
     }
