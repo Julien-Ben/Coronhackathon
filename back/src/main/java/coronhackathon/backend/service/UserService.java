@@ -35,6 +35,8 @@ public class UserService {
     }
 
     public void insert(User user) {
+        if (userRepository.findByUsernameContains(user.getUsername()))
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "user with username : " + user.getUsername() + " already exists");
         userRepository.save(user);
     }
 

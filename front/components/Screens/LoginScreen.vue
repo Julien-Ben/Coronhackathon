@@ -2,12 +2,12 @@
     <view class="real-container">
       <view class ="container">
         <text class="title">CONSVID la TÊTE</text>
-        <text class="text-container">Enter username :</text>
+        <text class="text-container">Pseudo :</text>
         <text-input class="input-container" placeholder="username" v-model="username"/>
-        <text class="text-container">Enter password :</text>
+        <text class="text-container">Mot de passe :</text>
         <text-input class="input-container" placeholder="password" secure-text-entry v-model="password"/>
         <view class="login-container">
-           <text  class="login-btn" :on-press="login">Login</text>
+           <text  class="login-btn" :on-press="login">Log in</text>
            <text  class="login-btn" :on-press="goToTabNavigator">Bypass login</text>
         </view>
       </view>
@@ -46,14 +46,14 @@ export default {
         }).then(function(response){
            //console.log(response)
           if(response != undefined && response.status == 200){
-              self.navigation.navigate("Challenges")
+              self.navigation.navigate("Défis")
           }
         }).catch(function(error){
            console.log(error)
         })
     },
     goToTabNavigator() {
-      this.navigation.navigate("Challenges")
+      this.navigation.navigate("Défis")
     }
   },
   mounted: function() {

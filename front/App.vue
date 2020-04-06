@@ -9,7 +9,9 @@ import DetailsScreen from "./components/Screens/DetailsScreen";
 import ProfileScreen from "./components/Screens/ProfileScreen";
 import ChallengesScreen from "./components/Screens/ChallengesScreen";
 import ChallengeDetailScreen from "./components/Screens/ChallengeDetailScreen";
-import ValidationChallenge from "./components/Screens/ValidationChallengeScreen";
+import CategoryScreen from "./components/Screens/CategoryScreen";
+import ValidationChallengeScreen from "./components/Screens/ValidationChallengeScreen";
+
 
 import {
   createAppContainer,
@@ -21,19 +23,20 @@ import {
 
 const Tabs = createBottomTabNavigator(
   {
-
-    Challenges: ChallengesScreen,
-    Details: DetailsScreen,
+    Covid19 : CoronaScreen,
+    Categories: CategoryScreen,
+    Défis: ChallengesScreen,
     Profile: ProfileScreen,
-    Validation: ValidationChallenge,
-    Corona : CoronaScreen,
+    Details: DetailsScreen,
+
+
   }
 );
 const StackNavigator = createStackNavigator(
   {
     Home: LoginScreen,
     ChallengeDetail : ChallengeDetailScreen,
-    Corona: CoronaScreen,
+    Validation: ValidationChallengeScreen,
     Tabs
   }
 );

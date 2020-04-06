@@ -1,7 +1,7 @@
 <template>
   <view class ="container">
     <!--titre de l'onglet + détails du challenge [title, category, description]    -->
-    
+
     <view class = "topbar">
       <text class="heading">Validation du défi :</text>
       <text class = "challenge-title">{{currentChallenge.name}}</text>
@@ -12,7 +12,7 @@
     <!--<text-input class = "challenge-title" v-model= "response.name"/>
     <text-input class = "challenge-cat" v-model= "response.category"/>
     <text-input class = "challenge-desc" v-model= "response.description"/>-->
-    
+
     <!-- Box "rajouter une description" + on la récupère pour la poster  -->
     <text class="box">Ajouter une description : </text>
      <text-input class = "insideBox" placeholder="Votre description" v-model= "review"/>
@@ -59,13 +59,16 @@ import React from 'react';
 import {Text} from 'react-native';
 
 export default {
+    props: {
+        navigation: {
+          type: Object
+      }
+  },
     data:   function() {
       return {
           imagePickerDisplay: "../../assets/images/challengescreen/virus-lab-scientist-biology-cell-medical-512.png",
           defiTitle : "Nom du défi",
           response:{
-            userId:67,
-            challengeId:3,
             commentary:"",
             picture:null,
           },
@@ -78,14 +81,14 @@ export default {
       }
     },
     methods:{
-      
+
       start: function(){
         const self=this;
       API({ //on suppose qu'on a déjà l'id
            method: 'get',
-           url: '/api/getChallenge/3',
+           url: '/api/getChallenge/'+this.navigation.state.params.challengeId,
           }).then(function(response){
-          console.log(response)
+
           self.currentChallenge.name = response.data.name; //contacter backend pour la structure de response
           self.currentChallenge.category = response.data.category;
           self.currentChallenge.description = response.data.description;
@@ -93,16 +96,18 @@ export default {
       },
       //tout sauf l'image puis uid et cid dans l'url et que l'image
       challengeValidation: function() {
+
           var bodyFormData = new FormData();
-          bodyFormData.append('challengeId', 136);
+          bodyFormData.append('challengeId', this.navigation.state.params.challengeId);
           bodyFormData.append('commentary',this.review);
           bodyFormData.append('picture',""); //à changer
+          console.log(bodyFormData)
           API({
             method: 'post',
             url : '/api/completeMyChallenge',
             data : bodyFormData,
-            headers: {'Content-Type':'multipart/form-data-'}
-          }).then(function(reponse){
+            headers: {'Content-Type':'multipart/form-data'}
+        }).then(function(response){
              console.log(response)
           }).catch(function(error){
             console.log(error)

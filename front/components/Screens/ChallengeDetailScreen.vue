@@ -1,24 +1,32 @@
 <template>
   <view class="container">
-      <image 
-        class='fleche'
-        :on-press="onPressRetour"
-        :source="require('../../assets/images/defiscreen/fleche.png')"
-      />
+
+    <scroll-view>
 
       <image
         class='hexagone'
-        :source="require('../../assets/images/defiscreen/hexagone.png')"
+        :source="{uri: 'http://192.168.1.117:8080/api/image?' + imageCategory}"
       />
     <image
         class='licorne'
-        :source="require('../../assets/images/defiscreen/licorne.png')"
+        :source="{uri: 'http://192.168.1.117:8080/api/image?' + imageChallenge}"
       />
 
       <text class="titre">{{titre}}</text>
 
-      <text class="description">{{description}}</text> 
-  
+      <text class="description">{{description}}</text>
+
+      <button :on-press="accessChallengeValidation"
+        title="Valider ce challenge"
+        color="#841584"
+
+        accessibility-label="Accéder à la validation du défi"/>
+
+      <view class="commentaires" v-for="(commentaire, index) in commentaires" :key="index">
+        <text>{{commentaire}}</text></view>
+
+      </scroll-view>
+
   </view>
 </template>
 
@@ -37,7 +45,7 @@
     position :relative;
     top : -160px;
     left : -170px;
-    
+
 
 }
 
@@ -46,7 +54,7 @@
     width : 80;
     height : 80;
     position :relative;
-    top : -160px;
+    top : -10px;
     left : -130px;
 
 }
@@ -68,9 +76,13 @@
 
 .description{
     color : #1d3060;
-    font-size:20;  
+    font-size:20;
     top : -150px;
     left : -20px;
+}
+
+.commentaires{
+  color :#1d3060;
 }
 
 </style>
@@ -90,25 +102,18 @@ export default {
   data: function() {
     return {
         titre:'',
-        description:''
+        description:'',
+        categoryId:'',
+        imageCategory:'',
+        imageChallenge:'',
+        commentaires:[]
     }
   },
   methods: {
-   /* login : function() {
-      var bodyFormData = new FormData();
-        bodyFormData.append('username', 'user');
-        bodyFormData.append('password', 'user');
-        const self = this;
-       API({
-        method: 'post',
-        url: '/login',
-        data: bodyFormData,
-        headers: {'Content-Type': 'multipart/form-data' }
-        }).then(function(response){
-          console.log(response)
-          self.request_challenge();
-        })
-    },*/
+
+    accessChallengeValidation : function(){
+        this.navigation.navigate("Validation", {challengeId:this.navigation.state.params.challengeId})
+    },
 
     fetch : function() {
       const self = this;
@@ -116,16 +121,44 @@ export default {
         method: 'get',
         url: '/api/getChallenge/'+this.navigation.state.params.challengeId
         }).then(function(response){
+          console.log(response.data);
           self.titre = response.data.name;
           self.description = response.data.description;
+          self.categoryId =response.data.categoryId;
+          //self.imageChallenge= response.data.???;
+          self.getComments();
         }).catch(function(error){
-
+          console.log(error);
         })
     },
 
-    onPressRetour: function() {
-      Alert.alert('Clicked Image')
+    getComments : function(){
+      const self = this;
+       API({
+        method: 'get',
+        url: '/api/getCommentsOfChallenge/'+this.navigation.state.params.challengeId
+        }).then(function(response){
+          self.commentaires =response.data;
+          self.getImageCategory();
+        }).catch(function(error){
+          console.log(error);
+        })
     },
+
+    getImageCategory : function(){
+      const self = this;
+       API({
+        method: 'get',
+        url: '/api/getCategory/'+self.categoryId
+        }).then(function(response){
+          self.imageCategory =response.data.logo;
+          // console.log(response)
+        }).catch(function(error){
+          console.log(error);
+        })
+    }
+
+
   },
 
   mounted : function(){

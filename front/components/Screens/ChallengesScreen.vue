@@ -2,12 +2,12 @@ E<template>
   <view class="container">
     <view class ="topbar">
       <view>
-      <text class="heading">Challenges</text>
-      <text>This is the Challenge screen</text>
+      <text class="heading">Défis</text>
+      <text>Bienvenue sur la liste des défis</text>
       </view>
-      <touchable-opacity class = "corona-touchable" :on-press="() => goToCorona()">
+      <!-- <touchable-opacity class = "corona-touchable" :on-press="() => goToCorona()">
         <image class = "corona-icon" :source="require('../../assets/images/challengescreen/virus-lab-scientist-biology-cell-medical-512.png')"/>
-      </touchable-opacity>
+      </touchable-opacity> -->
     </view>
     <scroll-view class = "myScrollView">
       <view class = "element-border" v-for="(challenge, index) in challenges" :key="index">
@@ -260,7 +260,7 @@ export default {
         method: 'get',
         url: '/api/allChallenges'
         }).then(function(response){
-          console.log(response)
+          //console.log(response)
           self.challenges = response.data
         })
     },
@@ -270,7 +270,7 @@ export default {
     },
 
     goToCorona : function() {
-      this.navigation.navigate("Corona")
+      this.navigation.navigate("Covid19")
     }
   },
   mounted: function() {
