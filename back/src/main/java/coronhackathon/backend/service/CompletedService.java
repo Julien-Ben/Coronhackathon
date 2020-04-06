@@ -78,9 +78,13 @@ public class CompletedService {
         hc.setUser(user);
         hc.setCommentary(commentary);
         hc.setPicture(picture);
-        completedRepository.save(hc);
-        // TODO return such that front can easily send image
-        return "User " + user.getUsername() + " has completed " + challenge.getName();
+        if(completedRepository.findByUserAndChallengeContains(user, challenge))
+            return "User " + user.getUsername() + " has already completed " + challenge.getName();
+        else {
+            completedRepository.save(hc);
+            // TODO return such that front can easily send image
+            return "User " + user.getUsername() + " has completed " + challenge.getName();
+        }
     }
 
     public String addCompletedChallenge(String username, long challengeId, String commentary, String picture) {
@@ -98,8 +102,13 @@ public class CompletedService {
         hc.setUser(user);
         hc.setCommentary(commentary);
         hc.setPicture(picture);
-        completedRepository.save(hc);
-        return "User " + user.getUsername() + " has completed " + challenge.getName();
+
+        if(completedRepository.findByUserAndChallengeContains(user, challenge))
+            return "User " + user.getUsername() + " has already completed " + challenge.getName();
+        else {
+            completedRepository.save(hc);
+            return "User " + user.getUsername() + " has completed " + challenge.getName();
+        }
     }
 
     public List<Challenge> getCompletedChallengesByCategory(long userId, long categoryId) {
