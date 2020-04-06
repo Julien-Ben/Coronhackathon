@@ -18,12 +18,10 @@ public class Challenge {
     private String name;
 
     @Column(nullable = false)
-    private String category;
-
-    @Column(nullable = false)
     private String description;
 
-    private String logo;     //the link to the logo
+    @Column(nullable = false)
+    private long categoryId;
 
     /* ---- Relations ---- */
 
@@ -39,16 +37,12 @@ public class Challenge {
         return name;
     }
 
-    public String getCategory() {
-        return category;
+    public long getCategoryId() {
+        return categoryId;
     }
 
     public String getDescription() {
         return description;
-    }
-
-    public String getLogo() {
-        return logo;
     }
 
     public void setId(long id) {
@@ -59,15 +53,13 @@ public class Challenge {
         this.name = name;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
+
 }

@@ -1,7 +1,6 @@
 package coronhackathon.backend.entity;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 public class Tag {
@@ -21,7 +20,6 @@ public class Tag {
     public String getName() {
         return name;
     }
-
 
     public void setId(long tagId) {
         this.Id = tagId;
