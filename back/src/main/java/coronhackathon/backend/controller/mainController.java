@@ -459,9 +459,9 @@ public class mainController {
         return tagOfChallengeService.addTagToChallenge(tagId, challengeId);
     }
 
-    /**
-     * IMAGE REQUESTS
-     */
+    /* --------------------------------------------*/
+    /*-------------IMAGE REQUESTS----------------- */
+    /* --------------------------------------------*/
 
     // TODO remove this test method when not needed anymore
     @GetMapping(
