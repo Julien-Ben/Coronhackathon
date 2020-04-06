@@ -59,7 +59,9 @@ public class mainController {
         return "authenticated pong!";
     }
 
-    /* ---Users ----*/
+    /* --------------------------------------------*/
+    /*------------------USER--------------------- */
+    /* --------------------------------------------*/
 
     @GetMapping("/api/allUsers")
     public List<User> allUsers() {
@@ -85,7 +87,9 @@ public class mainController {
     public void addUser(@RequestBody User user) { userService.insert(user);
     }
 
-    /* ----Completed---- */
+    /* --------------------------------------------*/
+    /*----------------COMPLETED------------------- */
+    /* --------------------------------------------*/
 
     /**
      * Marks user and challenge as completed.
@@ -144,7 +148,9 @@ public class mainController {
         return completedService.getCommentsOfChallenge(challengeId);
     }
 
-    /* ----Challenge---- */
+    /* --------------------------------------------*/
+    /*----------------CHALLENGE------------------- */
+    /* --------------------------------------------*/
 
     /**
      * Returns all the challenges stored in the database
@@ -210,7 +216,6 @@ public class mainController {
     }
 
     /**
-<<<<<<< HEAD
      * Returns a list with all the challenges that are in a category
      * @param categoryId a category of challenges
      * @return a list with all the challenge of a category
@@ -250,7 +255,9 @@ public class mainController {
 
 
 
-    /* ----Category---- */
+    /* --------------------------------------------*/
+    /*-----------------Category------------------- */
+    /* --------------------------------------------*/
 
     /**
      *
@@ -336,7 +343,9 @@ public class mainController {
     }
 
 
-    /* ----Tag---- */
+    /* --------------------------------------------*/
+    /*-------------------TAG---------------------- */
+    /* --------------------------------------------*/
     /**
      * Add a tag given as argument to the database
      * @param tag a tag we want to add
@@ -377,8 +386,10 @@ public class mainController {
         return tagService.allTags();
     }
 
-    /* ---- Tag of Challenge ---- */
 
+    /* --------------------------------------------*/
+    /*------------Tag of Challenge---------------- */
+    /* --------------------------------------------*/
     /**
      * Retrieve all Challenges that have the tag Tag
      * @param tagId the id of the tag
