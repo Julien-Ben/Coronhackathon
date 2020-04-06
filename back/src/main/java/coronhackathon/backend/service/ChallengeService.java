@@ -39,6 +39,7 @@ public class ChallengeService {
     public List<Challenge> getChallengeByCategory(String name) {
         return challengeRepository.findByCategory(categoryService.getIdFromName(name));
     }
+
     public Optional<Challenge> getChallengeByName(String name) {
         return challengeRepository.findByName(name);
     }
