@@ -34,13 +34,13 @@ public class mainController {
     @GetMapping("/ping")
     public String ping(){ return "pong!"; }
 
-    @RequestMapping(value = "/username", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/username", method = RequestMethod.GET)
     @ResponseBody
     public String currentUserName(Principal principal) {
         return principal.getName();
     }
 
-    @RequestMapping(value = "/userProfile", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/userProfile", method = RequestMethod.GET)
     @ResponseBody
     public Optional<User> currentUserProfile(Principal principal) {
         return userService.getUserByUsername(principal.getName());
@@ -101,7 +101,7 @@ public class mainController {
         return completedService.addCompletedChallenge(userId, challengeId, commentary, picture);
     }
 
-    @PostMapping("/api/completeChallenge")
+    @PostMapping("/api/completeMyChallenge")
     public String completeChallenge(Principal principal, @RequestParam long challengeId,
                                     @RequestParam String commentary, @RequestParam String picture){
         return completedService.addCompletedChallenge(principal.getName(), challengeId, commentary, picture);
@@ -116,6 +116,11 @@ public class mainController {
     @RequestMapping(path = "/api/getCompleted/{userId}", method = RequestMethod.GET)
     public List<Challenge> getCompletedChallenges(@PathVariable long userId){
         return completedService.getCompletedChallenges(userId);
+    }
+
+    @RequestMapping(path = "/api/getMyCompleted", method = RequestMethod.GET)
+    public List<Challenge> getCompletedChallenges(Principal principal){
+        return completedService.getCompletedChallenges(principal.getName());
     }
 
 
@@ -309,6 +314,11 @@ public class mainController {
         return completedService.getCompletedChallengesByCategory(userId,categoryId);
     }
 
+    @RequestMapping(path = "/api/getMyCompletedByCat/{categoryId}", method = RequestMethod.GET)
+    public List<Challenge> getCompletedChallengesByCategory(Principal principal, @PathVariable long categoryId){
+        return completedService.getCompletedChallengesByCategory(principal.getName() ,categoryId);
+    }
+
     /**
      * Returns all challenges completed by User in a certain category
      * @param userId Id of User
@@ -318,6 +328,11 @@ public class mainController {
     @RequestMapping(path = "/api/getCompletedByCatName/{userId}/{name}", method = RequestMethod.GET)
     public List<Challenge> getCompletedChallengesByCategory(@PathVariable long userId, @PathVariable String name){
         return completedService.getCompletedChallengesByCategory(userId,name);
+    }
+
+    @RequestMapping(path = "/api/getMyCompletedByCatName/{name}", method = RequestMethod.GET)
+    public List<Challenge> getCompletedChallengesByCategory(Principal principal, @PathVariable String name){
+        return completedService.getCompletedChallengesByCategory(principal.getName(),name);
     }
 
 

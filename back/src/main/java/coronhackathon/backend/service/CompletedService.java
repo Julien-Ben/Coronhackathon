@@ -40,6 +40,18 @@ public class CompletedService {
         return l;
     }
 
+    public List<Challenge> getCompletedChallenges(String username) {
+        List<Challenge> l = new ArrayList<Challenge>();
+        Optional<User> ou = userRepository.findByUsername(username);
+        if(!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with name : "+ username+" not found");
+        List<HasCompleted> lhc = completedRepository.findByUser(ou.get());
+        for(HasCompleted hc : lhc){
+            l.add(hc.getChallenge());
+        }
+        return l;
+    }
+
     public List<User> getCompletersOfChallenge(long challengeId) {
         List<User> l = new ArrayList<User>();
         Optional<Challenge> oc = challengeRepository.findById(challengeId);
@@ -102,9 +114,25 @@ public class CompletedService {
         }
         return l;
     }
+    public List<Challenge> getCompletedChallengesByCategory(String username, long categoryId) {
+        List<Challenge> l = new ArrayList<>();
+        Optional<User> ou = userRepository.findByUsername(username);
+        if(!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with name : "+ username+" not found");
+
+        for(HasCompleted hc : completedRepository.findByUser(ou.get())){
+            if(hc.getChallenge().getCategoryId() == categoryId)
+                l.add(hc.getChallenge());
+        }
+        return l;
+    }
 
     public List<Challenge> getCompletedChallengesByCategory(long userId, String name) {
         return getCompletedChallengesByCategory(userId, categoryService.getIdFromName(name));
+    }
+
+    public List<Challenge> getCompletedChallengesByCategory(String username, String name) {
+        return getCompletedChallengesByCategory(username, categoryService.getIdFromName(name));
     }
 
     public List<String> getCommentsOfChallenge(long challengeId) {
