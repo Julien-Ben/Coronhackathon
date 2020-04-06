@@ -159,7 +159,7 @@ public class mainController {
      * @param categoryId the name of the category
      * @return the number of challenges in the category
      */
-    @RequestMapping(path = "/api/numberOfChallengesOfCategory/{category}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/numberOfChallengesByCategory/{categoryId}", method = RequestMethod.GET)
     public Long numberOfChallengesOfCategory(@PathVariable long categoryId) {
         return challengeService.numberOfChallengesByCategoryId(categoryId);
     }
