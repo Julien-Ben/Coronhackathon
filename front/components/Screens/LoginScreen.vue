@@ -3,9 +3,9 @@
       <view class ="container">
         <text class="title">CONSVID la TÊTE</text>
         <text class="text-container">Enter username :</text>
-        <text-input class="input-container" v-model="username"/>
+        <text-input class="input-container" placeholder="username" v-model="username"/>
         <text class="text-container">Enter password :</text>
-        <text-input class="input-container" v-model="password"/>
+        <text-input class="input-container" placeholder="password" secure-text-entry v-model="password"/>
         <view class="login-container">
            <text  class="login-btn" :on-press="login">Login</text>
            <text  class="login-btn" :on-press="goToTabNavigator">Bypass login</text>
