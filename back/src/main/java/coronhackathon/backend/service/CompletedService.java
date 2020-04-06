@@ -71,6 +71,25 @@ public class CompletedService {
         return "User " + user.getUsername() + " has completed " + challenge.getName();
     }
 
+    public String addCompletedChallenge(String username, long challengeId, String commentary, String picture){
+        Optional<User> ou = userRepository.findByUsername(username);
+        Optional<Challenge> oc = challengeRepository.findById(challengeId);
+        if(!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with name : "+ username+" not found");
+        if( !oc.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : "+challengeId+" not found");
+
+        User user = ou.get();
+        Challenge challenge = oc.get();
+        HasCompleted hc = new HasCompleted();
+        hc.setChallenge(challenge);
+        hc.setUser(user);
+        hc.setCommentary(commentary);
+        hc.setPicture(picture);
+        completedRepository.save(hc);
+        return "User " + user.getUsername() + " has completed " + challenge.getName();
+    }
+
     public List<Challenge> getCompletedChallengesByCategory(long userId, long categoryId) {
         List<Challenge> l = new ArrayList<>();
         Optional<User> ou = userRepository.findById(userId);

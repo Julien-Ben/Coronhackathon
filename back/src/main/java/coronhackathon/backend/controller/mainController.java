@@ -11,6 +11,7 @@ import coronhackathon.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,18 @@ public class mainController {
     //TODO delete this test method when not needed anymore
     @GetMapping("/ping")
     public String ping(){ return "pong!"; }
+
+    @RequestMapping(value = "/username", method = RequestMethod.GET)
+    @ResponseBody
+    public String currentUserName(Principal principal) {
+        return principal.getName();
+    }
+
+    @RequestMapping(value = "/userProfile", method = RequestMethod.GET)
+    @ResponseBody
+    public Optional<User> currentUserProfile(Principal principal) {
+        return userService.getUserByUsername(principal.getName());
+    }
 
     @PostMapping("/register")
     public Optional<User> showRegistrationForm(@RequestParam String username,
@@ -86,6 +99,12 @@ public class mainController {
     public String completeChallenge(@RequestParam long userId, @RequestParam long challengeId,
                                     @RequestParam String commentary, @RequestParam String picture){
         return completedService.addCompletedChallenge(userId, challengeId, commentary, picture);
+    }
+
+    @PostMapping("/api/completeChallenge")
+    public String completeChallenge(Principal principal, @RequestParam long challengeId,
+                                    @RequestParam String commentary, @RequestParam String picture){
+        return completedService.addCompletedChallenge(principal.getName(), challengeId, commentary, picture);
     }
 
     /**
