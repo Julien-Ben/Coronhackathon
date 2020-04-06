@@ -198,7 +198,7 @@ public class mainController {
 
     /**
      * Returns a list with all the challenges that are in a category
-     * @param categoryId a category of challenges
+     * @param name a category of challenges
      * @return a list with all the challenge of a category
      */
     @RequestMapping(path = "/api/getChallengeByCategoryName/{name}", method = RequestMethod.GET)
@@ -297,7 +297,7 @@ public class mainController {
      * @param name category of the challenges completed by the user
      * @return completed challenges of a certain category as a list
      */
-    @RequestMapping(path = "/api/getCompletedByCat/{userId}/{name}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/getCompletedByCatName/{userId}/{name}", method = RequestMethod.GET)
     public List<Challenge> getCompletedChallengesByCategory(@PathVariable long userId, @PathVariable String name){
         return completedService.getCompletedChallengesByCategory(userId,name);
     }
@@ -355,6 +355,7 @@ public class mainController {
     public List<Challenge> getChallengesByTag(@PathVariable long tagId){
         return tagOfChallengeService.getChallengesOfTag(tagId);
     }
+
 
     /**
      * Retrieve all the tag that has a Challenge
