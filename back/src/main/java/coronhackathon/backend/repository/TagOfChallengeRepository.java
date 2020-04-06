@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface TagOfChallengeRepository extends JpaRepository<TagOfChallenge, Long> {
     public List<TagOfChallenge> findByChallenge(Challenge challenge);
+
     public List<TagOfChallenge> findByTag(Tag tag);
 }

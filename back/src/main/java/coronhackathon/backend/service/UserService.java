@@ -56,7 +56,7 @@ public class UserService {
                 insert(user);
                 return Optional.of(user);
             } else {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "user with username : "+ username +" already exists");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "user with username : " + username + " already exists");
             }
         } else {
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "passwords are not the same");
