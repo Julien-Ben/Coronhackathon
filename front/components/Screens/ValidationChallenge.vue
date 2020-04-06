@@ -55,6 +55,7 @@ export default {
           defiTitle : "Nom du défi",
           uploading: false,
           image:null,
+          imageBack:null,
           response:{
             userId:1,
             challengeId:1,
@@ -85,12 +86,13 @@ export default {
           self.currentChallenge.description = response.data.description;
         })
       },
-      challengeValidation: async function() {
+      //tout sauf l'image puis uid et cid dans l'url et que l'image
+      challengeValidation1: async function() {
           var bodyFormData = new FormData();
           bodyFormData.append('userId',this.userId);
           bodyFormData.append('challengeId', this.challengeId);
           bodyFormData.append('commentary',this.review);
-          bodyFormData.append('picture', this.image);
+          bodyFormData.append('picture',""); //à changer
           //valider le défi?
           API({
             method: 'post',
@@ -106,6 +108,38 @@ export default {
 
           })
         },
+      challengeValidation2: async function() {
+          this.image;
+          //valider le défi?
+          API({
+            method: 'post',
+            url : '/api/uploadImage/68-3', //user id et challenge id su
+            data : bodyFormData,
+            headers: {'Content-Type':'image/jpeg'}
+          }).then(function(reponse){
+            //try{
+             console.log(response)
+            //}catch(e){
+            // Alert.alert('Oupsi');
+            //}
+
+          })
+        },
+        challengeValidation: async function() {
+          challengeValidation1();
+          challengeValidation2();
+        },
+        //ca marchera pas faut afficher la photo avant de la passer au serveur
+        // getImageBack: async function() {
+        //   const self=this;
+        // API({ //on suppose qu'on a déjà l'id
+        //    method: 'get',
+        //    url: '/api/getChallenge?id=3', //changer la fonction!!
+        //   }).then(function(response){
+        //   console.log(response)
+        //   self.imageBack = response; //contacter backend pour la structure de response
+        // })
+        // },
         pickImage :  async function () {
             const {
               status: cameraRollPerm
@@ -174,7 +208,11 @@ export default {
             } finally {
              // this.uploading= false;
             }
-          }
+          },
+          // convertImage : async function(callback) {
+          //   var 
+
+          // },
         // postPhoto: async function() {
         //   var bodyFormData = new FormData();
         //   bodyFormData.append('image',this.image);
