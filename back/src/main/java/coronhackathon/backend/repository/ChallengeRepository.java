@@ -14,5 +14,4 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     public List<Challenge> findByCategoryId(long categoryId);
     public long count();
     public Long countByCategoryId(long categoryId);
-
 }

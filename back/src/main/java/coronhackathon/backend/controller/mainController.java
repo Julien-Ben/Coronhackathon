@@ -5,7 +5,6 @@ import coronhackathon.backend.entity.Challenge;
 
 import coronhackathon.backend.entity.Tag;
 import coronhackathon.backend.entity.User;
-import coronhackathon.backend.repository.TagOfChallengeRepository;
 import coronhackathon.backend.service.*;
 import coronhackathon.backend.service.ChallengeService;
 import coronhackathon.backend.service.UserService;
@@ -29,7 +28,6 @@ public class mainController {
     private CategoryService categoryService;
     @Autowired
     private TagOfChallengeService tagOfChallengeService;
-
 
     //TODO delete this test method when not needed anymore
     @GetMapping("/ping")
@@ -126,6 +124,7 @@ public class mainController {
 
     /**
      * Returns all the challenges stored in the database
+     * curl -X GET localhost:8080/api/allChallenges
      *
      * @return a list that contains all the challenges stored in the database
      */
@@ -187,6 +186,7 @@ public class mainController {
     }
 
     /**
+<<<<<<< HEAD
      * Returns a list with all the challenges that are in a category
      * @param categoryId a category of challenges
      * @return a list with all the challenge of a category
@@ -214,7 +214,6 @@ public class mainController {
     public long numberOfChallenges() {
         return challengeService.numberOfChallenges();
     }
-
 
     /**
      * Add a challenge given as argument to the database
@@ -278,7 +277,6 @@ public class mainController {
     public long numberOfCategories(){
         return categoryService.numberOfCategories();
     }
-
 
 
     /**
@@ -356,7 +354,6 @@ public class mainController {
     public List<Challenge> getChallengesByTag(@PathVariable long tagId){
         return tagOfChallengeService.getChallengesOfTag(tagId);
     }
-
 
     /**
      * Retrieve all the tag that has a Challenge

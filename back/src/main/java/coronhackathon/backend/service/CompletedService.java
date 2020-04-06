@@ -1,6 +1,5 @@
 package coronhackathon.backend.service;
 
-import coronhackathon.backend.entity.Category;
 import coronhackathon.backend.entity.Challenge;
 import coronhackathon.backend.entity.HasCompleted;
 import coronhackathon.backend.entity.User;
@@ -9,7 +8,6 @@ import coronhackathon.backend.repository.CompletedRepository;
 import coronhackathon.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,6 +25,7 @@ public class CompletedService {
     private CompletedRepository completedRepository;
     @Autowired
     private CategoryService categoryService;
+
 
 
     public List<Challenge> getCompletedChallenges(long userId) {
