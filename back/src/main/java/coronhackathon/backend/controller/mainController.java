@@ -220,10 +220,11 @@ public class mainController {
      * Add a challenge given as argument to the database
      * @param challenge a challenge we want to add
      */
-    @RequestMapping(path = "/api/addChallenge/{challenge}", method = RequestMethod.GET)
-    public void addChallenge(@PathVariable Challenge challenge) {
+    @PostMapping(path = "/api/addChallenge")
+    public void addChallenge(@RequestBody Challenge challenge) {
         challengeService.addChallenge(challenge);
     }
+
 
 
     /* ----Category---- */
