@@ -194,7 +194,7 @@ public class mainController {
     @RequestMapping(path = "/api/getChallengeByCategory/{categoryId}", method = RequestMethod.GET)
     public List<Challenge> getChallengeByCategory(@PathVariable long categoryId){
         return challengeService.getChallengeByCategory(categoryId);
-    }
+}
 
     /**
      * Returns a list with all the challenges that are in a category
@@ -220,8 +220,8 @@ public class mainController {
      * Add a challenge given as argument to the database
      * @param challenge a challenge we want to add
      */
-    @RequestMapping(path = "/api/addChallenge/{challenge}", method = RequestMethod.GET)
-    public void addChallenge(@PathVariable Challenge challenge) {
+    @PostMapping(path = "/api/addChallenge")
+    public void addChallenge(@RequestBody Challenge challenge) {
         challengeService.addChallenge(challenge);
     }
 
@@ -297,7 +297,7 @@ public class mainController {
      * @param name category of the challenges completed by the user
      * @return completed challenges of a certain category as a list
      */
-    @RequestMapping(path = "/api/getCompletedByCat/{userId}/{name}", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/getCompletedByCatName/{userId}/{name}", method = RequestMethod.GET)
     public List<Challenge> getCompletedChallengesByCategory(@PathVariable long userId, @PathVariable String name){
         return completedService.getCompletedChallengesByCategory(userId,name);
     }
