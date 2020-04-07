@@ -6,19 +6,15 @@
             </view>
             <view class ="main">
                 <view class="categories">
-                    <!-- <scroll-view class = "scrollable"> -->
-                        <view class="category" v-for="(category, id) in categories" :key="id">
-                            <view class="single-element-container" :on-press="goToCategory(category.name)">
-                                <!--<image class = "icon" :source="require('../../assets/images/defiscreen/licorne.png')"/>-->
-                                <image
-                                  :style="{width: 50, height: 50}"
-                                  :source="{uri: 'http://192.168.1.19:8080/banana'}"
+                        <view class="category" v-for="(category, index) in categories" :key="index">
+                            <touchable-opacity class="single-element-container" :on-press="() => goToCategory(category.id)">
+
+                                <image class="icon"
+                                  :source="{uri: baseURL + '/static/image/png?path=' + category.logo}"
                                 />
                                 <text class="name">{{category.name}}</text>
-                                <!-- /api/image?unserpent -->
-                            </view>
+                            </touchable-opacity>
                         </view>
-                    <!-- </scroll-view> -->
                 </view>
             </view>
         </view>
@@ -28,75 +24,70 @@
 <style>
 
 .header{
-
-
-
     width: 100%;
+    height: 10%;
     justify-content: center;
     align-items: center;
+    /* margin-bottom: 50; */
+    background-color: #3d9d84;
 }
 
 .title{
-    background-color: #888888;
+    color: white;
+    font-size: 40;
+    font-weight: 200;
+    /* margin-left: 50; */
 }
 
 .icon {
   height:80;
   width:80;
-  /* border-radius: 50%; */
 }
 
 .main {
     justify-content: center;
     align-items: center;
-
+    height:90%;
 }
 .categories{
-    /* margin: 10px; */
+    padding-top: 50;
+    /* padding-bottom: 50px; */
     flex-direction: row;
     justify-content: space-around;
+    align-items: stretch;
+    align-content: center;
     flex-wrap: wrap;
     max-width: 90%;
-    height:100%;
-}
-.scrollable{
-    background-color: #EEEEEE;
-    flex-direction: row;
+    height:90%;
+    /* background-color: grey; */
 }
 .single-element-container{
     justify-content: center;
-    align-items: center;
     margin: 10px;
-    max-width: 100px;
-    width: 90%;
+    margin-bottom:70;
+    width: 80;
+    /* background-color: grey; */
 }
 
 .name{
     justify-content: center;
     align-items: center;
+    text-align: center;
+    font-weight:200;
+    color:#2c3c74;
 }
 
-.real-container {
-    /* align-items: center;
-    justify-content: center;
-    flex:1; */
-}
 .container {
     background-color: #b2ebcc;
-  width:100%;
+    width:100%;
 }
 
-.title{
-    color: #3d9d84;
-    font-size: 40;
-    font-weight: 800;
-    margin-bottom: 10;
-}
+
 
 </style>
 
 <script>
-import {API} from '../../api.js';
+import {request, baseURL} from '../../api.js';
 import { Alert } from 'react-native';
 import axios from "axios";
 
@@ -108,6 +99,7 @@ export default {
     },
   data: function() {
     return {
+        baseURL:baseURL,
         categories: [
             {
                 name: "Hardcodé 1",
@@ -122,25 +114,22 @@ export default {
     fetch () {
      console.log("Fetch !")
         const self = this;
-       API({
+       request({
         method: 'get',
         url: '/api/allCategories',
         }).then(function(response){
             self.categories = response.data;
-            // this.setLogos();
             console.log('Fetched all categories')
 
-
         }).catch(function(error){
-            console.log("==================      ERROR       ==================")
-           console.log(error)
+            console.log(error)
         })
     },
     setLogos(){
 
     },
-    goToCategory(name) {
-      // this.navigation.navigate("Challenges")
+    goToCategory(catId) {
+      this.navigation.navigate("ChallengesByCategory", {categoryId:catId})
     },
 
   },

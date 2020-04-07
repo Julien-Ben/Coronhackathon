@@ -11,6 +11,7 @@ import ChallengesScreen from "./components/Screens/ChallengesScreen";
 import ChallengeDetailScreen from "./components/Screens/ChallengeDetailScreen";
 import CategoryScreen from "./components/Screens/CategoryScreen";
 import ValidationChallengeScreen from "./components/Screens/ValidationChallengeScreen";
+import ChallengesByCategoryScreen from "./components/Screens/ChallengesByCategoryScreen";
 
 
 import {
@@ -28,8 +29,6 @@ const Tabs = createBottomTabNavigator(
     Défis: ChallengesScreen,
     Profile: ProfileScreen,
     Details: DetailsScreen,
-
-
   }
 );
 const StackNavigator = createStackNavigator(
@@ -37,6 +36,7 @@ const StackNavigator = createStackNavigator(
     Home: LoginScreen,
     ChallengeDetail : ChallengeDetailScreen,
     Validation: ValidationChallengeScreen,
+    ChallengesByCategory: ChallengesByCategoryScreen,
     Tabs
   }
 );

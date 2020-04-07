@@ -455,7 +455,7 @@ public class mainController {
      * @return a string if the link was done
      */
     @PostMapping("/api/addTagToChallenge")
-    public String completeChallenge(@RequestParam long tagId, @RequestParam long challengeId) {
+    public String addTagToChallenge(@RequestParam long tagId, @RequestParam long challengeId) {
         return tagOfChallengeService.addTagToChallenge(tagId, challengeId);
     }
 
@@ -483,7 +483,7 @@ public class mainController {
      * @use ip:8080/api/image/jpg?<path> where <path> was received from a previous query
      */
     @GetMapping(
-            value = "/api/image/jpg",
+            value = "/static/image/jpg",
             produces = MediaType.IMAGE_JPEG_VALUE
     )
     public @ResponseBody
@@ -497,10 +497,10 @@ public class mainController {
      * @param path : should start with 'resources/'
      * @return the image data as byte array
      * @throws IOException
-     * @use ip:8080/api/image/png?<path> where <path> was received from a previous query
+     * @use ip:8080/static/image/png?<path> where <path> was received from a previous query
      */
     @GetMapping(
-            value = "/api/image/png",
+            value = "/static/image/png",
             produces = MediaType.IMAGE_PNG_VALUE
     )
     public @ResponseBody

@@ -5,27 +5,26 @@
 
       <image
         class='hexagone'
-        :source="{uri: 'http://192.168.1.117:8080/api/image?' + imageCategory}"
+        :source="{uri: baseURL + '/static/image/jpg?path=' + imageCategory}"
       />
-    <image
+      <image
         class='licorne'
-        :source="{uri: 'http://192.168.1.117:8080/api/image?' + imageChallenge}"
+        :source="{uri: baseURL + '/static/image/jpg?path=' + imageChallenge}"
       />
 
       <text class="titre">{{titre}}</text>
-
       <text class="description">{{description}}</text>
 
       <button :on-press="accessChallengeValidation"
         title="Valider ce challenge"
         color="#841584"
-
-        accessibility-label="Accéder à la validation du défi"/>
+        accessibility-label="Accéder à la validation du défi"
+      />
 
       <view class="commentaires" v-for="(commentaire, index) in commentaires" :key="index">
-        <text>{{commentaire}}</text></view>
-
-      </scroll-view>
+        <text>{{commentaire}}</text>
+      </view>
+    </scroll-view>
 
   </view>
 </template>
@@ -38,47 +37,24 @@
   justify-content: center;
   flex: 1;
 }
-.fleche{
-    transform: rotate(180deg);
-    width : 70;
-    height : 70;
-    position :relative;
-    top : -160px;
-    left : -170px;
-
-
-}
 
 .hexagone{
     transform: rotate(30deg);
     width : 80;
     height : 80;
-    position :relative;
-    top : -10px;
-    left : -130px;
-
 }
 .licorne{
     width : 250;
     height : 150;
-    position :relative;
-    top : -140px;
 }
 .titre{
     color : #1d3060;
     font-size:25;
-    position :relative;
-    top : -370px;
-    left : 50px;
 }
-
-
 
 .description{
     color : #1d3060;
     font-size:20;
-    top : -150px;
-    left : -20px;
 }
 
 .commentaires{
@@ -89,7 +65,7 @@
 
 
 <script>
-import {API} from '../../api.js';
+import {request, baseURL} from '../../api.js';
 import { Alert } from 'react-native';
 import axios from "axios";
 
@@ -106,7 +82,8 @@ export default {
         categoryId:'',
         imageCategory:'',
         imageChallenge:'',
-        commentaires:[]
+        commentaires:[],
+        baseURL:baseURL,
     }
   },
   methods: {
@@ -117,7 +94,7 @@ export default {
 
     fetch : function() {
       const self = this;
-       API({
+       request({
         method: 'get',
         url: '/api/getChallenge/'+this.navigation.state.params.challengeId
         }).then(function(response){
@@ -125,7 +102,7 @@ export default {
           self.titre = response.data.name;
           self.description = response.data.description;
           self.categoryId =response.data.categoryId;
-          //self.imageChallenge= response.data.???;
+          self.imageChallenge= response.data.imgPath;
           self.getComments();
         }).catch(function(error){
           console.log(error);
@@ -134,7 +111,7 @@ export default {
 
     getComments : function(){
       const self = this;
-       API({
+       request({
         method: 'get',
         url: '/api/getCommentsOfChallenge/'+this.navigation.state.params.challengeId
         }).then(function(response){
@@ -147,7 +124,7 @@ export default {
 
     getImageCategory : function(){
       const self = this;
-       API({
+       request({
         method: 'get',
         url: '/api/getCategory/'+self.categoryId
         }).then(function(response){
@@ -160,11 +137,9 @@ export default {
 
 
   },
-
   mounted : function(){
       this.fetch();
   }
-
 };
 
 </script>

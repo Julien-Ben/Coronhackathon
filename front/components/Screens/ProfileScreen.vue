@@ -1,98 +1,160 @@
 <!-- PROFILE SCREEN -->
 <template>
-    <view> 
-        
-        <scroll-view :content-container-style="{contentContainer: {
-        paddingVertical: 20
-        }}">
-
-            <view> 
-                <touchable-opacity :on-press="onPressButton">
-                    <image
-                        class="pp"
-                        :source="require('../../assets/images/profilescreen/Icon-round-Question_mark.png')"
-                    />
-                </touchable-opacity>
-                <text class="heading">{{username}}</text>
-            </view>
-        
+        <scroll-view class="top">
+                <view class="name-container">
+                    <text class="title">{{username}}</text>
+                </view>
             <view class="container">
-                <text class= "heading">{{nbCompleted}} Défi relevé!</text>
-                <text class="heading">Le Coeur sur la main</text>
-    
-              
-                <view v-for="ach in coeurStats">
-                    <image 
-                    class="icon-achieved"
-                    v-if="ach.pic == 1"
-                    :source="require('../../assets/images/profilescreen/coeur_clair.png')"/>
-                    <image 
-                    class="icon-failed"
-                    v-else
-                    :source="require('../../assets/images/profilescreen/coeur_fonce.png')"/>
-                    
+                <text class= "heading">{{nbAchieved}} Défis relevés parmi {{nbAll}} défis disponibles!</text>
+                <view class="cat-container" v-for="(cat,index) in res" :key="index">
+                    <text  v-if="cat.all!=0" class = "heading">{{cat.catName}} : {{cat.comp}} / {{cat.all}}</text>
+                    <view class="icon-container" v-for="challenge in cat.challenges" :key="challenge.id">
+                            <image class = "badge" :source="require('../../assets/images/profilescreen/coeur_fonce.png')"/>
+                            <text class="desc"> Badge obtenu pour la réalisation du challenge : {{challenge.name}} : {{challenge.description}}</text>
+                    </view>
                 </view>
-            
-            
-                
-                <text class="heading">Sportif de haut niveau!</text>
-                
-                <view v-for="ach in sportStats">
-                    <image 
-                    class="icon-achieved"
-                    v-if="ach.pic == 1"
-                    :source="require('../../assets/images/profilescreen/cible_clair.png')"/>
-                    <image 
-                    class="icon-failed"
-                    v-else
-                    :source="require('../../assets/images/profilescreen/cible_fonce.png')"/>
-                    
-                </view>
-            
-                
-                <text class="heading">Maniaco manie</text>
-            
-                <view v-for="ach in maniacStats">
-                    <image 
-                    class="icon-achieved"
-                    v-if="ach.pic==1"
-                    
-                    :source="require('../../assets/images/profilescreen/maniac_clair.png')"/>
-                    <image
-                    class="icon-failed" 
-                    v-else
-                    :source="require('../../assets/images/profilescreen/maniac_fonce.png')"/>
-                    
-                    
-                </view>
-        
-                
             </view>
 
         </scroll-view>
-        
-    </view>
 </template>
+
+<script>
+import {request} from '../../api.js';
+import { Alert } from 'react-native';
+import axios from "axios";
+    export default {
+        data: function() {
+            return{
+                cats: [],
+                res: [],
+                username: 'John Doe',
+                nbAchieved: 0,
+                nbAll: 0,
+
+            };
+        },
+        methods: {
+            onPressButton () {
+                alert(this.username + '\'s photo')
+            },
+
+            showChall (challenge) {
+                alert(this.username + ' a complété le défi : ' + challenge.name , challenge.description)
+            },
+
+
+            fetch : function(){
+                const self = this
+                // console.log("fetching the data")
+                request({
+                    method: 'GET',
+                    url: '/api/userProfile'
+                }).then(function(ansName){
+                    self.username = ansName.data.username
+                    request({
+                        method: 'GET',
+                        url: '/api/allCategories'
+                    }).then(function(categories){
+                        console.log(categories)
+                        self.cats = categories.data
+                        self.getCatInfo(0);
+
+                    }).catch(function(err){
+                        console.log("could not fetch the categories"+ err)
+                    })
+                }).catch(function(err){
+                    console.log("Impossible to catch the name"+ err)
+                })
+            },
+
+            getCatInfo: function(index){
+                const self = this
+                request({
+                    method: 'GET',
+                    url: "/api/getChallengeByCategoryName/"+self.cats[index].name
+                }).then(function(allChallengeName){
+                    const allChallofCat = allChallengeName.data.length
+                    self.nbAll += allChallofCat
+                    request({
+                        method: 'GET',
+                        url: "/api/getMyCompletedByCat/"+self.cats[index].id
+                    }).then(function(completed){
+                        const nbComplet = completed.data.length
+                        self.nbAchieved += nbComplet
+                        if(self.cats[index] != undefined){
+                            self.res.push({
+                                catName: self.cats[index].name,
+                                comp: nbComplet,
+                                all : allChallofCat,
+                                challenges:completed.data,
+                                pic:self.cats[index].logo
+                            })
+                        }
+                        if(index < self.cats.length){
+                            self.getCatInfo(index + 1)
+                        } else {
+                            // console.log("done extracting the info");
+                        }
+                    }).catch(function(err){
+                        console.log(err)
+                    })
+                })
+
+            }
+
+
+        },
+
+        mounted: function(){
+            this.fetch()
+        }
+
+
+    }
+</script>
 
 
 <style>
-.icon-achieved {
+.cat-container{
+    align-items: center;
+    justify-content: center;
+}
+.name-container{
+    align-items: center;
+    justify-content: center;
+    background-color: orange;
+}
+.real-container {
+    align-items: center;
+    justify-content: center;
+    flex:1;
+}
+.icon-container{
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+.badge {
     height: 30;
     width: 30;
-    background-color:green;
+
 }
-.icon-failed {
-    height: 30;
-    width: 30;
-    background-color:red;
+
+.title{
+
+    font-size: 70;
+    font-weight: 200;
+    margin-bottom: 100;
+    align-items: center;
+
 }
-.pp{
-    height: 120;
-    width: 120;
+.desc{
+    font-weight: 100;
+    width: 70%;
 }
+
 .root{
     align-items: center;
-    background-color: blue;
 }
 .container {
   align-items: center;
@@ -109,151 +171,14 @@
 .container2 {
     align-items: center;
     justify-content: center;
-    background-color: blue;
     flex: 1;
 }
+.info-container{
+    margin-top: 10;
+    width: 100%;
+    border-radius: 10;
+    align-items: center;
+    flex-direction: row;
+}
+
 </style>
-
-<script>
-import {API} from '../../api.js';
-import { Alert } from 'react-native';
-import axios from "axios";
-    export default {
-        data: function() {
-            return{
-                username:'John Doe'
-            };
-        },
-        methods: {
-            onPressButton () {
-                alert(this.username + '\'s photo')
-            },   
-
-            login : function(){
-                console.log("computing the coeur stats")
-                    var bodyFormData = new FormData();
-                    bodyFormData.append('username', 'user');
-                    bodyFormData.append('password', 'user');
-                    const self = this 
-                    API({
-                        method: 'post',
-                        url: '/login',
-                        data: bodyFormData,
-                        headers: {'Content-Type': 'multipart/form-data' }
-                        }).then(function(response){
-                            console.log(response)
-                        })
-            }
-        },
-        computed : {
-            nbAchievedCoeur: {
-                get: function() {
-                    console.log("getting the number of achieved COEUR done")
-                    return 3;
-                }
-            },
-
-            nbAchievedSport: {
-                get: function() {
-                    console.log("getting the number of achieved SPORTS")
-                    return 4;
-                }
-            },
-
-            nbAchievedManiac: {
-                get: function() {
-                    console.log("getting the number of achieved MANIAC")
-                    return 4;
-                }
-            },
-
-            coeurStats: {
-                get: function() {
-                    this.login()
-                    API({
-                        method: 'GET',
-                        url: "/getChallengeByCategory?category=coeur",
-                        header: []
-                    }).then(function(response){
-                        console.log("recieved the coeur stats from the server")
-                        var coeur = this.nbAchievedCoeur
-                        console.log("ACHIEVED COEUR = "+ coeur)
-                        var ach = []
-                        var i
-                        var total = response.data.length
-                        for(i = 0; i < total;  ++i){
-                            if(i < coeur){
-                                ach.push({id: i, pic: 1})
-                            } else {
-                                ach.push({id: i, pic: 0})
-                            }
-                        }
-                        return ach; 
-                    })   
-                }
-            },
-
-            sportStats: {
-                get: function() {
-                    this.login()
-                    console.log("computing the sports stats")
-                    API({
-                        method: 'GET',
-                        url: "/getChallengeByCategory?category=sport",
-                        header: []
-                    }).then(function(response){
-                        console.log("recieved the sports stats from the server")
-                        totalDefi = response.data.length
-                        var ach = []
-                        var sport = this.nbAchievedSport
-                        var totalDefi = 6
-                        var i
-                        for(i = 0; i < totalDefi;  ++i){
-                            if(i < sport){
-                                ach.push({id: i, pic: 1})
-                            } else {
-                                ach.push({id: i, pic: 0})
-                            }
-                        }
-                        return ach; 
-                   }) 
-                }
-            },
-
-            maniacStats: {
-                get: function(){
-                    this.login()
-                    console.log("computing the maniac stats")
-                    API({
-                        method: 'GET',
-                        url: "/getChallengeByCategory?category=sport",
-                        hearder: []
-                    }).then(function(response){
-                        console.log("=======================> THE RESPONSE TO CATEGORY SPORT <===================")
-                        console.log(response)
-                        totalDefi = response.data.length
-                        var ach = []
-                        var maniac = this.nbAchievedManiac
-                        var i
-                        for(i = 0; i < totalDefi;  ++i){
-                            if(i < maniac){
-                                ach.push({id: i, pic: 1})
-                            } else {
-                                ach.push({id: i, pic: 0})
-                            }
-                        }
-                        return ach; 
-                    }) 
-                }
-            },
-
-            nbCompleted: {
-                get: function(){
-                    return this.nbAchievedCoeur + this.nbAchievedManiac + this.nbAchievedSport;
-                }
-            }
-
-
-        }
-    }
-</script>

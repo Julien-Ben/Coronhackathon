@@ -3,7 +3,7 @@
     <!--titre de l'onglet + détails du challenge [title, category, description]    -->
     <text class="title">Validation du défi :</text>
 
-    <!--<text class="subTitle">{{this.defiTitle}}</text> <!-- récupérer le nom du challenge -->
+    <!--<text class="subTitle">{{this.defiTitle}}</text>--> <!-- récupérer le nom du challenge -->
 
     <!--<text-input class = "challenge-title" v-model= "response.name"/>
     <text-input class = "challenge-cat" v-model= "response.category"/>

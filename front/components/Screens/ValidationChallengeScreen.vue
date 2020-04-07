@@ -54,7 +54,7 @@
 
 <script>
 import { Alert } from 'react-native';
-import {API} from '../../api.js';
+import {request} from '../../api.js';
 import React from 'react';
 import {Text} from 'react-native';
 
@@ -84,7 +84,7 @@ export default {
 
       start: function(){
         const self=this;
-      API({ //on suppose qu'on a déjà l'id
+      request({ //on suppose qu'on a déjà l'id
            method: 'get',
            url: '/api/getChallenge/'+this.navigation.state.params.challengeId,
           }).then(function(response){
@@ -102,7 +102,7 @@ export default {
           bodyFormData.append('commentary',this.review);
           bodyFormData.append('picture',""); //à changer
           console.log(bodyFormData)
-          API({
+          request({
             method: 'post',
             url : '/api/completeMyChallenge',
             data : bodyFormData,
