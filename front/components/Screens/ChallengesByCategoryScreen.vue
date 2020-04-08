@@ -4,8 +4,12 @@
       <!-- <text class="heading">Catégorie : </text> -->
       <text class="title">{{categoryInfo.name}}</text>
     </view>
+    <view class="empty" v-if="challenges.length == 0">
+      <text class="empty-text">Il n'y a pas encore de défi dans cette catégorie.</text>
+      <image class ="empty-icon" :source="require('../../assets/images/categoryByScreen/sad.png')"/>
+    </view>
     <ChallengeList v-bind:challenges="challenges" v-bind:goToChallenge="goToChallenge"/>
-      </view>
+  </view>
 </template>
 
 <style>
@@ -30,6 +34,25 @@
   font-size: 40px;
   font-weight: 200;
   color: white;
+}
+
+.empty{
+  width:100%;
+  height:80%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.empty-text{
+  width:50%;
+  text-align: center;
+  padding: 20;
+  font-size: 20;
+}
+.empty-icon{
+  width:80;
+  height:80;
 }
 </style>
 
