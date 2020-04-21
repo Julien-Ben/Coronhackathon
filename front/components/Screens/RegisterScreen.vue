@@ -51,7 +51,8 @@ export default {
         this.loading = true
         var bodyFormData = new FormData();
         bodyFormData.append('username', this.username);
-        bodyFormData.append('password', this.password);
+        bodyFormData.append('hashPwd', this.password);
+        bodyFormData.append('hashPwd2', this.verification);
         const self = this;
         request({
         method: 'post',
@@ -59,7 +60,7 @@ export default {
         data: bodyFormData,
         headers: {'Content-Type': 'multipart/form-data' }
         }).then(function(response){
-           //console.log(response)
+           console.log(response)
           if(response != undefined && response.status == 200){
               self.navigation.navigate("Défis")
               self.loading = false
