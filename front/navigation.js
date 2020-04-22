@@ -30,6 +30,20 @@ const Covid19Tab = createStackNavigator(
         },        
       }
     },
+    Details: {
+      screen : DetailsScreen,
+      navigationOptions: {
+        title: 'QUI SOMMES-NOUS',
+            headerStyle: {
+              backgroundColor: '#3d9d84',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: '200',
+              fontSize: 30,
+            },
+      }
+  }
   },
   )
 
@@ -168,25 +182,25 @@ const ProfilTab = createStackNavigator(
 )
 
 
-const DetailsTab = createStackNavigator(
-  {
-    Details: {
-      screen: DetailsScreen,
-      navigationOptions: {
-        title: 'DÉTAILS',
-        headerStyle: {
-          backgroundColor: '#ffffff',
-        },
-        headerTintColor: 'black',
-        headerTitleStyle: {
-          fontWeight: '200',
-          fontSize: 30,
-        },
-        animationTypeForReplace: "pop",
-      }
-    },
-  },
-)
+// const DetailsTab = createStackNavigator(
+//   {
+//     Details: {
+//       screen: DetailsScreen,
+//       navigationOptions: {
+//         title: 'DÉTAILS',
+//         headerStyle: {
+//           backgroundColor: '#ffffff',
+//         },
+//         headerTintColor: 'black',
+//         headerTitleStyle: {
+//           fontWeight: '200',
+//           fontSize: 30,
+//         },
+//         animationTypeForReplace: "pop",
+//       }
+//     },
+//   },
+// )
 
 const Tabs = createBottomTabNavigator(
     {
@@ -240,17 +254,7 @@ const Tabs = createBottomTabNavigator(
               },
             }
         },
-        "Détails": {
-            screen : DetailsTab,
-            navigationOptions: {
-              tabBarIcon: ({ focused}) => {
-                let iconName = focused ? 'ios-information-circle': 
-                'ios-information-circle-outline';
-                let color = focused ? '#fedff2' : 'gray';
-                return <Ionicons name={iconName} size={30} color={color}/>;
-              },
-            }
-        }
+
     },
     {
         tabBarOptions: {
