@@ -58,9 +58,9 @@ public class mainController {
 
     @PostMapping("/register")
     public Optional<User> showRegistrationForm(@RequestParam String username,
-                                               @RequestParam String hashPwd,
-                                               @RequestParam String hashPwd2) {
-        return userService.register(username, hashPwd, hashPwd2);
+                                               @RequestParam String pwd,
+                                               @RequestParam String pwdBis) {
+        return userService.register(username, pwd, pwdBis);
     }
 
     //TODO delete this test method when not needed anymore
