@@ -18,7 +18,7 @@
         multiline
         placeholderTextColor="grey"
         textAlignVertical="top"
-        maxLength=500/>
+        />
       </view>
     </view>
     <view class="picker-container">
@@ -76,7 +76,7 @@
   min-height:200;
   max-height:200;
   margin: 20;
-background-color:whitesmoke;
+  padding-bottom: 10;
 }
 
 .input-title{
@@ -87,6 +87,7 @@ background-color:whitesmoke;
 .input-container{
   width:90%;
   min-height:30;
+  max-height:170;
   border-color: #3d9d84;
   border-radius:5;
   border-width: 1;
@@ -104,7 +105,6 @@ background-color:whitesmoke;
   width:100%;
   font-size: 20;
   margin-bottom: 20;
-  background-color:burlywood;
 }
 
 .container-btn {
@@ -128,6 +128,7 @@ import {request} from '../../api.js';
 import React from 'react';
 import {Text} from 'react-native';
 import ImagePicker from '../ImagePicker';
+import ValidationMain from '../ValidationMain';
 import styles from "../../palette.js"
 
 export default {
@@ -138,6 +139,7 @@ export default {
   },
   components: {
     ImagePicker,
+    ValidationMain
   },
     data:   function() {
       return {
