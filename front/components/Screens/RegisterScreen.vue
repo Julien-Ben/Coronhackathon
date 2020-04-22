@@ -71,8 +71,8 @@ export default {
         this.loading = true
         var bodyFormData = new FormData();
         bodyFormData.append('username', this.username);
-        bodyFormData.append('hashPwd', this.password);
-        bodyFormData.append('hashPwd2', this.verification);
+        bodyFormData.append('pwd', this.password);
+        bodyFormData.append('pwdBis', this.verification);
         const self = this;
         request({
         method: 'post',
