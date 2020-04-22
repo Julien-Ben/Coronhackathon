@@ -26,6 +26,9 @@ public class CompletedService {
     @Autowired
     private CategoryService categoryService;
 
+    public long getNumberOfCompletedChallenges(long userId){
+        return getCompletedChallenges(userId).size();
+    }
 
     public List<Challenge> getCompletedChallenges(long userId) {
         List<Challenge> l = new ArrayList<Challenge>();
