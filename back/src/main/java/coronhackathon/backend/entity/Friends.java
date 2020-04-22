@@ -20,6 +20,12 @@ public class Friends {
 
     private boolean completed;
 
+    public Friends(User user1, User user2, boolean completed){
+        this.user1 = user1;
+        this.user2 = user2;
+        this.completed = completed;
+    }
+
     public FriendsId getId() {
         return id;
     }

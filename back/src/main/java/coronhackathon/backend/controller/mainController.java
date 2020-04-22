@@ -76,13 +76,10 @@ public class mainController {
     /*------------------USER--------------------- */
     /* --------------------------------------------*/
 
-    /* ---Users ----*/
-    @GetMapping("/api/allUsers")
-
+    @RequestMapping(path = "/api/allUsers", method = RequestMethod.GET)
     public List<User> allUsers() {
         return userService.getAllUsers();
     }
-
 
     @RequestMapping(path = "/api/getUser/{userId}", method = RequestMethod.GET)
     public Optional<User> getUser(@PathVariable long userId) {
@@ -665,8 +662,7 @@ public class mainController {
      */
     @RequestMapping(path = "/api/getRequest", method = RequestMethod.GET)
     public List<User> getFriendsRequests(Principal principal) {
-        User user = userService.getUserByUsername(principal.getName()).get();
-        return friendsService.getFriendsRequests(user);
+        return friendsService.getFriendsRequests(getCurrentUser(principal));
     }
 
     /**
@@ -678,6 +674,28 @@ public class mainController {
     @RequestMapping(path = "/api/isFriend/{user1Id}/{user2Id}", method = RequestMethod.GET)
     public boolean isFriend(@PathVariable long user1Id, @PathVariable long user2Id) {
         return friendsService.isFriend(user1Id,user2Id);
+    }
+
+
+    @PostMapping("/api/friendRequest")
+    public String friendRequest(Principal principal, @RequestParam String username) {
+        return friendsService.friendRequest(getCurrentUser(principal) ,username);
+    }
+
+    @PostMapping("/api/acceptFriendRequest")
+    public String acceptFriendRequest(Principal principal, @RequestParam long userId) {
+        return friendsService.acceptFriendRequest(getCurrentUser(principal) ,userId);
+    }
+
+
+
+
+    /* --------------------------------------------*/
+    /*-------------USEFUL FUNCTIONS--------------- */
+    /* --------------------------------------------*/
+
+    private User getCurrentUser(Principal principal){
+        return userService.getUserByUsername(principal.getName()).get();
     }
 
 }
