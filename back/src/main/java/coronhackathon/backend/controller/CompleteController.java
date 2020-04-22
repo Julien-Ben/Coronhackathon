@@ -1,5 +1,6 @@
 package coronhackathon.backend.controller;
 
+import coronhackathon.backend.entity.User;
 import coronhackathon.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,6 +17,8 @@ import java.io.IOException;
 public class CompleteController {
     @Autowired
     private CompletedService completedService;
+    @Autowired
+    private UserService userService;
 
     /**
      * Marks user and challenge as completed.
@@ -68,6 +71,30 @@ public class CompleteController {
         return destinationPath;
     }
 
+    @RequestMapping(
+            value = "/api/uploadMyCompletedImage/jpg/{challengeId}",
+            method = RequestMethod.POST,
+            produces = MediaType.IMAGE_JPEG_VALUE
+    )
+    public @ResponseBody
+    String uploadMyCompletedJPGImage(
+            Principal principal,
+            @RequestBody byte[] imgData,
+            @PathVariable("challengeId") long challengeId) throws IOException {
+
+        Long id = userService.getUserByUsername(principal.getName()).get().getId();
+
+        String destinationPath = "resources/myCompletedImage/hasCompleted_"
+                + Long.toString(id)
+                + "_"
+                + Long.toString(challengeId) + ".jpg";
+
+        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imgData));
+        ImageIO.write(img, "jpg", new File("src/main/" + destinationPath));
+        completedService.setPath(id, challengeId, destinationPath);
+        return destinationPath;
+    }
+
     /**
      * Receive a PNG image illustrating a completion, save it and set path in hasCompleted entity
      *
@@ -95,6 +122,29 @@ public class CompleteController {
         BufferedImage img = ImageIO.read(new ByteArrayInputStream(imgData));
         ImageIO.write(img, "png", new File("src/main/" + destinationPath));
         completedService.setPath(userId, challengeId, destinationPath);
+        return destinationPath;
+    }
+
+    @RequestMapping(
+            value = "/api/uploadMyCompletedImage/png/{challengeId}",
+            method = RequestMethod.POST,
+            produces = MediaType.IMAGE_PNG_VALUE
+    )
+    public @ResponseBody
+    String uploadMyCompletedPNGImage(
+            Principal principal,
+            @RequestBody byte[] imgData,
+            @PathVariable("challengeId") long challengeId) throws IOException {
+        Long id = userService.getUserByUsername(principal.getName()).get().getId();
+
+        String destinationPath = "resources/completedImage/hasCompleted_user"
+                + Long.toString(id)
+                + "_challenge"
+                + Long.toString(challengeId) + ".png";
+
+        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imgData));
+        ImageIO.write(img, "png", new File("src/main/" + destinationPath));
+        completedService.setPath(id, challengeId, destinationPath);
         return destinationPath;
     }
 
