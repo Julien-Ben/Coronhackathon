@@ -9,7 +9,8 @@
         <text-input class="input-container" placeholder="T<f~M4*@@e)Zq8~" secure-text-entry v-model="password"/>
         <text class="text-container">Vérifie ton mot de passe :</text>
         <text-input class="input-container" placeholder="T<f~M4*@@e)Zq8~" secure-text-entry v-model="verification"/>
-        <text class="verification-fail" v-if="password != verification">Les mots de passes sont différents!</text>
+        <text class="verification-fail" v-if="password != verification || serverVerif">Les mots de passes sont différents!</text>
+        <text class="verification-fail" v-if="pseudoTaken">Ce pseudo est déjà utilisé :(</text>
         <text class="login-fail" v-else></text>
         <view class="login-container">
           <touchable-opacity :on-press="register">
@@ -42,6 +43,8 @@ export default {
         username:'',
         password:'',
         verification:'',
+        serverVerif:false,
+        pseudoTaken:false,
         styles: Stylesheet,
         loading: false,
     }
@@ -63,12 +66,26 @@ export default {
            console.log(response)
           if(response != undefined && response.status == 200){
               self.navigation.navigate("Défis")
+              //Reset error booleans
               self.loading = false
-          } else{
+              self.pseudoTaken = false
+              self.serverVerif = false
+          } else {
+
           }
         }).catch(function(error){
           self.loading = false
-          console.log(error)
+          if (error.response) {
+            if(error.response.status == 417){ //Passwords are not the same
+            self.serverVerif =true
+            } else if(error.response.status == 409){ //Pseudo already taken
+            self.pseudoTaken =true
+            }
+          }
+          
+          console.log(error.response.status)
+          console.log(error.response.data.message)
+          // console.log(error.response.headers)
 
         })
     },

@@ -18,7 +18,7 @@
         multiline
         placeholderTextColor="grey"
         textAlignVertical="top"
-        maxLength=500/>
+        maxLength=500/></text-input>
       </view>
     </view>
     <view class="picker-container">
