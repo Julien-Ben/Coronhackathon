@@ -675,8 +675,8 @@ public class mainController {
      *
      * @return true if it is the case false otherwise
      */
-    @RequestMapping(path = "/api/getRequest/{user1Id}/{user2Id}", method = RequestMethod.GET)
-    public List<User> getFriendsRequests(@PathVariable long user1Id, @PathVariable long user2Id) {
+    @RequestMapping(path = "/api/isFriend/{user1Id}/{user2Id}", method = RequestMethod.GET)
+    public boolean isFriend(@PathVariable long user1Id, @PathVariable long user2Id) {
         return friendsService.isFriend(user1Id,user2Id);
     }
 
