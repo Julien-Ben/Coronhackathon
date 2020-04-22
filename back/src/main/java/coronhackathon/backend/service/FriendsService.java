@@ -32,7 +32,7 @@ public class FriendsService {
         }
         for(Friends f : friendsRepository.findByUser2(user)) {
             if (f.getCompleted()) {
-                friends.add(f.getUser2());
+                friends.add(f.getUser1());
             }
         }
         friends.sort((x,y) -> {
@@ -91,8 +91,12 @@ public class FriendsService {
             else
                 return ""+currentUser.getUsername()+" and "+ou.get().getUsername()+" are now friends";
         }else { //if they never asked each other
-            friendsRepository.save(new Friends(currentUser, ou.get(), false));
-            return "" + currentUser.getUsername() + " ask " + ou.get().getUsername() + " to be his/her friend";
+            Friends friends = new Friends();
+            friends.setUser1(currentUser);
+            friends.setUser2(ou.get());
+            friends.setCompleted(false);
+            friendsRepository.save(friends);
+            return "" + currentUser.getUsername() + " asked " + ou.get().getUsername() + " to be his/her friend";
         }
     }
 
@@ -103,12 +107,12 @@ public class FriendsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
         User user = ou.get();
         Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
+        //System.out.println(of.get());
         if (!of.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
                     "" + currentUser.getUsername() + " to be his/her friend.");
         }
         of.get().setCompleted(true); //don't work
-        of.get().setUser1(new User());
         return ""+currentUser.getUsername()+" and "+ou.get().getUsername()+" are now friends";
     }
 }

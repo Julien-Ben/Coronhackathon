@@ -1,6 +1,8 @@
 package coronhackathon.backend.controller;
 
+import coronhackathon.backend.entity.Friends;
 import coronhackathon.backend.entity.User;
+import coronhackathon.backend.repository.FriendsRepository;
 import coronhackathon.backend.service.FriendsService;
 import coronhackathon.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,9 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.List;
 
+@RestController
 public class FriendsController {
     @Autowired
     private FriendsService friendsService;
+    @Autowired
+    private FriendsRepository friendsRepository;
     @Autowired
     private UserService userService;
     /**
@@ -37,6 +42,12 @@ public class FriendsController {
         return friendsService.getFriendsRequests(getCurrentUser(principal));
     }
 
+    //To be removed when necessary
+    @RequestMapping(path = "/api/getAllFriendships", method = RequestMethod.GET)
+    public List<Friends> getAllFriendships() {
+        return friendsRepository.findAll();
+    }
+
     /**
      * Tell if user1 is friend with user2
      * user1 is friend with user 2 iff user2 is friend with user1
@@ -58,7 +69,6 @@ public class FriendsController {
     public String acceptFriendRequest(Principal principal, @RequestParam long userId) {
         return friendsService.acceptFriendRequest(getCurrentUser(principal) ,userId);
     }
-
 
     private User getCurrentUser(Principal principal){
         return userService.getUserByUsername(principal.getName()).get();
