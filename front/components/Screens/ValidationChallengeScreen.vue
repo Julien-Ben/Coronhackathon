@@ -76,7 +76,7 @@
   min-height:200;
   max-height:200;
   margin: 20;
-  /* background-color: brown; */
+background-color:whitesmoke;
 }
 
 .input-title{
@@ -91,6 +91,7 @@
   border-radius:5;
   border-width: 1;
   padding:10;
+  
 }
 
 .input-text {
@@ -103,7 +104,7 @@
   width:100%;
   font-size: 20;
   margin-bottom: 20;
-  /* background-color:burlywood; */
+  background-color:burlywood;
 }
 
 .container-btn {
