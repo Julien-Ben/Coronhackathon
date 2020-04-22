@@ -8,4 +8,5 @@ export default StyleSheet.create({
   primaryTextColor: { color: '#212121' },
   secondaryTextColor: { color: '#757575' },
   dividerColor: { backgroundColor: '#BDBDBD' },
+  separatorColor: { borderColor: '#3d9d84' }
 })

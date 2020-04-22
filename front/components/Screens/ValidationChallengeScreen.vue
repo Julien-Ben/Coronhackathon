@@ -8,7 +8,8 @@
     </view>
 
     <!-- Box "rajouter une description" + on la récupère pour la poster  -->
-    <view class="main">
+    <ValidationMain :challengeId="challengeId" />
+    <!-- <view class="main">
     <view class="desc-container">
       <text class="input-title"></text>
       <view class="input-container">
@@ -23,16 +24,14 @@
     </view>
     <view class="picker-container">
       <view class="picker">
-        <!-- <ImagePicker/> -->
-        <ValidationMain :challengeId="challengeId" />
+        <ValidationMain :challengeId="challengeId" /> 
       </view>
     </view>
-    <!-- On confirme la validation + on poste les détails de la validation   -->
     <touchable-opacity class="container-btn" :on-press="challengeValidation" :style=styles.defaultPrimaryColor>
       <text class="validation-btn" :style=styles.textPrimaryColor>Valider !</text>
     </touchable-opacity>
 
-    </view>
+    </view> -->
 </view>
 </scroll-view>
 </template>

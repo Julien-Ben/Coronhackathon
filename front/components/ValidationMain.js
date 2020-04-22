@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Button, Image, View } from 'react-native';
+import { Button, Image, View, TextInput,TouchableOpacity, Text ,StyleSheet} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import {request} from '../api.js';
+import palette from "../palette.js"
 
 export default class ImagePickerExample extends React.Component {
   state = {
@@ -14,12 +15,31 @@ export default class ImagePickerExample extends React.Component {
     let { image } = this.state;
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Button title="Ajouter une photo" onPress={this._pickImage}/>
-        {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-        <Button title="Valider !" onPress={this._uploadImage}/>
+      <View style={styles.main}>
+        <View style={styles.descContainer}>
+          <Text style={styles.inputTitle}></Text>
+          <View style={styles.inputContainer}>
+            <TextInput style={styles.inputText}  
+              placeholder="Commente ce que tu as réalisé !" multiline
+              placeholderTextColor="grey"
+              textAlignVertical="top"
+            />
+          </View>
+        </View>
+        <View style={styles.pickerContainer}>
+          <View style={styles.picker}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <TouchableOpacity style={[styles.containerBtn,palette.defaultPrimaryColor]}  onPress={this._pickImage}> 
+                <Text style={[styles.validationBtn, palette.textPrimaryColor]}>Ajouter une photo</Text>
+              </TouchableOpacity>
+              {image && <Image source={{ uri: image }} style={[styles.image,palette.separatorColor]} />}
+            </View>
+          </View>
+        </View>
+        <TouchableOpacity style={[palette.defaultPrimaryColor, styles.containerBtn]} onPress={this._uploadImage}> 
+          <Text  style={[palette.textPrimaryColor, styles.validationBtn]}>Valider !</Text>
+        </TouchableOpacity>
       </View>
-      
     );
   }
 
@@ -120,3 +140,68 @@ export default class ImagePickerExample extends React.Component {
     })
   }
 }
+
+
+const styles = StyleSheet.create({
+    
+  main :{
+    alignItems: 'center',
+    height:'80%',
+  },
+
+  descContainer :{
+    alignItems: 'center',
+    width:'100%',
+    // minHeight:200,
+    // maxHeight:200,
+    margin: 20,
+    paddingBottom: 10,
+  },
+
+  inputTitle:{
+    fontSize:20,
+    color : '#3d9d84',
+  },
+
+  inputContainer :{
+    minWidth:'90%',
+    minHeight:30,
+    maxHeight:170,
+    borderColor: '#3d9d84',
+    borderRadius:5,
+    borderWidth: 1,
+    padding:10,
+  },
+
+  inputText :{
+    fontSize: 18,
+    textAlign: 'left',
+  },
+
+  pickerContainer  :{
+    minHeight: 100,
+    width:'100%',
+    fontSize: 20,
+    marginBottom: 20,
+  },
+
+  image :{
+    borderWidth:3,
+    borderRadius:5,
+    width: 200, 
+    height: 200,
+  },
+
+  containerBtn :{
+    borderRadius: 25,
+    marginBottom:30,
+  },
+
+  validationBtn :{
+      fontSize: 20,
+      paddingTop: 10,
+      paddingBottom: 10,
+      paddingLeft: 20,
+      paddingRight: 20,
+  },
+});
