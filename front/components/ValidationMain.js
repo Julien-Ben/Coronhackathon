@@ -17,7 +17,7 @@ export default class ImagePickerExample extends React.Component {
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Button title="Ajouter une photo" onPress={this._pickImage}/>
         {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-        <Button title="Valider !" onPress={this._upload}/>
+        <Button title="Valider !" onPress={this._uploadImage}/>
       </View>
       
     );
@@ -53,34 +53,35 @@ export default class ImagePickerExample extends React.Component {
     }
   };
 
- _upload = async () => {
-    // if(this.state.image == null){
-    //   console.log(this.props.challengeId)
-    //   return
-    // }
-    // let uriParts = this.state.image.split('.');
-    // let fileType = uriParts[uriParts.length - 1];
+ _uploadImage = async () => {
+    if(this.state.image == null){
+      console.log(this.props.challengeId)
+      return
+    }
+    // console.log(this.state.image)
+    let uriParts = this.state.image.split('.');
+    let fileType = uriParts[uriParts.length - 1];
+    fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
+    let formData = new FormData();
 
-    // let formData = new FormData();
-    // formData.append('photo', {
-    //   uri,
-    //   name: `photo.${fileType}`,
-    //   type: `image/${fileType}`,
-    // });
-
-    let bodyFormData = new FormData();
-    bodyFormData.append('challengeId', this.props.challengeId);
-    bodyFormData.append('commentary',"Commentaire constructif"); //this.review
-    bodyFormData.append('picture',""); //this.state.image
+    formData.append('photo', {
+      uri: this.state.image,
+      name: `photo.${fileType}`,
+      type: `image/${fileType}`,
+    });
 
     request({
       method: 'post',
-      url : '/api/completeMyChallenge',
+      url : '/api/uploadCompletedImage/'+fileType+'/'+this.props.challengeId,
       data : bodyFormData,
       headers: {'Content-Type':'multipart/form-data'}
     }).then(function(response){
+      console.log("Got here then!")
+      console.log(response)
+
+      this._submitValidation(response.path) // ??
     }).catch(function(error){
-      console.log("Got here !")
+      console.log("Got here catch!")
       console.log(error.response)
     })
 
@@ -96,5 +97,26 @@ export default class ImagePickerExample extends React.Component {
     // return fetch(apiUrl, options);
     // }
 
+  }
+
+  _submitValidation = async (imagePath) => {
+    
+    let bodyFormData = new FormData();
+    bodyFormData.append('challengeId', this.props.challengeId);
+    bodyFormData.append('commentary',"Commentaire constructif"); //this.review
+    bodyFormData.append('picture',""); //this.state.image
+
+    request({
+      method: 'post',
+      url : '/api/completeMyChallenge',
+      data : bodyFormData,
+      headers: {'Content-Type':'multipart/form-data'}
+    }).then(function(response){
+      console.log("Got here then!")
+      console.log(response)
+    }).catch(function(error){
+      console.log("Got here catch!")
+      console.log(error.response)
+    })
   }
 }

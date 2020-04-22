@@ -23,6 +23,7 @@
     </view>
     <view class="picker-container">
       <view class="picker">
+        <!-- <ImagePicker/> -->
         <ValidationMain :challengeId="challengeId" />
       </view>
     </view>
