@@ -1,2 +1,4 @@
 language: java
-before_install: cd back
+before_install:
+- cd back
+- chmod +x gradlew
