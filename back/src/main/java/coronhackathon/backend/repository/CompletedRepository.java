@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CompletedRepository extends JpaRepository<HasCompleted, Long> {
+    //instead of Long it is possible it is HasCompletedId
     public List<HasCompleted> findByUser(User user);
 
     public List<HasCompleted> findByChallenge(Challenge challenge);
