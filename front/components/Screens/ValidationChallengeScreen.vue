@@ -23,7 +23,7 @@
     </view>
     <view class="picker-container">
       <view class="picker">
-        <ImagePicker/>
+        <ValidationMain :challengeId="challengeId" />
       </view>
     </view>
     <!-- On confirme la validation + on poste les détails de la validation   -->
@@ -143,6 +143,7 @@ export default {
   },
     data:   function() {
       return {
+          challengeId: this.navigation.state.params.challengeId,
           styles: styles,
           response:{
             commentary:"",

@@ -17,7 +17,9 @@ export default class ImagePickerExample extends React.Component {
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
         <Button title="Ajouter une photo" onPress={this._pickImage}/>
         {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        <Button title="Valider !" onPress={this._upload}/>
       </View>
+      
     );
   }
 
@@ -52,47 +54,13 @@ export default class ImagePickerExample extends React.Component {
     }
   };
 
-  _handleImagePicked = async pickerResult => {
-    let uploadResponse, uploadResult;
+ _upload = async () => {
+  if(this.state.image == null){
+    console.log(this.props.challengeId)
+    return
+  }
 
-    try {
-      this.setState({
-        uploading: true
-      });
-
-      if (!pickerResult.cancelled) {
-        uploadResponse = await uploadImageAsync(pickerResult.uri);
-        uploadResult = await uploadResponse.json();
-
-        this.setState({
-          image: uploadResult.location
-        });
-      }
-    } catch (e) {
-      console.log({ uploadResponse });
-      console.log({ uploadResult });
-      console.log({ e });
-      alert('Upload failed, sorry :(');
-    } finally {
-      this.setState({
-        uploading: false
-      });
-    }
-  };
-}
-
-async function uploadImageAsync(uri) {
-
-  // Note:
-  // Uncomment this if you want to experiment with local server
-  //
-  // if (Constants.isDevice) {
-  //   apiUrl = `https://your-ngrok-subdomain.ngrok.io/upload`;
-  // } else {
-  //   apiUrl = `http://localhost:3000/upload`
-  // }
-
-  let uriParts = uri.split('.');
+  let uriParts = this.state.image.split('.');
   let fileType = uriParts[uriParts.length - 1];
 
   // let formData = new FormData();
@@ -102,8 +70,9 @@ async function uploadImageAsync(uri) {
   //   type: `image/${fileType}`,
   // });
 
+  console.log("Got here !")
   let bodyFormData = new FormData();
-  bodyFormData.append('challengeId', this.navigation.state.params.challengeId);
+  bodyFormData.append('challengeId', this.props.challengeId);
   bodyFormData.append('commentary',this.review);
   bodyFormData.append('picture',""); //à changer
 
@@ -129,4 +98,5 @@ async function uploadImageAsync(uri) {
   // return fetch(apiUrl, options);
   // }
 
+}
 }
