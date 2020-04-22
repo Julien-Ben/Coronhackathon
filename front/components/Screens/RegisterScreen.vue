@@ -4,14 +4,30 @@
         <text class="title" :style="styles.myred">CONSVID la TÊTE</text>
         
         <text class="text-container">Choisis ton pseudo : </text>
-        <text-input class="input-container" placeholder="pseudo" v-model="username"/>
+        <text-input class="input-container" 
+          placeholder="pseudo" 
+          v-model="username" 
+          maxLength=15
+        />
         <text class="text-container">Mot de passe :</text>
-        <text-input class="input-container" placeholder="T<f~M4*@@e)Zq8~" secure-text-entry v-model="password"/>
+        <text-input class="input-container" 
+          placeholder="T<f~M4*@@e)Zq8~" 
+          secure-text-entry
+          maxLength=20 
+          v-model="password"
+        />
         <text class="text-container">Vérifie ton mot de passe :</text>
-        <text-input class="input-container" placeholder="T<f~M4*@@e)Zq8~" secure-text-entry v-model="verification"/>
-        <text class="verification-fail" v-if="password != verification || serverVerif">Les mots de passes sont différents!</text>
-        <text class="verification-fail" v-if="pseudoTaken">Ce pseudo est déjà utilisé :(</text>
-        <text class="login-fail" v-else></text>
+        <text-input class="input-container" 
+          placeholder="T<f~M4*@@e)Zq8~" 
+          secure-text-entry 
+          maxLength=20
+          v-model="verification"
+        />
+        <view class ="verification-container">
+          <text class="verification-fail" v-if="username.length < 4 && username.length > 0">Le pseudo doit contenir entre 4 et 15 caractères</text>
+          <text class="verification-fail" v-if="(password != verification || serverVerif) && verification.length > 0 ">Les mots de passes sont différents!</text>
+          <text class="verification-fail" v-if="pseudoTaken">Ce pseudo est déjà utilisé :(</text>
+        </view>
         <view class="login-container">
           <touchable-opacity :on-press="register">
            <text  class="login-btn" >Créer un compte</text>
@@ -45,6 +61,7 @@ export default {
         verification:'',
         serverVerif:false,
         pseudoTaken:false,
+        wrongPseudoFormat:false,
         styles: Stylesheet,
         loading: false,
     }
@@ -78,8 +95,13 @@ export default {
           if (error.response) {
             if(error.response.status == 417){ //Passwords are not the same
             self.serverVerif =true
-            } else if(error.response.status == 409){ //Pseudo already taken
+            }else if(error.response.status == 409){ //Pseudo already taken
             self.pseudoTaken =true
+            self.serverVerif = false
+            } else {
+              //Reset error booleans
+              self.serverVerif = false
+              self.pseudoTaken = false
             }
           }
           
@@ -138,9 +160,12 @@ export default {
 .verification-fail{
   width:100%;
   text-align: center;
-  min-height:30;
   font-size:20;
   color:rgb(248, 69, 108);
+}
+
+.verification-container{
+  min-height:50;
 }
 
 .login-container{
