@@ -11,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CompletedService {
@@ -123,6 +121,7 @@ public class CompletedService {
         }
         return l;
     }
+
 
     public List<Challenge> getCompletedChallengesByCategory(String username, long categoryId) {
         List<Challenge> l = new ArrayList<>();

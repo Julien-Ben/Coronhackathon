@@ -1,5 +1,6 @@
 package coronhackathon.backend.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import coronhackathon.backend.entity.Category;
 import coronhackathon.backend.entity.Challenge;
 
@@ -20,7 +21,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -143,6 +146,7 @@ public class mainController {
     }
 
 
+
     /**
      * Retrieve all users that complete challenge Challenge
      *
@@ -182,14 +186,32 @@ public class mainController {
     }
 
     /**
-     * Returns all the challenges stored in the database
+     * Returns nine of the challenges stored in the database
      *
-     * @return a list that contains all the challenges stored in the database
+     * @return a list that contains nine of the challenges stored in the database
      */
     @GetMapping("/api/nineChallenges")
     public List<Challenge> nineChallenges() {
         return challengeService.getNineChallenges();
     }
+
+
+    /**
+     * Returns nine the challenges stored in the database and if they are completed or not
+     *
+     * @return a list of nine challenges and a list of booleans (completed by the logged user or not)
+     */
+    @RequestMapping(path = "/api/nineChallengesBool", method = RequestMethod.GET)
+    public Map<String, Object> nineChallengesBool(Principal principal) {
+        HashMap<String, Object> map = new HashMap<>();
+        List<Challenge> lc = challengeService.getNineChallenges();
+        List<Boolean> lb =challengeService.getNineBoolean(principal.getName(), lc);
+        map.put("Challenge", lc);
+        map.put("Completed", lb);
+        return map;
+    }
+
+
 
     /**
      * Returns an Optional that contains a challenge with a specified id if it exists
@@ -246,6 +268,14 @@ public class mainController {
     @RequestMapping(path = "/api/getChallengeByCategory/{categoryId}", method = RequestMethod.GET)
     public List<Challenge> getChallengeByCategory(@PathVariable long categoryId) {
         return challengeService.getChallengeByCategory(categoryId);
+    }
+
+    @RequestMapping(path = "/api/getChallengeByCategoryBool/{categoryId}", method = RequestMethod.GET)
+    public Map<String, Object> getChallengeByCategoryBool(Principal principal, @PathVariable long categoryId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("Challenge", challengeService.getChallengeByCategory(categoryId));
+        map.put("Completed", challengeService.getChallengeBool(principal.getName(), categoryId));
+        return map;
     }
 
     /**
