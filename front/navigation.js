@@ -14,34 +14,200 @@ import CategoryScreen from "./components/Screens/CategoryScreen";
 import ValidationChallengeScreen from "./components/Screens/ValidationChallengeScreen";
 import ChallengesByCategoryScreen from "./components/Screens/ChallengesByCategoryScreen";
 
+const Covid19Tab = createStackNavigator(
+  {
+    Covid19: {
+      screen: CoronaScreen,
+      navigationOptions: {
+        title: 'COVID-19',
+        headerStyle: {
+          backgroundColor: '#ffffff',
+        },
+        headerTintColor: '#980740',
+        headerTitleStyle: {
+          fontWeight: '200',
+          fontSize: 30,
+        },        
+      }
+    },
+  },
+  )
+
 const CategoryTab = createStackNavigator(
     {
-        Category: CategoryScreen,
-        ChallengesByCategory : ChallengesByCategoryScreen,
-        ChallengeDetail : ChallengeDetailScreen,
-        Validation : ValidationChallengeScreen,
+      Category: {
+        screen: CategoryScreen,
+        navigationOptions: {
+          title: 'CATÉGORIES',
+          headerStyle: {
+            backgroundColor: '#3d9d84',
+          },
+          headerTintColor: '#ffffff',
+          headerTitleStyle: {
+            fontWeight: '200',
+            fontSize: 30,
+          },
+          headerBackTitle:"Catégories",
+        }
+      },
+        ChallengesByCategory: {
+          screen: ChallengesByCategoryScreen,
+          navigationOptions: {
+            title: '',
+            headerStyle: {
+              backgroundColor: '#3d9d84',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: '200',
+              fontSize: 30,
+            },
+            headerBackTitle:"Défis",
+          }
+        },
+        ChallengeDetail: {
+          screen: ChallengeDetailScreen,
+          navigationOptions: {
+            title: '',
+            headerStyle: {
+              backgroundColor: '#3d9d84',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: '200',
+              fontSize: 30,
+            },
+            headerBackTitle:"Défis",
+          }
+        },
+        Validation: {
+          screen: ValidationChallengeScreen,
+          navigationOptions: {
+            title: 'VALIDATION',
+            headerStyle: {
+              backgroundColor: '#3d9d84',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: '200',
+              fontSize: 30,
+            },
+          }
+        },
     },
 )
 
 const ChallengesTab = createStackNavigator(
     {
-        ChallengesScreen: ChallengesScreen,
-        ChallengeDetail : ChallengeDetailScreen,
-        Validation : ValidationChallengeScreen,
+      Challenges: {
+        screen: ChallengesScreen,
+        navigationOptions: {
+          title: 'DÉFIS',
+          headerStyle: {
+            backgroundColor: '#3d9d84',
+          },
+          headerTintColor: '#ffffff',
+          headerTitleStyle: {
+            fontWeight: '200',
+            fontSize: 30,
+          },
+          headerBackTitle:"Défis",
+        }
+      },
+        ChallengeDetail: {
+          screen: ChallengeDetailScreen,
+          navigationOptions: {
+            title: '',
+            headerStyle: {
+              backgroundColor: '#3d9d84',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: '200',
+              fontSize: 30,
+            },
+            headerBackTitle:"Défis",
+          }
+        },
+        Validation: {
+          screen: ValidationChallengeScreen,
+          navigationOptions: {
+            title: 'VALIDATION',
+            headerStyle: {
+              backgroundColor: '#3d9d84',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: '200',
+              fontSize: 30,
+            },
+            headerBackTitle:"Défis",
+          }
+        },
     },
+)
+
+const ProfilTab = createStackNavigator(
+  {
+    Profil: {
+      screen: ProfileScreen,
+      navigationOptions: {
+        title: 'PROFIL',
+        headerStyle: {
+          backgroundColor: '#3d9d84',
+        },
+        headerTintColor: 'white',
+        headerTitleStyle: {
+          fontWeight: '200',
+          fontSize: 30,
+        },
+        animationTypeForReplace: "pop",
+      }
+    },
+  },
+)
+
+
+const DetailsTab = createStackNavigator(
+  {
+    Details: {
+      screen: DetailsScreen,
+      navigationOptions: {
+        title: 'DÉTAILS',
+        headerStyle: {
+          backgroundColor: '#ffffff',
+        },
+        headerTintColor: 'black',
+        headerTitleStyle: {
+          fontWeight: '200',
+          fontSize: 30,
+        },
+        animationTypeForReplace: "pop",
+      }
+    },
+  },
 )
 
 const Tabs = createBottomTabNavigator(
     {
         "Covid-19" : {
-            screen : CoronaScreen,
+            screen : Covid19Tab,
             navigationOptions: {
                 tabBarIcon: ({ focused}) => {
                   let iconName = 'warning';
                   let color = focused ? '#980740' : 'gray';
                   return <AntDesign name={iconName} size={28} color={color} />;
                 },
-            }
+                title: 'Covid-19',
+              headerStyle: {
+                backgroundColor: '#f4511e',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            },
+            
         },
         "Catégories": {
             screen : CategoryTab,
@@ -61,10 +227,11 @@ const Tabs = createBottomTabNavigator(
                 let color = focused ? '#3d9d84' : 'gray';
                 return <MaterialCommunityIcons name={iconName} size={30} color={color}/>;
               },
+              gesturesEnabled: false,
             }
         },
         "Profil": {
-            screen : ProfileScreen,
+            screen : ProfilTab,
             navigationOptions: {
               tabBarIcon: ({ focused}) => {
                 let iconName = focused ? 'user': 'user-o';
@@ -74,7 +241,7 @@ const Tabs = createBottomTabNavigator(
             }
         },
         "Détails": {
-            screen : DetailsScreen,
+            screen : DetailsTab,
             navigationOptions: {
               tabBarIcon: ({ focused}) => {
                 let iconName = focused ? 'ios-information-circle': 
@@ -102,8 +269,12 @@ const StackNavigator = createStackNavigator(
         Tabs
     },
     {
-        headerMode: 'none'
-    }
+        headerMode: 'none',
+        navigationOptions: {
+          gesturesEnabled: false,
+        },
+    },
+    
   );
 
 
