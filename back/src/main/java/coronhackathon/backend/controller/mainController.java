@@ -660,7 +660,7 @@ public class mainController {
      * @param principal needed to know who is the current user
      * @return the list of all the user that asks the current user to be friend
      */
-    @RequestMapping(path = "/api/getRequest", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/getFriendRequests", method = RequestMethod.GET)
     public List<User> getFriendsRequests(Principal principal) {
         return friendsService.getFriendsRequests(getCurrentUser(principal));
     }
@@ -678,16 +678,14 @@ public class mainController {
 
 
     @PostMapping("/api/friendRequest")
-    public String friendRequest(Principal principal, @RequestParam String username) {
-        return friendsService.friendRequest(getCurrentUser(principal) ,username);
+    public String friendRequest(Principal principal, @RequestParam long userId) {
+        return friendsService.friendRequest(getCurrentUser(principal) ,userId);
     }
 
     @PostMapping("/api/acceptFriendRequest")
     public String acceptFriendRequest(Principal principal, @RequestParam long userId) {
         return friendsService.acceptFriendRequest(getCurrentUser(principal) ,userId);
     }
-
-
 
 
     /* --------------------------------------------*/

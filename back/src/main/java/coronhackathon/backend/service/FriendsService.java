@@ -47,7 +47,7 @@ public class FriendsService {
         List<User> friends = new ArrayList<>();
         for(Friends f : friendsRepository.findByUser2(user)) {
             if (!f.getCompleted()) {
-                friends.add(f.getUser2());
+                friends.add(f.getUser1());
             }
         }
         return friends;
@@ -68,10 +68,10 @@ public class FriendsService {
                 of2.isPresent() && of2.get().getCompleted();
     }
 
-    public String friendRequest(User currentUser, String username) {
-        Optional<User> ou = userRepository.findByUsername(username);
+    public String friendRequest(User currentUser, long userId) {
+        Optional<User> ou = userRepository.findById(userId);
         if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with username : " + username + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with userId : " + userId + " not found");
         User user = ou.get();
         Optional<Friends> of1 = friendsRepository.findByUser1AndUser2(currentUser, user);
         Optional<Friends> of2 = friendsRepository.findByUser1AndUser2(user, currentUser);
@@ -81,8 +81,8 @@ public class FriendsService {
             if (f1.getCompleted())
                 return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are already friends";
             else
-                return "user : " + user.getUsername() + " has already asked " +
-                        "" + currentUser.getUsername() + " to be his/her friend";
+                return "user : " + currentUser.getUsername() + " has already asked " +
+                        "" + user.getUsername() + " to be his/her friend";
         }else if (of2.isPresent()) {//if user already asked currentUser to be his/her friend
                                     //and currentUser has or has not already answered
             Friends f2 = of2.get();
@@ -102,12 +102,13 @@ public class FriendsService {
         if (!ou.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
         User user = ou.get();
-        Optional<Friends> of = friendsRepository.findByUser1AndUser2(currentUser, user);
+        Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
         if (!of.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
                     "" + currentUser.getUsername() + " to be his/her friend.");
         }
-        of.get().setCompleted(true);
+        of.get().setCompleted(true); //don't work
+        of.get().setUser1(new User());
         return ""+currentUser.getUsername()+" and "+ou.get().getUsername()+" are now friends";
     }
 }
