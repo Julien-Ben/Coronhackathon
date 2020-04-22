@@ -2,6 +2,7 @@
 <view>
   
 <scroll-view class="scroll">
+  <!-- Liste des infos + des liens -->
     <view class="container" v-for="(element, index) in content" :key="index">
       <text class="title">{{element.title}}</text>
       <text v-if="element.text" class="para">{{element.text}}</text>
@@ -9,6 +10,15 @@
         <href color = "#eea8c4" v-bind:url="link.url" v-bind:name="link.name" />
       </view>
     </view>
+
+    <!-- Bouton pour aller au DetailScreen -->
+     <!--<touchable-opacity class="container-btn" :on-press="accessDetailsScreen" :style=styles.defaultPrimaryColor>
+        <text class="detailScreen-btn" :style=styles.textPrimaryColor>Qui sommes-nous ?</text>
+     </touchable-opacity>-->
+    <touchable-opacity class="container-btn" :on-press="accessDetailsScreen" >
+        <text class="detailScreen-btn">Qui sommes-nous ?</text>
+     </touchable-opacity>
+
 </scroll-view>
 </view>
 </template>
@@ -66,12 +76,31 @@
   top : 500px;
   left: 10px;
 }
+.container-btn {
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 60px;
+}
+.detailScreen-btn{
+    font-size: 20;
+    color: #eea8c4;
+    justify-content:center;
+    
+    
+}
 
 </style>
 <script>
+import styles from "../../palette.js"
 import href from "../href.vue";
 import {StatusBar} from 'react-native';
 export default {
+   props: {
+      navigation: {
+        type: Object
+      }
+    },
   components : {
     href
   },
@@ -122,6 +151,12 @@ export default {
         },
         ],
     }
+  },
+  methods: {
+
+    accessDetailsScreen : function(){
+        this.navigation.navigate("Details")
+    },
   }
 }
 </script>
