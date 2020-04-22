@@ -1,14 +1,11 @@
 <template>
-  <view class="container" :style=styles.lightPrimaryColor>
-
+  <view class="container" > 
+    <!-- :style=styles.lightPrimaryColor -->
     <scroll-view class="scroll">
-      <view class="header" :style=styles.defaultPrimaryColor>
-        <view class="logo-container">
-        <image class='logo'
-          :source="{uri: baseURL + '/static/image/jpg?path=resources/white_logo_entraide.png'}"
-        />
-        </view>
-        <text class="title" :style=styles.textPrimaryColor>{{titre}}</text>
+      <view class ="header">
+      
+      <text class="title">{{titre}}</text>
+      <view class="sep"></view>
       </view>
 
       <view class="main">
@@ -80,32 +77,28 @@
   
 }
 
-.header{
-  flex-direction: row;
+.header {
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
+  margin-bottom: 20;
+}
+
+.sep{
   width: 80%;
-  height:90;
-  border-bottom-right-radius: 15;
-  /* margin-bottom:30; */
-}
-
-.logo-container{
-  width:30%;
   align-items: center;
+  border-color:#3d9d84;
+  border-bottom-width: 2;
+  padding-bottom: 20;
+  
+  
 }
-
-.logo{
-    /* transform: rotate(30deg); */
-    width : 80;
-    height : 80;
-}
-
-.title{
-    font-size:30;
-    font-weight: 200;
-    width: 70%;
-    text-align: center;
+.title {
+  font-size: 40px;
+  font-weight: 200;
+  color:#3d9d84;
+  margin-top:20;
+  max-width:90%;
+  text-align: center;
 }
 
 .main{
@@ -129,9 +122,7 @@
 }
 
 .desc-container{
-    border-top-width: 2;
-    border-color:#3d9d84;
-    max-width: 80%;
+    max-width: 70%;
     justify-content: center;
     align-items: center;
     padding: 10;
@@ -139,8 +130,8 @@
     margin-bottom:30;
 }
 .desc{
-    color : #2c3c74;
     font-size:20;
+    color : #4e4e4e;
     /* text-align: center; */
 }
 
@@ -164,11 +155,7 @@
   padding-bottom: 30;
 }
 
-.sep{
- width:80%;
- border-top-width: 2;
- border-color:#3d9d84;
-}
+
 
 .comment-title-container{
   width:100%;
@@ -178,7 +165,7 @@
 
 .comment-title{
   font-size:25;
-  color : #2c3c74;
+  color : #3d9d84;
   width:80%;
 }
 
@@ -187,21 +174,21 @@
   align-items: center;
 }
 .comments{
-  width:90%;
+  width:100%;
   padding-bottom:100;
   align-items: center;
 }
 
 .comment-container{
   border-bottom-width: 1;
-  border-color:#3d9d84;
+  border-color:gray;
   width:100%;
-  padding:20;
+  padding:30;
   
 }
 
 .comment{
-  color :#1d3060;
+  color :#4e4e4e;
   font-size: 20;
 
 }

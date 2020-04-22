@@ -1,9 +1,7 @@
 <template>
     <view class="real-container">
-        <view class="container" :style=styles.lightPrimaryColor>
-            <view class="header" :style=styles.defaultPrimaryColor>
-              <text class="title" :style=styles.textPrimaryColor>Catégories</text>
-            </view>
+        <view class="container">
+            
             <view class ="main">
                 <view class="categories">
                         <view class="category" v-for="(category, index) in categories" :key="index">
@@ -22,13 +20,13 @@
 
 <style>
 
-.header{
+/* .header{
     width: 100%;
     height: 10%;
     justify-content: center;
     align-items: center;
-    /* margin-bottom: 50; */
-}
+    background-color: #3d9d84;
+} */
 
 .title{
     font-size: 40;
@@ -44,7 +42,8 @@
 .main {
     justify-content: center;
     align-items: center;
-    height:90%;
+    /* height:90%; */
+    height:100%;
 }
 .categories{
     padding-top: 50;
@@ -71,6 +70,7 @@
     align-items: center;
     text-align: center;
     font-weight:200;
+    font-size:15;
     color:#2c3c74;
 }
 
@@ -99,12 +99,12 @@ export default {
         styles: styles,
         baseURL:baseURL,
         categories: [
-            {
-                name: "Hardcodé 1",
-            },
-            {
-                name: "Hardcodé 2",
-            },
+            // {
+            //     name: "Hardcodé 1",
+            // },
+            // {
+            //     name: "Hardcodé 2",
+            // },
         ]
     }
   },
