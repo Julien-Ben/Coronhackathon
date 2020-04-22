@@ -1,18 +1,28 @@
-E<template>
+<template>
+  <view class="container">
+    <!-- <view class ="header">
   <view class="container" :style=styles.lightPrimaryColor>
     <view class ="header" :style=styles.defaultPrimaryColor>
       <view>
       <text class="title" :style=styles.textPrimaryColor>Listes des Défis</text>
       </view>
-      <!-- <touchable-opacity class = "corona-touchable" :on-press="() => goToCorona()">
-        <image class = "corona-icon" :source="require('../../assets/images/challengescreen/virus-lab-scientist-biology-cell-medical-512.png')"/>
-      </touchable-opacity> -->
-    </view>
+    </view> -->
      <ChallengeList :challenges="challenges" :goToChallenge="goToChallenge"/>
   </view>
 </template>
 
 <style>
+
+/* .header {
+  height : 10%;
+  justify-content: center;
+  align-items: center;
+  background-color: #3d9d84;
+  color:white;
+  flex-direction: row;
+  justify-content: space-around;
+} */
+
 .header {
   height : 10%;
   justify-content: center;

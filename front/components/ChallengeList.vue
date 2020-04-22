@@ -33,6 +33,7 @@
   /* background-color: grey; */
   width:80%;
   
+  
 }
 .challenge-title {
   font-size: 20;
@@ -40,8 +41,8 @@
   padding-bottom:10;
 }
 
-.challenge-description {
-  font-size : 10;
+.challenge-desc {
+  color:#4e4e4e;
 }
 
 .challenge-icon {

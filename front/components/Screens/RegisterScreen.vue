@@ -3,19 +3,21 @@
       <view class ="container">
         <text class="title" :style="styles.myred">CONSVID la TÊTE</text>
         
-        <text class="text-container">Pseudo : </text>
-        <text-input class="input-container" placeholder="username" v-model="username"/>
+        <text class="text-container">Choisis ton pseudo : </text>
+        <text-input class="input-container" placeholder="pseudo" v-model="username"/>
         <text class="text-container">Mot de passe :</text>
-        <text-input class="input-container" placeholder="password" secure-text-entry v-model="password"/>
-        <text class="login-fail" v-if="loginFail">Mauvaise combinaison</text>
+        <text-input class="input-container" placeholder="T<f~M4*@@e)Zq8~" secure-text-entry v-model="password"/>
+        <text class="text-container">Vérifie ton mot de passe :</text>
+        <text-input class="input-container" placeholder="T<f~M4*@@e)Zq8~" secure-text-entry v-model="verification"/>
+        <text class="verification-fail" v-if="password != verification">Les mots de passes sont différents!</text>
         <text class="login-fail" v-else></text>
-        <view class="login-container"> 
-          <touchable-opacity :on-press="login">
-           <text  class="login-btn">Se connecter</text>
-          </touchable-opacity>
-          <touchable-opacity :on-press="goToRegister">
-           <text  class="login-btn" >S'enregistrer</text>
-          </touchable-opacity>
+        <view class="login-container">
+          <touchable-opacity :on-press="register">
+           <text  class="login-btn" >Créer un compte</text>
+           </touchable-opacity>
+           <touchable-opacity :on-press="goToLogin">
+           <text  class="login-btn">Retour</text>
+           </touchable-opacity>
         </view>
       </view>
        <view class="loading-container">
@@ -39,45 +41,42 @@ export default {
     return {
         username:'',
         password:'',
+        verification:'',
         styles: Stylesheet,
         loading: false,
-        loginFail: false,
     }
   },
   methods: {
-    login () {
+    register () {
         this.loading = true
         var bodyFormData = new FormData();
         bodyFormData.append('username', this.username);
-        bodyFormData.append('password', this.password);
+        bodyFormData.append('hashPwd', this.password);
+        bodyFormData.append('hashPwd2', this.verification);
         const self = this;
         request({
         method: 'post',
-        url: '/login',
+        url: '/register', //A modifier ?
         data: bodyFormData,
         headers: {'Content-Type': 'multipart/form-data' }
         }).then(function(response){
-           //console.log(response)
+           console.log(response)
           if(response != undefined && response.status == 200){
               self.navigation.navigate("Défis")
               self.loading = false
-              self.loginFail = false
           } else{
           }
         }).catch(function(error){
           self.loading = false
-          self.loginFail = true
           console.log(error)
 
         })
     },
-    goToRegister() {
-      this.navigation.navigate("RegisterScreen")
+    goToLogin() {
+      this.navigation.navigate("Home")
     }
   },
   mounted: function() {
-      this.username = 'Julien Le Vig'
-      this.password = '1234'
   }
 };
 </script>
@@ -119,7 +118,7 @@ export default {
   margin-bottom: 20;
 }
 
-.login-fail{
+.verification-fail{
   width:100%;
   text-align: center;
   min-height:30;
@@ -144,6 +143,7 @@ export default {
   background-color: #EEAAEE;
   color:white;
 }
+
 
 
 </style>
