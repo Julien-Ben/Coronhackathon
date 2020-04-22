@@ -5,6 +5,7 @@ import coronhackathon.backend.entity.Challenge;
 
 import coronhackathon.backend.entity.Tag;
 import coronhackathon.backend.entity.User;
+import coronhackathon.backend.repository.FriendsRepository;
 import coronhackathon.backend.service.*;
 import coronhackathon.backend.service.ChallengeService;
 import coronhackathon.backend.service.UserService;
@@ -37,6 +38,8 @@ public class mainController {
     private CategoryService categoryService;
     @Autowired
     private TagOfChallengeService tagOfChallengeService;
+    @Autowired
+    private FriendsService friendsService;
 
     //TODO delete this test method when not needed anymore
     @GetMapping("/ping")
@@ -636,4 +639,47 @@ public class mainController {
         completedService.setPath(userId, challengeId, destinationPath);
         return destinationPath;
     }
+
+
+    /* --------------------------------------------*/
+    /*-------------FRIENDS REQUESTS--------------- */
+    /* --------------------------------------------*/
+
+    /**
+     * Returns the list of all the friends of the current user ordered by the number of completed Challenges
+     *
+     * @param principal needed to know who is the current user
+     * @return A list with the friends of the current user ordered by the number of completed Challenges
+     */
+    @RequestMapping(path = "/api/getFriends", method = RequestMethod.GET)
+    public List<User> getFriendsOrderByCompletedChallenges(Principal principal) {
+        User user = userService.getUserByUsername(principal.getName()).get();
+        return friendsService.getFriendsOrderByCompletedChallenges(user);
+    }
+
+    /**
+     * Returns the list of all the user that asks the current user to be friend
+     *
+     * @param principal needed to know who is the current user
+     * @return the list of all the user that asks the current user to be friend
+     */
+    @RequestMapping(path = "/api/getRequest", method = RequestMethod.GET)
+    public List<User> getFriendsRequests(Principal principal) {
+        User user = userService.getUserByUsername(principal.getName()).get();
+        return friendsService.getFriendsRequests(user);
+    }
+
+    /**
+     * Tell if user1 is friend with user2
+     * user1 is friend with user 2 iff user2 is friend with user1
+     *
+     * @return true if it is the case false otherwise
+     */
+    @RequestMapping(path = "/api/getRequest/{user1Id}/{user2Id}", method = RequestMethod.GET)
+    public List<User> getFriendsRequests(@PathVariable long user1Id, @PathVariable long user2Id) {
+        return friendsService.isFriend(user1Id,user2Id);
+    }
+
+
+
 }
