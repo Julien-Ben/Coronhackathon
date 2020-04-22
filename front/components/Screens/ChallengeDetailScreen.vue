@@ -1,14 +1,11 @@
 <template>
-  <view class="container">
-
+  <view class="container" > 
+    <!-- :style=styles.lightPrimaryColor -->
     <scroll-view class="scroll">
-      <view class="header">
-        <view class="logo-container">
-        <image class='logo'
-          :source="{uri: baseURL + '/static/image/jpg?path=resources/white_logo_entraide.png'}"
-        />
-        </view>
-        <text class="title">{{titre}}</text>
+      <view class ="header">
+      
+      <text class="title">{{titre}}</text>
+      <view class="sep"></view>
       </view>
 
       <view class="main">
@@ -20,8 +17,8 @@
         <view class="desc-container">
           <text class="desc">{{description}}</text>
         </view>
-        <touchable-opacity class="container-btn" :on-press="accessChallengeValidation">
-        <text class="validation-btn">Valider ce challenge</text>
+        <touchable-opacity class="container-btn" :on-press="accessChallengeValidation" :style=styles.defaultPrimaryColor>
+        <text class="validation-btn" :style=styles.textPrimaryColor>Valider ce challenge</text>
         </touchable-opacity>
         
       </view>
@@ -62,14 +59,12 @@
         </view>
       </view>
     </scroll-view>
-    <view class="footer"></view>
   </view>
 </template>
 
 
 <style>
 .container {
-  background-color: #b2ebcc;
   align-items: center;
   justify-content: center;
   /* flex: 1; */
@@ -82,34 +77,28 @@
   
 }
 
-.header{
-  flex-direction: row;
+.header {
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
+  margin-bottom: 20;
+}
+
+.sep{
   width: 80%;
-  height:90;
-  background-color: #3d9d84;
-  border-bottom-right-radius: 15;
-  /* margin-bottom:30; */
-}
-
-.logo-container{
-  width:30%;
   align-items: center;
+  border-color:#3d9d84;
+  border-bottom-width: 2;
+  padding-bottom: 20;
+  
+  
 }
-
-.logo{
-    /* transform: rotate(30deg); */
-    width : 80;
-    height : 80;
-}
-
-.title{
-    color : white ; /*#1d3060*/
-    font-size:30;
-    font-weight: 200;
-    width: 70%;
-    text-align: center;
+.title {
+  font-size: 40px;
+  font-weight: 200;
+  color:#3d9d84;
+  margin-top:20;
+  max-width:90%;
+  text-align: center;
 }
 
 .main{
@@ -133,9 +122,7 @@
 }
 
 .desc-container{
-    border-top-width: 2; 
-    border-color:#3d9d84;
-    max-width: 80%;
+    max-width: 70%;
     justify-content: center;
     align-items: center;
     padding: 10;
@@ -143,19 +130,17 @@
     margin-bottom:30;
 }
 .desc{
-    color : #2c3c74;
     font-size:20;
+    color : #4e4e4e;
     /* text-align: center; */
 }
 
 .container-btn {
   border-radius: 25;
-  background-color:#3d9d84;
   margin-bottom:30;
 }
 .validation-btn{
     font-size: 20;
-    color: white;
     padding-top: 10;
     padding-bottom: 10;
     padding-left: 20;
@@ -170,11 +155,7 @@
   padding-bottom: 30;
 }
 
-.sep{
- width:80%;
- border-top-width: 2;
- border-color:#3d9d84;
-}
+
 
 .comment-title-container{
   width:100%;
@@ -184,7 +165,7 @@
 
 .comment-title{
   font-size:25;
-  color : #2c3c74;
+  color : #3d9d84;
   width:80%;
 }
 
@@ -193,29 +174,23 @@
   align-items: center;
 }
 .comments{
-  width:90%;
+  width:100%;
   padding-bottom:100;
   align-items: center;
 }
 
 .comment-container{
   border-bottom-width: 1;
-  border-color:#3d9d84;
+  border-color:gray;
   width:100%;
-  padding:20;
+  padding:30;
   
 }
 
 .comment{
-  color :#1d3060;
+  color :#4e4e4e;
   font-size: 20;
 
-}
-
-.footer{
-  background-color:white;
-  height:10%;
-  width:100%;
 }
 
 </style>
@@ -225,6 +200,7 @@
 import {request, baseURL} from '../../api.js';
 import { Alert } from 'react-native';
 import axios from "axios";
+import styles from "../../palette.js"
 
 export default {
   props: {
@@ -234,6 +210,7 @@ export default {
     },
   data: function() {
     return {
+        styles: styles,
         titre:'',
         description:'',
         categoryId:'',
@@ -272,7 +249,6 @@ export default {
         url: '/api/getCommentsOfChallenge/'+this.navigation.state.params.challengeId
         }).then(function(response){
           self.commentaires =response.data;
-          console.log(response.data)
           self.getImageCategory();
         }).catch(function(error){
           console.log(error);

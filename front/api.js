@@ -18,4 +18,6 @@ request.interceptors.response.use(function (response) {
       //todo redirect the user to the login page with the router
     }
     return Promise.reject(error)
-})
+  })
+
+  export default request

@@ -1,4 +1,6 @@
 <template>
+<view>
+  
 <scroll-view class="scroll">
     <view class="container" v-for="(element, index) in content" :key="index">
       <text class="title">{{element.title}}</text>
@@ -8,6 +10,7 @@
       </view>
     </view>
 </scroll-view>
+</view>
 </template>
 
 <style>
@@ -67,6 +70,7 @@
 </style>
 <script>
 import href from "../href.vue";
+import {StatusBar} from 'react-native';
 export default {
   components : {
     href

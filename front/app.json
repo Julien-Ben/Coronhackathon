@@ -24,6 +24,11 @@
     "ios": {
       "supportsTablet": true
     },
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "hidden": false,
+      "translucent": false
+    },
     "packagerOpts": {
       "config": "metro.config.js",
       "sourceExts": [
