@@ -254,7 +254,6 @@ const Tabs = createBottomTabNavigator(
               },
             }
         },
-
     },
     {
         tabBarOptions: {
