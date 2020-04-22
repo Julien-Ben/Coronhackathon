@@ -1,3 +1,3 @@
 .DS_STORE
-back/h2-DB.mv.db
-front/api.js
+#back/h2-DB.mv.db
+#front/api.js
