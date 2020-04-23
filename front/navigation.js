@@ -5,6 +5,7 @@ import { StyleSheet, Image, Easing, Animated } from 'react-native';
 import { Ionicons, FontAwesome, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import LoginScreen from "./components/Screens/LoginScreen";
+import RegisterScreen from "./components/Screens/RegisterScreen";
 import CoronaScreen from "./components/Screens/CoronaScreen";
 import DetailsScreen from "./components/Screens/DetailsScreen";
 import ProfileScreen from "./components/Screens/ProfileScreen";
@@ -30,6 +31,20 @@ const Covid19Tab = createStackNavigator(
         },        
       }
     },
+    Details: {
+      screen : DetailsScreen,
+      navigationOptions: {
+        title: 'QUI SOMMES-NOUS',
+            headerStyle: {
+              backgroundColor: '#3d9d84',
+            },
+            headerTintColor: '#ffffff',
+            headerTitleStyle: {
+              fontWeight: '200',
+              fontSize: 30,
+            },
+      }
+  }
   },
   )
 
@@ -168,25 +183,25 @@ const ProfilTab = createStackNavigator(
 )
 
 
-const DetailsTab = createStackNavigator(
-  {
-    Details: {
-      screen: DetailsScreen,
-      navigationOptions: {
-        title: 'DÉTAILS',
-        headerStyle: {
-          backgroundColor: '#ffffff',
-        },
-        headerTintColor: 'black',
-        headerTitleStyle: {
-          fontWeight: '200',
-          fontSize: 30,
-        },
-        animationTypeForReplace: "pop",
-      }
-    },
-  },
-)
+// const DetailsTab = createStackNavigator(
+//   {
+//     Details: {
+//       screen: DetailsScreen,
+//       navigationOptions: {
+//         title: 'DÉTAILS',
+//         headerStyle: {
+//           backgroundColor: '#ffffff',
+//         },
+//         headerTintColor: 'black',
+//         headerTitleStyle: {
+//           fontWeight: '200',
+//           fontSize: 30,
+//         },
+//         animationTypeForReplace: "pop",
+//       }
+//     },
+//   },
+// )
 
 const Tabs = createBottomTabNavigator(
     {
@@ -240,17 +255,6 @@ const Tabs = createBottomTabNavigator(
               },
             }
         },
-        "Détails": {
-            screen : DetailsTab,
-            navigationOptions: {
-              tabBarIcon: ({ focused}) => {
-                let iconName = focused ? 'ios-information-circle': 
-                'ios-information-circle-outline';
-                let color = focused ? '#fedff2' : 'gray';
-                return <Ionicons name={iconName} size={30} color={color}/>;
-              },
-            }
-        }
     },
     {
         tabBarOptions: {
@@ -266,6 +270,7 @@ const Tabs = createBottomTabNavigator(
 const StackNavigator = createStackNavigator(
     {
         Home: LoginScreen,
+        RegisterScreen,
         Tabs
     },
     {

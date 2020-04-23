@@ -9,9 +9,13 @@
         <text-input class="input-container" placeholder="password" secure-text-entry v-model="password"/>
         <text class="login-fail" v-if="loginFail">Mauvaise combinaison</text>
         <text class="login-fail" v-else></text>
-        <view class="login-container">
-           <text  class="login-btn" :on-press="login">Log in</text>
-           <text  class="login-btn" :on-press="goToTabNavigator">Bypass login</text>
+        <view class="login-container"> 
+          <touchable-opacity :on-press="login">
+           <text  class="login-btn">Se connecter</text>
+          </touchable-opacity>
+          <touchable-opacity :on-press="goToRegister">
+           <text  class="login-btn" >S'enregistrer</text>
+          </touchable-opacity>
         </view>
       </view>
        <view class="loading-container">
@@ -57,6 +61,7 @@ export default {
           if(response != undefined && response.status == 200){
               self.navigation.navigate("Défis")
               self.loading = false
+              self.loginFail = false
           } else{
           }
         }).catch(function(error){
@@ -66,8 +71,8 @@ export default {
 
         })
     },
-    goToTabNavigator() {
-      this.navigation.navigate("Défis")
+    goToRegister() {
+      this.navigation.navigate("RegisterScreen")
     }
   },
   mounted: function() {
@@ -126,12 +131,15 @@ export default {
   margin-top: 10;
   width: 100%;
   border-radius: 10;
-  justify-content: space-between;
-  flex-direction: row;
+  /* justify-content: space-between; */
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-btn {
   padding: 20;
+  margin-bottom:20;
   font-size: 22;
   background-color: #EEAAEE;
   color:white;
