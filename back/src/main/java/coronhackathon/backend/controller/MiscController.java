@@ -25,7 +25,12 @@ public class MiscController {
     )
     public @ResponseBody
     byte[] getJPG(@RequestParam String path) throws IOException {
-        return Files.readAllBytes(Paths.get("src/main/" + path));
+        if(path.contains("resources/")){
+            return Files.readAllBytes(Paths.get("src/main/" + path));
+        }
+        else {
+            return new byte[]{};
+        }
     }
 
     /**
@@ -42,7 +47,12 @@ public class MiscController {
     )
     public @ResponseBody
     byte[] getPNG(@RequestParam String path) throws IOException {
-        return Files.readAllBytes(Paths.get("src/main/" + path));
+        if(path.contains("resources/")){
+            return Files.readAllBytes(Paths.get("src/main/" + path));
+        }
+        else {
+            return new byte[]{};
+        }
     }
 
 
