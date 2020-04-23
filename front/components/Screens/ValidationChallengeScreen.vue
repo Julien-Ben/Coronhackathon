@@ -7,6 +7,7 @@
       <view class="sep"></view>
     </view>
     <ValidationMain :challengeId="challengeId" />
+    
 </view>
 </scroll-view>
 </template>
@@ -102,7 +103,6 @@ import { Alert } from 'react-native';
 import {request} from '../../api.js';
 import React from 'react';
 import {Text} from 'react-native';
-import ImagePicker from '../ImagePicker';
 import ValidationMain from '../ValidationMain';
 import styles from "../../palette.js"
 
@@ -113,7 +113,6 @@ export default {
       }
   },
   components: {
-    ImagePicker,
     ValidationMain
   },
     data:   function() {

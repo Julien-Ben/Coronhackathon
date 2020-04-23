@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Image, View, TextInput,TouchableOpacity, Text ,StyleSheet} from 'react-native';
+import { ActivityIndicator, Image, View, TextInput,TouchableOpacity, Text ,StyleSheet} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
@@ -10,11 +10,12 @@ export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
     commentary: "",
+    animating:false,
   };
 
   render() {
     let { image } = this.state;
-
+    const animating = this.state.animating;
     return (
       <View style={styles.main}>
         <View style={styles.descContainer}>
@@ -38,9 +39,15 @@ export default class ImagePickerExample extends React.Component {
             </View>
           </View>
         </View>
+
         <TouchableOpacity style={[palette.defaultPrimaryColor, styles.containerBtn]} onPress={this._submitValidation}> 
           <Text  style={[palette.textPrimaryColor, styles.validationBtn]}>Valider !</Text>
         </TouchableOpacity>
+        <ActivityIndicator
+               animating = {animating}
+               color = '#3d9d84'
+               size = "large"
+        />
       </View>
     );
   }
@@ -81,6 +88,7 @@ export default class ImagePickerExample extends React.Component {
   };
 
   _submitValidation = async () => {
+    this.setState({animating: true })
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
     bodyFormData.append('commentary',this.state.commentary);
@@ -96,19 +104,19 @@ export default class ImagePickerExample extends React.Component {
       bodyFormData.append('imgBase64',"");
       bodyFormData.append('imgFormat', ""); 
     }
-
+    const self = this;
     request({
       method: 'post',
       url : '/api/completeMyChallenge',
       data : bodyFormData,
       headers: {'Content-Type':'multipart/form-data'}
     }).then(function(response){
-
+      self.setState({animating: false})
       console.log("Got here then!")
       console.log(response.status)
-
+      
     }).catch(function(error){
-
+      self.setState({animating: false})
       console.log("Got here catch!")
       console.log(error.response.data.status)
       console.log(error.response.data.error)
