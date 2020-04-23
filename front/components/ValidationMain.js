@@ -36,7 +36,7 @@ export default class ImagePickerExample extends React.Component {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={[palette.defaultPrimaryColor, styles.containerBtn]} onPress={this._uploadImage}> 
+        <TouchableOpacity style={[palette.defaultPrimaryColor, styles.containerBtn]} onPress={this._submitValidation}> 
           <Text  style={[palette.textPrimaryColor, styles.validationBtn]}>Valider !</Text>
         </TouchableOpacity>
       </View>
@@ -130,6 +130,7 @@ export default class ImagePickerExample extends React.Component {
     }).then(function(response){
       console.log("Got here then!")
       console.log(response)
+      self._uploadImage()
     }).catch(function(error){
       console.log("Got here catch!")
       console.log(error.response)
