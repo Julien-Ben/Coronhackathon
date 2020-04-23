@@ -8,8 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface CompletedRepository extends JpaRepository<HasCompleted, Long> {
-    //instead of Long it is possible it is HasCompletedId
+public interface CompletedRepository extends JpaRepository<HasCompleted, HasCompletedId> {
     public List<HasCompleted> findByUser(User user);
 
     public List<HasCompleted> findByChallenge(Challenge challenge);
