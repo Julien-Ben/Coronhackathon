@@ -34,6 +34,9 @@ public class CompletedService {
     @Autowired
     private UserService userService;
 
+    public long getNumberOfCompletedChallenges(long userId){
+        return getCompletedChallenges(userId).size();
+    }
 
     public List<Challenge> getCompletedChallenges(long userId) {
         List<Challenge> l = new ArrayList<Challenge>();
@@ -130,6 +133,7 @@ public class CompletedService {
         }
         return l;
     }
+
 
     public List<Challenge> getCompletedChallengesByCategory(String username, long categoryId) {
         List<Challenge> l = new ArrayList<>();

@@ -6,32 +6,7 @@
       <text class="title">{{challenge}}</text>
       <view class="sep"></view>
     </view>
-
-    <!-- Box "rajouter une description" + on la récupère pour la poster  -->
     <ValidationMain :challengeId="challengeId" />
-    <!-- <view class="main">
-    <view class="desc-container">
-      <text class="input-title"></text>
-      <view class="input-container">
-        <text-input class = "input-text" 
-        placeholder="Commente ce que tu as réalisé !" 
-        v-model= "review"
-        multiline
-        placeholderTextColor="grey"
-        textAlignVertical="top"
-        />
-      </view>
-    </view>
-    <view class="picker-container">
-      <view class="picker">
-        <ValidationMain :challengeId="challengeId" /> 
-      </view>
-    </view>
-    <touchable-opacity class="container-btn" :on-press="challengeValidation" :style=styles.defaultPrimaryColor>
-      <text class="validation-btn" :style=styles.textPrimaryColor>Valider !</text>
-    </touchable-opacity>
-
-    </view> -->
 </view>
 </scroll-view>
 </template>

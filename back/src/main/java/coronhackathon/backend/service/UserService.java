@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public class UserService {
     }
 
     public void insert(User user) {
-        if (userRepository.findByUsernameContains(user.getUsername()))
+        if (userRepository.findByUsername(user.getUsername()).isPresent())
             throw new ResponseStatusException(HttpStatus.CONFLICT, "user with username : " + user.getUsername() + " already exists");
         userRepository.save(user);
     }
@@ -44,16 +45,16 @@ public class UserService {
      * Username must be unique and that the two hashes match
      * we must store encoded passwords as spring security expects
      */
-    public Optional<User> register(String username, String hashPwd, String hashPwd2) {
+    public Optional<User> register(String username, String pwd, String pwdBis) {
         //if passwords match
-        if (hashPwd.equals(hashPwd2)) {
+        if (pwdBis.equals(pwd)) {
             // if the username is new
             if (!userRepository.findByUsername(username).isPresent()) {
 
                 User user = new User();
                 user.setUsername(username);
                 // Store encoded passwords
-                user.setPwdHash(passwordEncoder.encode(hashPwd));
+                user.setPwdHash(passwordEncoder.encode(pwd));
 
                 insert(user);
                 return Optional.of(user);
@@ -61,7 +62,7 @@ public class UserService {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "user with username : " + username + " already exists");
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "passwords are not the same");
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "passwords dont match");
         }
     }
 }

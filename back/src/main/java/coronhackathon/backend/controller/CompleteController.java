@@ -1,25 +1,16 @@
 package coronhackathon.backend.controller;
 
-import coronhackathon.backend.entity.User;
 import coronhackathon.backend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.util.Base64;
 
 @RestController
 public class CompleteController {
     @Autowired
     private CompletedService completedService;
-    @Autowired
-    private UserService userService;
 
     /**
      * Marks user and challenge as completed.
