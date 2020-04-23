@@ -67,7 +67,7 @@ public class ChallengeController {
     }
 
     /**
-     * Returns nine the challenges stored in the database and if they are completed or not
+     * Returns nine of the challenges stored in the database and if they are completed or not
      *
      * @return a list of nine challenges and a list of booleans (completed by the logged user or not)
      */
