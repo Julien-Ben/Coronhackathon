@@ -7,7 +7,6 @@
       <view class="sep"></view>
     </view>
     <ValidationMain :challengeId="challengeId" />
-    
 </view>
 </scroll-view>
 </template>

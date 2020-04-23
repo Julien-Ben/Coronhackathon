@@ -37,7 +37,7 @@ public class CompletedService {
     public long getNumberOfCompletedChallenges(long userId){
         return getCompletedChallenges(userId).size();
     }
-
+    
     public List<Challenge> getCompletedChallenges(long userId) {
         List<Challenge> l = new ArrayList<Challenge>();
         Optional<User> ou = userRepository.findById(userId);
@@ -135,7 +135,6 @@ public class CompletedService {
         }
         return l;
     }
-
 
     public List<Challenge> getCompletedChallengesByCategory(String username, long categoryId) {
         List<Challenge> l = new ArrayList<>();
