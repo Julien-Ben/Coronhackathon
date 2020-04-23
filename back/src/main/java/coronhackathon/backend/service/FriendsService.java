@@ -24,25 +24,7 @@ public class FriendsService {
     @Autowired
     private CompletedService completedService;
 
-    public List<User> getFriendsOrderByCompletedChallenges(User user) {
-        List<User> friends = new ArrayList<>();
-        for(Friends f : friendsRepository.findByUser1(user)) {
-            if (f.getCompleted()) {
-                friends.add(f.getUser2());
-            }
-        }
-        for(Friends f : friendsRepository.findByUser2(user)) {
-            if (f.getCompleted()) {
-                friends.add(f.getUser1());
-            }
-        }
-        friends.sort((x,y) -> {
-            long user1 = completedService.getNumberOfCompletedChallenges(x.getId());
-            long user2 = completedService.getNumberOfCompletedChallenges(y.getId());
-            return user1 == user2 ? 0 : (user1 > user2 ? 1 : -1);
-        });
-        return friends;
-    }
+
 
     public List<User> getFriendsRequests(User user) {
         List<User> friends = new ArrayList<>();
@@ -124,5 +106,25 @@ public class FriendsService {
             friendsRepository.save(f);
             return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are now friends";
         }
+    }
+
+    public List<User> getFriendsOrderByCompletedChallenges(User user) {
+        List<User> friends = new ArrayList<>();
+        for(Friends f : friendsRepository.findByUser1(user)) {
+            if (f.getCompleted()) {
+                friends.add(f.getUser2());
+            }
+        }
+        for(Friends f : friendsRepository.findByUser2(user)) {
+            if (f.getCompleted()) {
+                friends.add(f.getUser1());
+            }
+        }
+        friends.sort((x,y) -> {
+            long user1 = completedService.getNumberOfCompletedChallenges(x.getId());
+            long user2 = completedService.getNumberOfCompletedChallenges(y.getId());
+            return user1 == user2 ? 0 : (user1 > user2 ? 1 : -1);
+        });
+        return friends;
     }
 }

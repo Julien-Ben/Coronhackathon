@@ -18,6 +18,9 @@ public class Friends {
     @MapsId("user2Id")
     private User user2;
 
+    //Say if the friendship is completed or not
+    //i.e. completed is false when user1 asked for friendship user2 but user2 didn't reply for the moment
+    //                  true  when user1 and user2 are friends
     private boolean completed;
 
     public FriendsId getId() {
