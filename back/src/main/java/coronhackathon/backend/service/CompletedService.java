@@ -163,8 +163,29 @@ public class CompletedService {
         if (!oc.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
         for (HasCompleted hc : completedRepository.findByChallenge(oc.get())) {
-            l.add(hc.getCommentary());
+            if(!hc.getCommentary().isEmpty())
+                l.add(hc.getCommentary());
         }
+        return l;
+    }
+
+    public List<String> getDataCompleted(String name, long challengeId){
+        List<String> l = new ArrayList<>();
+
+        Optional<User> ou = userRepository.findByUsername(name);
+        if (!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with username : " + name + " not found");
+
+        Optional<Challenge> oc = challengeRepository.findById(challengeId);
+        if (!oc.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
+        Optional<HasCompleted> oh  = completedRepository.findByUserAndChallenge(ou.get(),oc.get());
+
+        if (!oh.isPresent()) //If the user didn't complete the challenge yet return an empty array
+            return l;
+        HasCompleted hc = oh.get();
+        l.add(hc.getCommentary());
+        l.add(hc.getPicture());
         return l;
     }
 }

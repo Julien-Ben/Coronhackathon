@@ -3,11 +3,12 @@ import { ActivityIndicator, Image, View, TextInput,TouchableOpacity, Text ,Style
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import {request} from '../api.js';
+import {request, baseURL} from '../api.js';
 import palette from "../palette.js"
 
 export default class ImagePickerExample extends React.Component {
   state = {
+    previousImage:null,
     image: null,
     commentary: "", // 'comment' is a keyword /!\
     animating:false, // loading icon animation
@@ -16,7 +17,7 @@ export default class ImagePickerExample extends React.Component {
   render() {
     let { image } = this.state;
     const animating = this.state.animating; //cannot call this.state in View 
-
+    const previousComment = this.state.commentary;
     return (
       <View style={styles.main}>
         {/* text input for th euser's comment*/}
@@ -24,6 +25,7 @@ export default class ImagePickerExample extends React.Component {
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputText}  
               placeholder="Commente ce que tu as réalisé !" multiline
+              defaultValue={previousComment}
               placeholderTextColor="grey"
               textAlignVertical="top"
               onChangeText={this.handleComment}
@@ -60,8 +62,30 @@ export default class ImagePickerExample extends React.Component {
 
   //When the screen is mounted ask for permission
   componentDidMount() {
+    this.isAlreadyCompleted();
     this.getPermissionAsync();
   }
+
+  isAlreadyCompleted = async () =>{
+    const self = this
+    request({ 
+      method: 'GET',
+      url: "/api/getDataCompleted/"+this.props.challengeId, 
+    }).then(function(response){
+      console.log('Success !')
+      console.log(response.data);
+      if(response.data !== []){
+        self.setState({commentary: response.data[0]})
+        if(response.data.length > 1){
+          self.setState({image:{uri: baseURL + '/static/image/jpg?path=' +response.data[1]}})
+        }
+      }
+    }).catch(function(error){
+      console.log('Failure...')
+      console.log(error.response.data.status);
+
+    })
+  };
 
   getPermissionAsync = async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
