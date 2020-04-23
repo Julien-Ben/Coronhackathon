@@ -78,7 +78,7 @@ public class CompletedService {
         hc.setUser(user);
         hc.setCommentary(commentary);
         hc.setPicture(picture);
-        if(completedRepository.findByUserAndChallengeContains(user, challenge))
+        if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
             return "User " + user.getUsername() + " has already completed " + challenge.getName();
         else {
             completedRepository.save(hc);
@@ -103,7 +103,7 @@ public class CompletedService {
         hc.setCommentary(commentary);
         hc.setPicture(picture);
 
-        if(completedRepository.findByUserAndChallengeContains(user, challenge))
+        if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
             return "User " + user.getUsername() + " has already completed " + challenge.getName();
         else {
             completedRepository.save(hc);
