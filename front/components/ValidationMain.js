@@ -118,7 +118,7 @@ export default class ImagePickerExample extends React.Component {
   _submitValidation = async () => {
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
-    bodyFormData.append('commentary',"Commentaire constructif 3");
+    bodyFormData.append('commentary',"Commentaire constructif 4");
 
     if(this.state.image != null){
       let uriParts = this.state.image.uri.split('.');
@@ -140,8 +140,9 @@ export default class ImagePickerExample extends React.Component {
     }).then(function(response){
 
       console.log("Got here then!")
-      console.log(response)
-      self._uploadImage()
+      console.log(response.status)
+      console.log(response.message)
+
     }).catch(function(error){
 
       console.log("Got here catch!")
