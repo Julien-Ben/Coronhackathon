@@ -75,8 +75,9 @@ public class ChallengeService {
         if (!ou.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with name : " + username + " not found");
         List<Challenge> cc = completedService.getCompletedChallenges(username);
+        // creates the lists of booleans corresponding to the given list of challenges
         for(Challenge c : lc) {
-            lb.add(cc.contains(c));
+            lb.add(cc.contains(c)); 
         }
         return lb;
     }
@@ -88,6 +89,7 @@ public class ChallengeService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with name : " + username + " not found");
         List<Challenge> completed = completedService.getCompletedChallengesByCategory(ou.get().getId(),categoryId);
         List<Challenge> cs = challengeRepository.findByCategoryId(categoryId);
+        // creates the lists of booleans corresponding to the given list of challenges cs
         for (Challenge c : cs) {
             l.add(completed.contains(c));
         }
