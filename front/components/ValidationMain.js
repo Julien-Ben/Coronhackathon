@@ -32,7 +32,7 @@ export default class ImagePickerExample extends React.Component {
               <TouchableOpacity style={[styles.containerBtn,palette.defaultPrimaryColor]}  onPress={this._pickImage}> 
                 <Text style={[styles.validationBtn, palette.textPrimaryColor]}>Ajouter une photo</Text>
               </TouchableOpacity>
-              {image && <Image source={{ uri: image }} style={[styles.image,palette.separatorColor]} />}
+              {image && <Image source={{ uri: image.uri }} style={[styles.image,palette.separatorColor]} />}
             </View>
           </View>
         </View>
@@ -61,13 +61,14 @@ export default class ImagePickerExample extends React.Component {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
-        aspect: [4, 3],
-        quality: 1,
+        aspect: [2, 2],
+        quality: 0.5,
+        base64:true,
       });
       if (!result.cancelled) {
-        this.setState({ image: result.uri });
+        this.setState({ image: result });
       }
-      // console.log(result);
+      //  console.log(result.base64);
     } catch (E) {
       console.log(E);
     }
@@ -75,34 +76,29 @@ export default class ImagePickerExample extends React.Component {
 
  _uploadImage = async () => {
     if(this.state.image == null){
-      console.log(this.props.challengeId)
       return
     }
-    // console.log(this.state.image)
-    let uriParts = this.state.image.split('.');
+    
+    let uriParts = this.state.image.uri.split('.');
     let fileType = uriParts[uriParts.length - 1];
     fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
-    let formData = new FormData();
-
-    formData.append('photo', {
-      uri: this.state.image,
-      name: `photo.${fileType}`,
-      type: `image/${fileType}`,
-    });
-
+    let bodyFormData = new FormData();
+    bodyFormData.append('imgData',this.state.image.base64);
     request({
       method: 'post',
-      url : '/api/uploadCompletedImage/'+fileType+'/'+this.props.challengeId,
-      data : bodyFormData,
-      headers: {'Content-Type':'multipart/form-data'}
+      url : '/api/uploadMyCompletedImage/'+fileType+'/'+this.props.challengeId,
+       data : bodyFormData,
+      headers: {'Content-Type':'image/jpeg'}
     }).then(function(response){
       console.log("Got here then!")
       console.log(response)
 
-      this._submitValidation(response.path) // ??
+      // this._submitValidation(response.path) // ??
     }).catch(function(error){
       console.log("Got here catch!")
-      console.log(error.response)
+      console.log(error.response.data.status)
+      console.log(error.response.data.error)
+      console.log(error.response.data.message)
     })
 
     // let options = {

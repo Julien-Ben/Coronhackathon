@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 
 @RestController
 public class CompleteController {
@@ -79,7 +80,7 @@ public class CompleteController {
     public @ResponseBody
     String uploadMyCompletedJPGImage(
             Principal principal,
-            @RequestBody byte[] imgData,
+            @RequestParam String imgData,
             @PathVariable("challengeId") long challengeId) throws IOException {
 
         Long id = userService.getUserByUsername(principal.getName()).get().getId();
@@ -89,7 +90,8 @@ public class CompleteController {
                 + "_"
                 + Long.toString(challengeId) + ".jpg";
 
-        BufferedImage img = ImageIO.read(new ByteArrayInputStream(imgData));
+        byte[] byteImg = Base64.getDecoder().decode(imgData);
+        BufferedImage img = ImageIO.read(new ByteArrayInputStream(byteImg));
         ImageIO.write(img, "jpg", new File("src/main/" + destinationPath));
         completedService.setPath(id, challengeId, destinationPath);
         return destinationPath;
