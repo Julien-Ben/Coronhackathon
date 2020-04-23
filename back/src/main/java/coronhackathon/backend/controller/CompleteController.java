@@ -38,8 +38,10 @@ public class CompleteController {
 
     @PostMapping("/api/completeMyChallenge")
     public String completeChallenge(Principal principal, @RequestParam long challengeId,
-                                    @RequestParam String commentary, @RequestParam String picture) {
-        return completedService.addCompletedChallenge(principal.getName(), challengeId, commentary, picture);
+                                    @RequestParam String commentary, @RequestParam String imgBase64, @RequestParam String imgFormat)
+                                    throws IOException{
+
+        return completedService.addCompletedChallenge(principal.getName(), challengeId, commentary, imgBase64, imgFormat);
     }
 
     /**

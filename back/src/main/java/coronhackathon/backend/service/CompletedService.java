@@ -11,7 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +31,8 @@ public class CompletedService {
     private CompletedRepository completedRepository;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private UserService userService;
 
 
     public List<Challenge> getCompletedChallenges(long userId) {
@@ -87,7 +95,8 @@ public class CompletedService {
         }
     }
 
-    public String addCompletedChallenge(String username, long challengeId, String commentary, String picture) {
+    public String addCompletedChallenge(String username, long challengeId, String commentary, String imgBase64, String imgFormat)
+    throws IOException {
         Optional<User> ou = userRepository.findByUsername(username);
         Optional<Challenge> oc = challengeRepository.findById(challengeId);
         if (!ou.isPresent())
@@ -101,7 +110,21 @@ public class CompletedService {
         hc.setChallenge(challenge);
         hc.setUser(user);
         hc.setCommentary(commentary);
-        hc.setPicture(picture);
+
+        if(imgBase64.length() > 0) {
+
+            Long id = userService.getUserByUsername(username).get().getId();
+
+            String destinationPath = "resources/myCompletedImage/hasCompleted_"
+                    + Long.toString(id)
+                    + "_"
+                    + Long.toString(challengeId) + "."+imgFormat;
+
+            byte[] byteImg = Base64.getDecoder().decode(imgBase64);
+            BufferedImage img = ImageIO.read(new ByteArrayInputStream(byteImg));
+            ImageIO.write(img, "jpg", new File("src/main/" + destinationPath));
+            hc.setPicture(destinationPath);
+        }
 
         if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
             return "User " + user.getUsername() + " has already completed " + challenge.getName();

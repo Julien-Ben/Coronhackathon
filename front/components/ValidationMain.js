@@ -91,7 +91,7 @@ export default class ImagePickerExample extends React.Component {
       headers: {'Content-Type':'image/jpeg'}
     }).then(function(response){
       console.log("Got here then!")
-      console.log(response)
+      // console.log(response)
 
       // this._submitValidation(response.path) // ??
     }).catch(function(error){
@@ -115,12 +115,22 @@ export default class ImagePickerExample extends React.Component {
 
   }
 
-  _submitValidation = async (imagePath) => {
-    
+  _submitValidation = async () => {
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
-    bodyFormData.append('commentary',"Commentaire constructif"); //this.review
-    bodyFormData.append('picture',""); //this.state.image
+    bodyFormData.append('commentary',"Commentaire constructif 3");
+
+    if(this.state.image != null){
+      let uriParts = this.state.image.uri.split('.');
+      let fileType = uriParts[uriParts.length - 1];
+      fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
+      
+      bodyFormData.append('imgBase64',this.state.image.base64);
+      bodyFormData.append('imgFormat', fileType); 
+    } else{
+      bodyFormData.append('imgBase64',"");
+      bodyFormData.append('imgFormat', ""); 
+    }
 
     request({
       method: 'post',
@@ -128,12 +138,16 @@ export default class ImagePickerExample extends React.Component {
       data : bodyFormData,
       headers: {'Content-Type':'multipart/form-data'}
     }).then(function(response){
+
       console.log("Got here then!")
       console.log(response)
       self._uploadImage()
     }).catch(function(error){
+
       console.log("Got here catch!")
-      console.log(error.response)
+      console.log(error.response.data.status)
+      console.log(error.response.data.error)
+      console.log(error.response.data.message)
     })
   }
 }
