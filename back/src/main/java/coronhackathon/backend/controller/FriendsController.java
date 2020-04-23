@@ -42,12 +42,6 @@ public class FriendsController {
         return friendsService.getFriendsRequests(getCurrentUser(principal));
     }
 
-    //To be removed when necessary
-    @RequestMapping(path = "/api/getAllFriendships", method = RequestMethod.GET)
-    public List<Friends> getAllFriendships() {
-        return friendsRepository.findAll();
-    }
-
     /**
      * Tell if user1 is friend with user2
      * user1 is friend with user 2 iff user2 is friend with user1
@@ -59,17 +53,33 @@ public class FriendsController {
         return friendsService.isFriend(user1Id,user2Id);
     }
 
-
+    /**
+     * The current user asks the user given in parameter to be his friend
+     *
+     * @param principal needed to now who is the current user
+     * @param userId the userId of the user to which we want to ask to be her/his friend
+     * @return a comment on the post request
+     */
     @PostMapping("/api/friendRequest")
     public String friendRequest(Principal principal, @RequestParam long userId) {
         return friendsService.friendRequest(getCurrentUser(principal) ,userId);
     }
 
+    /**
+     * Accept the pending request previously done by the user given in argument
+     *
+     * @param principal needed to kwon who is the current user
+     * @param userId the userId of the user who previously made a friend request
+     * @return a comment on the post request
+     */
     @PostMapping("/api/acceptFriendRequest")
     public String acceptFriendRequest(Principal principal, @RequestParam long userId) {
         return friendsService.acceptFriendRequest(getCurrentUser(principal) ,userId);
     }
 
+    /**
+     * Return the current user
+     */
     private User getCurrentUser(Principal principal){
         return userService.getUserByUsername(principal.getName()).get();
     }
