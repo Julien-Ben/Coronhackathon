@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sun.jvm.hotspot.memory.FreeChunk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,15 +58,15 @@ public class FriendsService {
         Optional<User> ou1 = userRepository.findById(user1Id);
         if (!ou1.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + user1Id + " not found");
-        Optional<User> ou2 = userRepository.findById(user1Id);
+        Optional<User> ou2 = userRepository.findById(user2Id);
         if (!ou2.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + user2Id + " not found");
 
         User user1 = ou1.get(), user2 = ou2.get();
         Optional<Friends> of = friendsRepository.findByUser1AndUser2(user1, user2);
         Optional<Friends> of2 = friendsRepository.findByUser1AndUser2(user2, user1);
-        return of.isPresent() && of.get().getCompleted()  ||
-                of2.isPresent() && of2.get().getCompleted();
+        return (of.isPresent() && of.get().getCompleted())  ||
+                (of2.isPresent() && of2.get().getCompleted());
     }
 
     public String friendRequest(User currentUser, long userId) {
@@ -73,6 +74,9 @@ public class FriendsService {
         if (!ou.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with userId : " + userId + " not found");
         User user = ou.get();
+        if(user.equals(currentUser))
+            return "You cannot be friends with yourself";
+
         Optional<Friends> of1 = friendsRepository.findByUser1AndUser2(currentUser, user);
         Optional<Friends> of2 = friendsRepository.findByUser1AndUser2(user, currentUser);
         if (of1.isPresent()) {  //if currentUser already asked user to be his/her friend
@@ -112,7 +116,13 @@ public class FriendsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
                     "" + currentUser.getUsername() + " to be his/her friend.");
         }
-        of.get().setCompleted(true); //don't work
-        return ""+currentUser.getUsername()+" and "+ou.get().getUsername()+" are now friends";
+        Friends f = of.get();
+        if(f.getCompleted())
+            return ""+currentUser.getUsername()+" is already friend with "+user.getUsername();
+        else {
+            f.setCompleted(true);
+            friendsRepository.save(f);
+            return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are now friends";
+        }
     }
 }
