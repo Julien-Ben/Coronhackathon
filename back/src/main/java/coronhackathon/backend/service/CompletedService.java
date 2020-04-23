@@ -70,31 +70,13 @@ public class CompletedService {
         return l;
     }
 
-    // TODO return type? (python c'est cool pour le packing)
-    public String addCompletedChallenge(long userId, long challengeId, String commentary, String picture) {
-        Optional<User> ou = userRepository.findById(userId);
-        Optional<Challenge> oc = challengeRepository.findById(challengeId);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
-
-        User user = ou.get();
-        Challenge challenge = oc.get();
-        HasCompleted hc = new HasCompleted();
-        hc.setChallenge(challenge);
-        hc.setUser(user);
-        hc.setCommentary(commentary);
-        hc.setPicture(picture);
-        if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
-            return "User " + user.getUsername() + " has already completed " + challenge.getName();
-        else {
-            completedRepository.save(hc);
-            // TODO return such that front can easily send image
-            return "User " + user.getUsername() + " has completed " + challenge.getName();
-        }
-    }
-
+    /** Add a completed Challenge
+     *
+     * @param imgBase64 the image encoded in a base64 String
+     * @param imgFormat jpg, png or jpeg
+     * @return success message
+     * @throws IOException
+     */
     public String addCompletedChallenge(String username, long challengeId, String commentary, String imgBase64, String imgFormat)
     throws IOException {
         Optional<User> ou = userRepository.findByUsername(username);
@@ -106,6 +88,10 @@ public class CompletedService {
 
         User user = ou.get();
         Challenge challenge = oc.get();
+
+        if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
+            return "User " + user.getUsername() + " has already completed " + challenge.getName();
+
         HasCompleted hc = new HasCompleted();
         hc.setChallenge(challenge);
         hc.setUser(user);
@@ -126,12 +112,10 @@ public class CompletedService {
             hc.setPicture(destinationPath);
         }
 
-        if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
-            return "User " + user.getUsername() + " has already completed " + challenge.getName();
-        else {
-            completedRepository.save(hc);
-            return "User " + user.getUsername() + " has completed " + challenge.getName();
-        }
+
+        completedRepository.save(hc);
+        return "User " + user.getUsername() + " has completed " + challenge.getName();
+
     }
 
     public List<Challenge> getCompletedChallengesByCategory(long userId, long categoryId) {
@@ -159,24 +143,7 @@ public class CompletedService {
         }
         return l;
     }
-
-    public void setPath(long userId, long challengeId, String destinationPath) {
-        Optional<User> ou = userRepository.findById(userId);
-        Optional<Challenge> oc = challengeRepository.findById(challengeId);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
-
-        User user = ou.get();
-        Challenge challenge = oc.get();
-        Optional<HasCompleted> ohc = completedRepository.findByUserAndChallenge(user, challenge);
-        if (!ohc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "has completed not found");
-
-        else ohc.get().setPicture(destinationPath);
-    }
-
+    
     public List<Challenge> getCompletedChallengesByCategory(long userId, String name) {
         return getCompletedChallengesByCategory(userId, categoryService.getIdFromName(name));
     }
