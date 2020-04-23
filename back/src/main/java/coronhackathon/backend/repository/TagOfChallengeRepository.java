@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface TagOfChallengeRepository extends JpaRepository<TagOfChallenge, Long> {
-    //instead of Long it is possible it is TagOfChallengeId
+public interface TagOfChallengeRepository extends JpaRepository<TagOfChallenge, TagOfChallengeId> {
+
     public List<TagOfChallenge> findByChallenge(Challenge challenge);
 
     public List<TagOfChallenge> findByTag(Tag tag);
