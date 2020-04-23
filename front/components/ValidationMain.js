@@ -9,17 +9,18 @@ import palette from "../palette.js"
 export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
-    commentary: "",
-    animating:false,
+    commentary: "", // 'comment' is a keyword /!\
+    animating:false, // loading icon animation
   };
 
   render() {
     let { image } = this.state;
-    const animating = this.state.animating;
+    const animating = this.state.animating; //cannot call this.state in View 
+
     return (
       <View style={styles.main}>
+        {/* text input for th euser's comment*/}
         <View style={styles.descContainer}>
-          <Text style={styles.inputTitle}></Text>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputText}  
               placeholder="Commente ce que tu as réalisé !" multiline
@@ -29,6 +30,7 @@ export default class ImagePickerExample extends React.Component {
             />
           </View>
         </View>
+        {/* The image picker*/}
         <View style={styles.pickerContainer}>
           <View style={styles.picker}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -39,7 +41,7 @@ export default class ImagePickerExample extends React.Component {
             </View>
           </View>
         </View>
-
+        {/* Submit button*/}
         <TouchableOpacity style={[palette.defaultPrimaryColor, styles.containerBtn]} onPress={this._submitValidation}> 
           <Text  style={[palette.textPrimaryColor, styles.validationBtn]}>Valider !</Text>
         </TouchableOpacity>
@@ -56,20 +58,25 @@ export default class ImagePickerExample extends React.Component {
     this.setState({ commentary: text })
  }
 
+  //When the screen is mounted ask for permission
   componentDidMount() {
     this.getPermissionAsync();
   }
 
   getPermissionAsync = async () => {
-    if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== 'granted') {
         alert('Nous avons besoin de ta permission pour ajouter une image!');
       }
-    }
   };
 
+  //Choose image in gallery, display it and store its uri + base64 representation
   _pickImage = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Nous avons besoin de ta permission pour ajouter une image!');
+        return
+      }
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -81,12 +88,12 @@ export default class ImagePickerExample extends React.Component {
       if (!result.cancelled) {
         this.setState({ image: result });
       }
-      //  console.log(result.base64);
     } catch (E) {
       console.log(E);
     }
   };
 
+  //Post the comment and the image base64 
   _submitValidation = async () => {
     this.setState({animating: true })
     let bodyFormData = new FormData();
@@ -112,12 +119,10 @@ export default class ImagePickerExample extends React.Component {
       headers: {'Content-Type':'multipart/form-data'}
     }).then(function(response){
       self.setState({animating: false})
-      console.log("Got here then!")
-      console.log(response.status)
       
     }).catch(function(error){
       self.setState({animating: false})
-      console.log("Got here catch!")
+      console.log("Error while posting validation!")
       console.log(error.response.data.status)
       console.log(error.response.data.error)
       console.log(error.response.data.message)
@@ -136,8 +141,6 @@ const styles = StyleSheet.create({
   descContainer :{
     alignItems: 'center',
     width:'100%',
-    // minHeight:200,
-    // maxHeight:200,
     margin: 20,
     paddingBottom: 10,
   },
