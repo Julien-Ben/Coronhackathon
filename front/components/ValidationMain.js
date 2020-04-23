@@ -9,6 +9,7 @@ import palette from "../palette.js"
 export default class ImagePickerExample extends React.Component {
   state = {
     image: null,
+    commentary: "",
   };
 
   render() {
@@ -23,6 +24,7 @@ export default class ImagePickerExample extends React.Component {
               placeholder="Commente ce que tu as réalisé !" multiline
               placeholderTextColor="grey"
               textAlignVertical="top"
+              onChangeText={this.handleComment}
             />
           </View>
         </View>
@@ -42,6 +44,10 @@ export default class ImagePickerExample extends React.Component {
       </View>
     );
   }
+
+  handleComment = (text) => {
+    this.setState({ commentary: text })
+ }
 
   componentDidMount() {
     this.getPermissionAsync();
@@ -74,52 +80,11 @@ export default class ImagePickerExample extends React.Component {
     }
   };
 
- _uploadImage = async () => {
-    if(this.state.image == null){
-      return
-    }
-    
-    let uriParts = this.state.image.uri.split('.');
-    let fileType = uriParts[uriParts.length - 1];
-    fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
-    let bodyFormData = new FormData();
-    bodyFormData.append('imgData',this.state.image.base64);
-    request({
-      method: 'post',
-      url : '/api/uploadMyCompletedImage/'+fileType+'/'+this.props.challengeId,
-       data : bodyFormData,
-      headers: {'Content-Type':'image/jpeg'}
-    }).then(function(response){
-      console.log("Got here then!")
-      // console.log(response)
-
-      // this._submitValidation(response.path) // ??
-    }).catch(function(error){
-      console.log("Got here catch!")
-      console.log(error.response.data.status)
-      console.log(error.response.data.error)
-      console.log(error.response.data.message)
-    })
-
-    // let options = {
-    //   method: 'POST',
-    //   body: formData,
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // };
-
-    // return fetch(apiUrl, options);
-    // }
-
-  }
-
   _submitValidation = async () => {
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
-    bodyFormData.append('commentary',"Commentaire constructif 3");
-
+    bodyFormData.append('commentary',this.state.commentary);
+    console.log(this.state.commentary);
     if(this.state.image != null){
       let uriParts = this.state.image.uri.split('.');
       let fileType = uriParts[uriParts.length - 1];
@@ -140,8 +105,8 @@ export default class ImagePickerExample extends React.Component {
     }).then(function(response){
 
       console.log("Got here then!")
-      console.log(response)
-      self._uploadImage()
+      console.log(response.status)
+
     }).catch(function(error){
 
       console.log("Got here catch!")

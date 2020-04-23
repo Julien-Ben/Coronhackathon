@@ -34,6 +34,9 @@ public class CompletedService {
     @Autowired
     private UserService userService;
 
+    public long getNumberOfCompletedChallenges(long userId){
+        return getCompletedChallenges(userId).size();
+    }
 
     public List<Challenge> getCompletedChallenges(long userId) {
         List<Challenge> l = new ArrayList<Challenge>();
@@ -89,10 +92,12 @@ public class CompletedService {
         User user = ou.get();
         Challenge challenge = oc.get();
 
+        HasCompleted hc;
         if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
-            return "User " + user.getUsername() + " has already completed " + challenge.getName();
-
-        HasCompleted hc = new HasCompleted();
+            hc = completedRepository.findByUserAndChallenge(user, challenge).get();
+        else {
+            hc = new HasCompleted();
+        }
         hc.setChallenge(challenge);
         hc.setUser(user);
         hc.setCommentary(commentary);
@@ -130,6 +135,7 @@ public class CompletedService {
         }
         return l;
     }
+
 
     public List<Challenge> getCompletedChallengesByCategory(String username, long categoryId) {
         List<Challenge> l = new ArrayList<>();

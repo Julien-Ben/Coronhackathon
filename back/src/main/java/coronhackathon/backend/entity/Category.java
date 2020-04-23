@@ -1,6 +1,6 @@
 package coronhackathon.backend.entity;
 
-import sun.reflect.generics.tree.Tree;
+//import sun.reflect.generics.tree.Tree;
 
 import javax.persistence.*;
 import java.util.Collection;
