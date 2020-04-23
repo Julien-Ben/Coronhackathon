@@ -8,7 +8,10 @@ import coronhackathon.backend.service.ChallengeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -61,6 +64,21 @@ public class ChallengeController {
     @GetMapping("/api/nineChallenges")
     public List<Challenge> nineChallenges() {
         return challengeService.getNineChallenges();
+    }
+
+    /**
+     * Returns nine of the challenges stored in the database and if they are completed or not
+     *
+     * @return a list of nine challenges and a list of booleans (completed by the logged user or not)
+     */
+    @RequestMapping(path = "/api/nineChallengesBool", method = RequestMethod.GET)
+    public Map<String, Object> nineChallengesBool(Principal principal) {
+        HashMap<String, Object> map = new HashMap<>();
+        List<Challenge> lc = challengeService.getNineChallenges();
+        List<Boolean> lb =challengeService.getNineBoolean(principal.getName(), lc);
+        map.put("Challenge", lc);
+        map.put("Completed", lb);
+        return map;
     }
 
     /**
@@ -132,6 +150,19 @@ public class ChallengeController {
     }
 
     /**
+     * Returns a list with all challenges of a category, with a boolean that indicates if it is validated or not
+     * @param categoryId the id of the category
+     * @return a map with all the challenges and their corresponding boolean
+     */
+    @RequestMapping(path = "/api/getChallengeByCategoryBool/{categoryId}", method = RequestMethod.GET)
+    public Map<String, Object> getChallengeByCategoryBool(Principal principal, @PathVariable long categoryId) {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("Challenge", challengeService.getChallengeByCategory(categoryId));
+        map.put("Completed", challengeService.getChallengeBool(principal.getName(), categoryId));
+        return map;
+    }
+
+    /**
      * Returns the number of challenges
      *
      * @return the number of challenges
@@ -151,6 +182,7 @@ public class ChallengeController {
     public List<Challenge> getChallengesByTag(@PathVariable long tagId) {
         return tagOfChallengeService.getChallengesOfTag(tagId);
     }
+
 
 
 }
