@@ -143,7 +143,24 @@ public class CompletedService {
         }
         return l;
     }
-    
+
+    public void setPath(long userId, long challengeId, String destinationPath) {
+        Optional<User> ou = userRepository.findById(userId);
+        Optional<Challenge> oc = challengeRepository.findById(challengeId);
+        if (!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
+        if (!oc.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
+
+        User user = ou.get();
+        Challenge challenge = oc.get();
+        Optional<HasCompleted> ohc = completedRepository.findByUserAndChallenge(user, challenge);
+        if (!ohc.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "has completed not found");
+
+        else ohc.get().setPicture(destinationPath);
+    }
+
     public List<Challenge> getCompletedChallengesByCategory(long userId, String name) {
         return getCompletedChallengesByCategory(userId, categoryService.getIdFromName(name));
     }
@@ -152,14 +169,24 @@ public class CompletedService {
         return getCompletedChallengesByCategory(username, categoryService.getIdFromName(name));
     }
 
-    public List<String> getCommentsOfChallenge(long challengeId) {
-        List<String> l = new ArrayList<>();
+    /**
+     * return a list of (user, comment) pairs
+     */
+    public List<List<String>> getCommentsOfChallenge(long challengeId) {
         Optional<Challenge> oc = challengeRepository.findById(challengeId);
         if (!oc.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
+
+        List<List<String>> userAndComments = new ArrayList<>();
         for (HasCompleted hc : completedRepository.findByChallenge(oc.get())) {
-            l.add(hc.getCommentary());
+
+            List<String> UserAndComment = new ArrayList<String>();
+            UserAndComment.add(hc.getUser().getUsername());
+            UserAndComment.add(hc.getCommentary());
+
+            userAndComments.add(UserAndComment);
         }
-        return l;
+
+        return userAndComments;
     }
 }
