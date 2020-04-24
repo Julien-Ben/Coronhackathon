@@ -5,6 +5,7 @@ import { StyleSheet, Image, Easing, Animated } from 'react-native';
 import { Ionicons, FontAwesome, MaterialCommunityIcons, AntDesign } from '@expo/vector-icons';
 import { createStackNavigator, createAppContainer, createBottomTabNavigator } from 'react-navigation'
 import LoginScreen from "./components/Screens/LoginScreen";
+import RegisterScreen from "./components/Screens/RegisterScreen";
 import CoronaScreen from "./components/Screens/CoronaScreen";
 import DetailsScreen from "./components/Screens/DetailsScreen";
 import ProfileScreen from "./components/Screens/ProfileScreen";
@@ -269,6 +270,7 @@ const Tabs = createBottomTabNavigator(
 const StackNavigator = createStackNavigator(
     {
         Home: LoginScreen,
+        RegisterScreen,
         Tabs
     },
     {
