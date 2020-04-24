@@ -7,7 +7,12 @@
           <text class = "challenge-desc">{{challenge.description}}</text>
         </view>
         <view>
-          <image class = "challenge-icon" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
+        <!--<view class="empty-container" v-if="challengesAndBool.Completed[index]">-->
+        <!-- if the challenge has already been done-->
+        <!-- <image class = "challenge-icon-done" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/> -->
+        <!-- if it has not been done -->
+        <image class = "challenge-icon" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
+        <!--</view>-->
         </view>
       </touchable-opacity>
     </view> 
@@ -15,7 +20,6 @@
 </template>
 
 <style >
-
 .element-border {
   border-bottom-width: 1;
   border-color: gray;
@@ -31,9 +35,11 @@
 }
 
 .challenge-text{
+  /* background-color: grey; */
   width:80%;
+  
+  
 }
-
 .challenge-title {
   font-size: 20;
   color: #3d9d84;
@@ -65,16 +71,13 @@ export default {
     props: {
         challengesAndBool: Object,
         goToChallenge: Function,
-        
     },
     data: function() {
-      return {
-        baseURL: baseURL,
-      }
+        return {
+            baseURL: baseURL,
+        }
     },
     mounted: function (){
     }
 }
-
-
 </script>

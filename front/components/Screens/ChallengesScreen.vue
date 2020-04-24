@@ -1,27 +1,15 @@
 <template>
-  <view class="container">
-    <!-- <view class ="header">
   <view class="container" :style=styles.lightPrimaryColor>
     <view class ="header" :style=styles.defaultPrimaryColor>
       <view>
-      <text class="title" :style=styles.textPrimaryColor>Listes des Défis</text>
+        <text class="title" :style=styles.textPrimaryColor>Listes des Défis</text>
       </view>
-    </view> -->
-     <ChallengeList :challengesAndBool="challenges" :goToChallenge="goToChallenge"/>
-  </view>
+      </view>
+        <ChallengeList :challenges="challenges" :goToChallenge="goToChallenge"/>
+      </view>
 </template>
 
 <style>
-
-/* .header {
-  height : 10%;
-  justify-content: center;
-  align-items: center;
-  background-color: #3d9d84;
-  color:white;
-  flex-direction: row;
-  justify-content: space-around;
-} */
 
 .header {
   height : 10%;
@@ -45,10 +33,10 @@ import styles from '../../palette.js'
 
 export default {
   props: {
-      navigation: {
-        type: Object
-      }
-    },
+    navigation: {
+      type: Object
+    }
+  },
   components:{
     ChallengeList:ChallengeList,
   },
@@ -63,12 +51,12 @@ export default {
   methods: {
     fetch : function() {
       const self = this;
-       request({
+      request({
         method: 'get',
         url: '/api/allChallenges'
-        }).then(function(response){
-          self.challenges = response.data
-        })
+      }).then(function(response){
+        self.challenges = response.data
+      })
     },
 
     goToChallenge : function(challenge) {
