@@ -26,7 +26,7 @@ public class FriendsController {
      * @return A list with the friends of the current user ordered by the number of completed Challenges
      */
     @RequestMapping(path = "/api/getFriends", method = RequestMethod.GET)
-    public List<User> getFriendsOrderByCompletedChallenges(Principal principal) {
+    public List<FriendsService.UserAndNbChallenge> getFriendsOrderByCompletedChallenges(Principal principal) {
         User user = userService.getUserByUsername(principal.getName()).get();
         return friendsService.getFriendsOrderByCompletedChallenges(user);
     }

@@ -11,10 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import sun.jvm.hotspot.memory.FreeChunk;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 
 @Service
 public class FriendsService {
@@ -109,23 +106,46 @@ public class FriendsService {
         }
     }
 
-    public List<User> getFriendsOrderByCompletedChallenges(User user) {
-        List<User> friends = new ArrayList<>();
+    public List<UserAndNbChallenge> getFriendsOrderByCompletedChallenges(User user) {
+        List<UserAndNbChallenge> friends = new ArrayList<>();
         for(Friends f : friendsRepository.findByUser1(user)) {
             if (f.getCompleted()) {
-                friends.add(f.getUser2());
+                User u = f.getUser2();
+                friends.add(new UserAndNbChallenge(u.getId(), u.getUsername(),
+                        completedService.getNumberOfCompletedChallenges(u.getId())));
             }
         }
         for(Friends f : friendsRepository.findByUser2(user)) {
             if (f.getCompleted()) {
-                friends.add(f.getUser1());
+                User u = f.getUser1();
+                friends.add(new UserAndNbChallenge(u.getId(), u.getUsername(),
+                        completedService.getNumberOfCompletedChallenges(u.getId())));
             }
         }
-        friends.sort((x,y) -> {
-            long user1 = completedService.getNumberOfCompletedChallenges(x.getId());
-            long user2 = completedService.getNumberOfCompletedChallenges(y.getId());
-            return user1 == user2 ? 0 : (user1 > user2 ? 1 : -1);
-        });
+        friends.sort((x,y) -> x.getNbChall() == y.getNbChall()? 0 :
+                (x.getNbChall() > y.getNbChall() ? 1 : 0 ));
         return friends;
+    }
+    public class UserAndNbChallenge{
+        private long userId;
+        private String username;
+        private long nbChall;
+        private UserAndNbChallenge(long userId, String username, long nbChall){
+            this.userId = userId;
+            this.username = username;
+            this.nbChall = nbChall;
+        }
+
+        public long getNbChall() {
+            return nbChall;
+        }
+
+        public long getUserId() {
+            return userId;
+        }
+
+        public String getUsername() {
+            return username;
+        }
     }
 }
