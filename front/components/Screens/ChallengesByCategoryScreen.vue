@@ -1,3 +1,4 @@
+<!-- TODO redefinir empty (peut-être?) se renseigner sur les else rapport à la propretré-->
 <template>
   <view class="container">
     <view class ="header">
@@ -8,7 +9,7 @@
       <image class="sad" :source="require('../../assets/images/categoryByScreen/sad.png')"/>
       <text class="empty-text">Il n'y a pas encore de défi dans cette catégorie.</text>
     </view>
-    <ChallengeList v-bind:challenges="map" v-bind:goToChallenge="goToChallenge"/>
+    <ChallengeList v-bind:challengesAndBool="challenges" v-bind:goToChallenge="goToChallenge"/>
       </view>
 </template>
 
@@ -68,7 +69,7 @@ export default {
       navigation: {
         type: Object
       }
-    },
+  },
   components: {
     ChallengeList: ChallengeList,
   },
@@ -76,12 +77,12 @@ export default {
   data: function() {
     return {
       empty:false,
-      map:null,
+      challenges:Object,
       baseURL: baseURL,
         categoryInfo: {
           name:'',
         },
-        challenges: [
+       // challengesAndBool: [
           //  {
           //   id: 1,
           //   title : 'Prendre des nouvelles de ses voisins',
@@ -100,7 +101,7 @@ export default {
           //   description : "Lorem ipsum je n'ai pas d'idée, de toute façons personne ne lira cette description. PERSONNE LIS TES PAVEEEES",
           //   image : ''
           // },
-        ]
+      //  ]
     }
   },
 
@@ -118,10 +119,8 @@ export default {
         url: '/api/getChallengeByCategoryBool/'+self.navigation.state.params.categoryId
         //on get une map avec "challenge" puis liste des challenges qui map "completed" puis liste des booléens
         }).then(function(response){
-          //console.log(response)
-          self.map = response.data
-          self.empty = self.map.Challenges.length == 0
-          console.log(response.data)
+          console.log('reponse->'+response);
+          self.challenges = response.data;
         }).catch(function(error){
           console.log(error);
         })
@@ -134,6 +133,7 @@ export default {
         url: '/api/getCategory/'+self.navigation.state.params.categoryId
         }).then(function(response){
           //console.log(response)
+
           self.categoryInfo = response.data
         }).catch(function(error){
           console.log(error);
@@ -150,6 +150,7 @@ export default {
   },
   mounted: function() {
     this.fetch();
+    console.log('coucouJackson');
     this.fetchCatInfo();
   }
 };

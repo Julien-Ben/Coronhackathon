@@ -1,21 +1,22 @@
 <template>
     <scroll-view class = "myScrollView">
-          <view class = "element-border" v-for="(challenge, index) in map.Challenges" :key="index">
+         <view class = "element-border" v-for="(challenge, index) in challengesAndBool.Challenge" :key="index">
             <touchable-opacity class = "element-container" :on-press="() => goToChallenge(challenge)">
               <view class ="challenge-text">
               <text class = "challenge-title">{{challenge.name}}</text> 
               <text class = "challenge-desc">{{challenge.description}}</text>
               </view>
               <view>
-                <view class="empty-container" v-if="map.Completed[index]">
+                
+                  <!--<view class="empty-container" v-if="challengesAndBool.Completed[index]">-->
                   <!-- if the challenge has already been done-->
-                  <image class = "challenge-icon-done" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
-                  </view>
+                 <!-- <image class = "challenge-icon-done" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/> -->
                   <!-- if it has not been done -->
               <image class = "challenge-icon" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
-              </view>
+              <!--</view>-->
+             </view>
             </touchable-opacity>
-          </view>
+          </view> 
     </scroll-view>
 </template>
 
@@ -69,8 +70,9 @@ import {baseURL} from '../api.js';
 
 export default {
     props: {
-        challenges: Array,
+        challengesAndBool: Object,
         goToChallenge: Function,
+        
     },
     data: function() {
         return {
@@ -81,8 +83,11 @@ export default {
         // goToChallenge : this.goToChallenge
     },
     mounted: function (){
+      
+     
 
     }
 }
+
 
 </script>
