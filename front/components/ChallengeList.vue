@@ -1,12 +1,17 @@
 <template>
     <scroll-view class = "myScrollView">
-          <view class = "element-border" v-for="(challenge, index) in challenges" :key="index">
+          <view class = "element-border" v-for="(challenge, index) in map.Challenges" :key="index">
             <touchable-opacity class = "element-container" :on-press="() => goToChallenge(challenge)">
               <view class ="challenge-text">
               <text class = "challenge-title">{{challenge.name}}</text> 
               <text class = "challenge-desc">{{challenge.description}}</text>
               </view>
               <view>
+                <view class="empty-container" v-if="map.Completed[index]">
+                  <!-- if the challenge has already been done-->
+                  <image class = "challenge-icon-done" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
+                  </view>
+                  <!-- if it has not been done -->
               <image class = "challenge-icon" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
               </view>
             </touchable-opacity>
@@ -46,6 +51,13 @@
 }
 
 .challenge-icon {
+  width: 60;
+  height: 60;
+  border-radius: 25;
+}
+
+.challenge-icon-done {
+  color:honeydew;
   width: 60;
   height: 60;
   border-radius: 25;

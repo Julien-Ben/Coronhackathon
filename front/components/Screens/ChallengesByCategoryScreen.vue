@@ -8,7 +8,7 @@
       <image class="sad" :source="require('../../assets/images/categoryByScreen/sad.png')"/>
       <text class="empty-text">Il n'y a pas encore de défi dans cette catégorie.</text>
     </view>
-    <ChallengeList v-bind:challenges="challenges" v-bind:goToChallenge="goToChallenge"/>
+    <ChallengeList v-bind:challenges="map" v-bind:goToChallenge="goToChallenge"/>
       </view>
 </template>
 
@@ -76,6 +76,7 @@ export default {
   data: function() {
     return {
       empty:false,
+      map:null,
       baseURL: baseURL,
         categoryInfo: {
           name:'',
@@ -103,16 +104,24 @@ export default {
     }
   },
 
+
+   //How to use map in JS
+   // Map.prototype.entries()
+   // Renvoie un nouvel objet Iterator qui contient un tableau de [clé, valeur] pour chacun des éléments de l'objet Map, 
+   // dans leur ordre d'insertion.
+
   methods: {
     fetch : function() {
       const self = this;
        request({
         method: 'get',
-        url: '/api/getChallengeByCategory/'+self.navigation.state.params.categoryId
+        url: '/api/getChallengeByCategoryBool/'+self.navigation.state.params.categoryId
+        //on get une map avec "challenge" puis liste des challenges qui map "completed" puis liste des booléens
         }).then(function(response){
           //console.log(response)
-          self.challenges = response.data
-          self.empty = self.challenges.length == 0
+          self.map = response.data
+          self.empty = self.map.Challenges.length == 0
+          console.log(response.data)
         }).catch(function(error){
           console.log(error);
         })
