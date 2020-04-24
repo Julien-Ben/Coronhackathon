@@ -11,7 +11,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompletedService {
@@ -23,11 +31,13 @@ public class CompletedService {
     private CompletedRepository completedRepository;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private UserService userService;
 
     public long getNumberOfCompletedChallenges(long userId){
         return getCompletedChallenges(userId).size();
     }
-
+    
     public List<Challenge> getCompletedChallenges(long userId) {
         List<Challenge> l = new ArrayList<Challenge>();
         Optional<User> ou = userRepository.findById(userId);
@@ -63,32 +73,15 @@ public class CompletedService {
         return l;
     }
 
-    // TODO return type? (python c'est cool pour le packing)
-    public String addCompletedChallenge(long userId, long challengeId, String commentary, String picture) {
-        Optional<User> ou = userRepository.findById(userId);
-        Optional<Challenge> oc = challengeRepository.findById(challengeId);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
-
-        User user = ou.get();
-        Challenge challenge = oc.get();
-        HasCompleted hc = new HasCompleted();
-        hc.setChallenge(challenge);
-        hc.setUser(user);
-        hc.setCommentary(commentary);
-        hc.setPicture(picture);
-        if(completedRepository.findByUserAndChallengeContains(user, challenge))
-            return "User " + user.getUsername() + " has already completed " + challenge.getName();
-        else {
-            completedRepository.save(hc);
-            // TODO return such that front can easily send image
-            return "User " + user.getUsername() + " has completed " + challenge.getName();
-        }
-    }
-
-    public String addCompletedChallenge(String username, long challengeId, String commentary, String picture) {
+    /** Add a completed Challenge
+     *
+     * @param imgBase64 the image encoded in a base64 String
+     * @param imgFormat jpg, png or jpeg
+     * @return success message
+     * @throws IOException
+     */
+    public String addCompletedChallenge(String username, long challengeId, String commentary, String imgBase64, String imgFormat)
+    throws IOException {
         Optional<User> ou = userRepository.findByUsername(username);
         Optional<Challenge> oc = challengeRepository.findById(challengeId);
         if (!ou.isPresent())
@@ -98,18 +91,36 @@ public class CompletedService {
 
         User user = ou.get();
         Challenge challenge = oc.get();
-        HasCompleted hc = new HasCompleted();
+
+        HasCompleted hc;
+        if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
+            hc = completedRepository.findByUserAndChallenge(user, challenge).get();
+        else {
+            hc = new HasCompleted();
+        }
         hc.setChallenge(challenge);
         hc.setUser(user);
         hc.setCommentary(commentary);
-        hc.setPicture(picture);
 
-        if(completedRepository.findByUserAndChallengeContains(user, challenge))
-            return "User " + user.getUsername() + " has already completed " + challenge.getName();
-        else {
-            completedRepository.save(hc);
-            return "User " + user.getUsername() + " has completed " + challenge.getName();
+        if(imgBase64.length() > 0) {
+
+            Long id = userService.getUserByUsername(username).get().getId();
+
+            String destinationPath = "resources/myCompletedImage/hasCompleted_"
+                    + Long.toString(id)
+                    + "_"
+                    + Long.toString(challengeId) + "."+imgFormat;
+
+            byte[] byteImg = Base64.getDecoder().decode(imgBase64);
+            BufferedImage img = ImageIO.read(new ByteArrayInputStream(byteImg));
+            ImageIO.write(img, "jpg", new File("src/main/" + destinationPath));
+            hc.setPicture(destinationPath);
         }
+
+
+        completedRepository.save(hc);
+        return "User " + user.getUsername() + " has completed " + challenge.getName();
+
     }
 
     public List<Challenge> getCompletedChallengesByCategory(long userId, long categoryId) {
@@ -125,7 +136,6 @@ public class CompletedService {
         return l;
     }
 
-
     public List<Challenge> getCompletedChallengesByCategory(String username, long categoryId) {
         List<Challenge> l = new ArrayList<>();
         Optional<User> ou = userRepository.findByUsername(username);
@@ -138,24 +148,7 @@ public class CompletedService {
         }
         return l;
     }
-
-    public void setPath(long userId, long challengeId, String destinationPath) {
-        Optional<User> ou = userRepository.findById(userId);
-        Optional<Challenge> oc = challengeRepository.findById(challengeId);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
-
-        User user = ou.get();
-        Challenge challenge = oc.get();
-        Optional<HasCompleted> ohc = completedRepository.findByUserAndChallenge(user, challenge);
-        if (!ohc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "has completed not found");
-
-        else ohc.get().setPicture(destinationPath);
-    }
-
+    
     public List<Challenge> getCompletedChallengesByCategory(long userId, String name) {
         return getCompletedChallengesByCategory(userId, categoryService.getIdFromName(name));
     }
@@ -170,8 +163,29 @@ public class CompletedService {
         if (!oc.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
         for (HasCompleted hc : completedRepository.findByChallenge(oc.get())) {
-            l.add(hc.getCommentary());
+            if(!hc.getCommentary().isEmpty())
+                l.add(hc.getCommentary());
         }
+        return l;
+    }
+
+    public List<String> getDataCompleted(String name, long challengeId){
+        List<String> l = new ArrayList<>();
+
+        Optional<User> ou = userRepository.findByUsername(name);
+        if (!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with username : " + name + " not found");
+
+        Optional<Challenge> oc = challengeRepository.findById(challengeId);
+        if (!oc.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
+        Optional<HasCompleted> oh  = completedRepository.findByUserAndChallenge(ou.get(),oc.get());
+
+        if (!oh.isPresent()) //If the user didn't complete the challenge yet return an empty array
+            return l;
+        HasCompleted hc = oh.get();
+        l.add(hc.getCommentary());
+        l.add(hc.getPicture());
         return l;
     }
 }

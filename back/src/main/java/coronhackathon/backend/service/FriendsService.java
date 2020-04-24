@@ -9,12 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sun.jvm.hotspot.memory.FreeChunk;
+//import sun.jvm.hotspot.memory.FreeChunk;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.OptionalInt;
+import java.util.*;
 
 @Service
 public class FriendsService {
@@ -52,10 +49,10 @@ public class FriendsService {
                 (of2.isPresent() && of2.get().getCompleted());
     }
 
-    public String friendRequest(User currentUser, long userId) {
-        Optional<User> ou = userRepository.findById(userId);
+    public String friendRequest(User currentUser, String username) {
+        Optional<User> ou = userRepository.findByUsername(username);
         if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with userId : " + userId + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with username : " + username + " not found");
         User user = ou.get();
         if(user.equals(currentUser))
             return "You cannot be friends with yourself";
@@ -94,7 +91,6 @@ public class FriendsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
         User user = ou.get();
         Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
-        //System.out.println(of.get());
         if (!of.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
                     "" + currentUser.getUsername() + " to be his/her friend.");
@@ -109,23 +105,63 @@ public class FriendsService {
         }
     }
 
-    public List<User> getFriendsOrderByCompletedChallenges(User user) {
-        List<User> friends = new ArrayList<>();
+    public String refuseFriendRequest(User currentUser, long userId) {
+        Optional<User> ou = userRepository.findById(userId);
+        if (!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
+        User user = ou.get();
+        Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
+        if (!of.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
+                    "" + currentUser.getUsername() + " to be his/her friend.");
+        }else{
+            friendsRepository.delete(of.get());
+            return "Request from " + user.getUsername() + " to " + currentUser.getUsername() + " deleted";
+        }
+    }
+
+
+    public List<UserAndNbChallenge> getFriendsOrderByCompletedChallenges(User user) {
+        List<UserAndNbChallenge> friends = new ArrayList<>();
         for(Friends f : friendsRepository.findByUser1(user)) {
             if (f.getCompleted()) {
-                friends.add(f.getUser2());
+                User u = f.getUser2();
+                friends.add(new UserAndNbChallenge(u.getId(), u.getUsername(),
+                        completedService.getNumberOfCompletedChallenges(u.getId())));
             }
         }
         for(Friends f : friendsRepository.findByUser2(user)) {
             if (f.getCompleted()) {
-                friends.add(f.getUser1());
+                User u = f.getUser1();
+                friends.add(new UserAndNbChallenge(u.getId(), u.getUsername(),
+                        completedService.getNumberOfCompletedChallenges(u.getId())));
             }
         }
-        friends.sort((x,y) -> {
-            long user1 = completedService.getNumberOfCompletedChallenges(x.getId());
-            long user2 = completedService.getNumberOfCompletedChallenges(y.getId());
-            return user1 == user2 ? 0 : (user1 > user2 ? 1 : -1);
-        });
+        friends.sort((x,y) -> x.getNbChall() == y.getNbChall()? 0 :
+                (x.getNbChall() > y.getNbChall() ? 1 : 0 ));
         return friends;
+    }
+
+    public class UserAndNbChallenge{
+        private long userId;
+        private String username;
+        private long nbChall;
+        private UserAndNbChallenge(long userId, String username, long nbChall){
+            this.userId = userId;
+            this.username = username;
+            this.nbChall = nbChall;
+        }
+
+        public long getNbChall() {
+            return nbChall;
+        }
+
+        public long getUserId() {
+            return userId;
+        }
+
+        public String getUsername() {
+            return username;
+        }
     }
 }

@@ -18,7 +18,7 @@ public class HasCompleted {
     @MapsId("challengeId")
     private Challenge challenge;
 
-    private String picture;     //link to the picture
+    private String picture = "";     //link to the picture
 
     private String commentary;
 
