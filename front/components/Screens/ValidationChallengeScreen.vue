@@ -76,25 +76,6 @@ export default {
             self.challenge = response.data.name; 
         })
       },
-<<<<<<< HEAD
-      //tout sauf l'image puis uid et cid dans l'url et que l'image
-      challengeValidation: function() {
-          var bodyFormData = new FormData();
-          bodyFormData.append('challengeId', this.navigation.state.params.challengeId);
-          bodyFormData.append('commentary',this.review);
-          bodyFormData.append('picture',""); //à changer
-          request({
-            method: 'post',
-            url : '/api/completeMyChallenge',
-            data : bodyFormData,
-            headers: {'Content-Type':'multipart/form-data'}
-        }).then(function(response){
-          }).catch(function(error){
-            console.log(error)
-          })
-        },
-=======
->>>>>>> master
     },
     mounted: function() {
       this.start();
