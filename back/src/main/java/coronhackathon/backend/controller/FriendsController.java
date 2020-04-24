@@ -85,7 +85,6 @@ public class FriendsController {
      * @param userId the userId of the user who previously made a friend request
      * @return a comment on the post request
      */
-    @Modifying
     @PostMapping("/api/refuseFriendRequest")
     public String refuseFriendRequest(Principal principal, @RequestParam long userId) {
         return friendsService.refuseFriendRequest(getCurrentUser(principal) ,userId);

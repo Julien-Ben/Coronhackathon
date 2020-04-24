@@ -115,7 +115,7 @@ public class FriendsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
                     "" + currentUser.getUsername() + " to be his/her friend.");
         }else{
-            friendsRepository.deleteByUser1AndUser2(user, currentUser);
+            friendsRepository.delete(of.get());
             return "Request from " + user.getUsername() + " to " + currentUser.getUsername() + " deleted";
         }
     }
