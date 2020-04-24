@@ -57,12 +57,12 @@ public class FriendsController {
      * The current user asks the user given in parameter to be his friend
      *
      * @param principal needed to now who is the current user
-     * @param userId the userId of the user to which we want to ask to be her/his friend
+     * @param username the username of the user to which we want to ask to be her/his friend
      * @return a comment on the post request
      */
     @PostMapping("/api/friendRequest")
-    public String friendRequest(Principal principal, @RequestParam long userId) {
-        return friendsService.friendRequest(getCurrentUser(principal) ,userId);
+    public String friendRequest(Principal principal, @RequestParam String username) {
+        return friendsService.friendRequest(getCurrentUser(principal) ,username);
     }
 
     /**

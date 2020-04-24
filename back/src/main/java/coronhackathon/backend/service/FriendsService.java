@@ -52,10 +52,10 @@ public class FriendsService {
                 (of2.isPresent() && of2.get().getCompleted());
     }
 
-    public String friendRequest(User currentUser, long userId) {
-        Optional<User> ou = userRepository.findById(userId);
+    public String friendRequest(User currentUser, String username) {
+        Optional<User> ou = userRepository.findByUsername(username);
         if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with userId : " + userId + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with username : " + username + " not found");
         User user = ou.get();
         if(user.equals(currentUser))
             return "You cannot be friends with yourself";
