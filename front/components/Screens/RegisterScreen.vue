@@ -6,26 +6,26 @@
         <text class="text-container">Choisis ton pseudo : </text>
         <text-input class="input-container" 
           placeholder="pseudo" 
-          v-model="username" 
-          maxLength=15
+          autoCapitalize="none"
+          v-model="pseudo" 
         />
         <text class="text-container">Mot de passe :</text>
         <text-input class="input-container" 
           placeholder="T<f~M4*@@e)Zq8~" 
           secure-text-entry
-          maxLength=20 
-          v-model="password"
+          autoCapitalize="none"
+          v-model="pwd"
         />
         <text class="text-container">Vérifie ton mot de passe :</text>
         <text-input class="input-container" 
           placeholder="T<f~M4*@@e)Zq8~" 
           secure-text-entry 
-          maxLength=20
+          autoCapitalize="none"
           v-model="verification"
         />
         <view class ="verification-container">
-          <text class="verification-fail" v-if="username.length < 4 && username.length > 0">Le pseudo doit contenir entre 4 et 15 caractères</text>
-          <text class="verification-fail" v-if="(password != verification || serverVerif) && verification.length > 0 ">Les mots de passes sont différents!</text>
+          <text class="verification-fail" v-if="pseudo.length < 4 && pseudo.length > 0">Le pseudo doit contenir entre 4 et 15 caractères</text>
+          <text class="verification-fail" v-if="(pwd != verification || serverVerif) && verification.length > 0 ">Les mots de passes sont différents!</text>
           <text class="verification-fail" v-if="pseudoTaken">Ce pseudo est déjà utilisé :(</text>
         </view>
         <view class="login-container">
@@ -56,23 +56,25 @@ export default {
     },
   data: function() {
     return {
-        username:'',
-        password:'',
+        pseudo:'',
+        pwd:'',
         verification:'',
         serverVerif:false,
         pseudoTaken:false,
-        wrongPseudoFormat:false,
         styles: Stylesheet,
         loading: false,
     }
   },
   methods: {
     register () {
+        if(this.pseudo.length < 4 || this.pwd != this.verification){
+          return
+        }
         this.loading = true
         var bodyFormData = new FormData();
-        bodyFormData.append('username', this.username);
-        bodyFormData.append('pwd', this.password);
-        bodyFormData.append('pwdBis', this.verification);
+        bodyFormData.append('username', this.pseudo);
+        bodyFormData.append('pwd', this.pwd);
+        bodyFormData.append('pwd2', this.verification);
         const self = this;
         request({
         method: 'post',
@@ -80,13 +82,10 @@ export default {
         data: bodyFormData,
         headers: {'Content-Type': 'multipart/form-data' }
         }).then(function(response){
-           console.log(response)
+           console.log(response.status)
           if(response != undefined && response.status == 200){
-              self.navigation.navigate("Défis")
-              //Reset error booleans
-              self.loading = false
-              self.pseudoTaken = false
-              self.serverVerif = false
+              self.login()
+              
           } else {
 
           }
@@ -105,9 +104,39 @@ export default {
             }
           }
           
-          console.log(error.response.status)
-          console.log(error.response.data.message)
+          // console.log(error.response.data.status)
+          // console.log(error.response.data.message)
           // console.log(error.response.headers)
+
+        })
+    },
+
+    login(){
+        console.log("got here")
+        this.loading = true
+        var bodyFormData = new FormData();
+        bodyFormData.append('username', this.pseudo);
+        bodyFormData.append('password', this.pwd);
+        const self = this;
+        request({
+        method: 'post',
+        url: '/login',
+        data: bodyFormData,
+        headers: {'Content-Type': 'multipart/form-data' }
+        }).then(function(response){
+           //console.log(response)
+          if(response != undefined && response.status == 200){
+              self.navigation.navigate("Défis")
+              //Reset error booleans
+              self.loading = false
+              self.pseudoTaken = false
+              self.serverVerif = false
+          } else{
+          }
+        }).catch(function(error){
+          self.loading = false
+          self.loginFail = true
+          console.log(error)
 
         })
     },
