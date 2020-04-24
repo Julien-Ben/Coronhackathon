@@ -163,7 +163,6 @@ export default {
       },
       //tout sauf l'image puis uid et cid dans l'url et que l'image
       challengeValidation: function() {
-
           var bodyFormData = new FormData();
           bodyFormData.append('challengeId', this.navigation.state.params.challengeId);
           bodyFormData.append('commentary',this.review);

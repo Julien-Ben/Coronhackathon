@@ -48,7 +48,6 @@ import { Alert } from 'react-native';
 import {API} from '../../api.js';
 import React from 'react';
 import {Text} from 'react-native';
-
 export default {
     data:   function() {
       return {
@@ -105,7 +104,6 @@ export default {
             //}catch(e){
             // Alert.alert('Oupsi');
             //}
-
           })
         },
       challengeValidation2: async function() {
@@ -122,7 +120,6 @@ export default {
             //}catch(e){
             // Alert.alert('Oupsi');
             //}
-
           })
         },
         challengeValidation: async function() {
@@ -144,7 +141,6 @@ export default {
             const {
               status: cameraRollPerm
             } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
             // only if user allows permission to camera roll
             if (cameraRollPerm === 'granted') {
               let pickerResult = await ImagePicker.launchImageLibraryAsync({
@@ -158,11 +154,9 @@ export default {
            const {
              status: cameraPerm
            } = await Permissions.askAsync(Permissions.CAMERA);
-
            const {
              status: cameraRollPerm
            } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
            // only if user allows permission to camera AND camera roll
            if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
              let pickerResult = await ImagePicker.launchCameraAsync({
@@ -183,7 +177,6 @@ export default {
                  // console.log({ uploadResult });
                  console.log({ e });
                  Alert.alert('Upload failed, sorry :(');
-
                } finally {
                    this.uploading = false;
                }
@@ -191,10 +184,8 @@ export default {
          },
         handleImagePicked : async function(pickerResult) {
             let uploadResponse, uploadResult;
-
             try {
              // this.uploading = true;
-
               if (!pickerResult.cancelled) {
                 uploadResponse = await uploadImageAsync(pickerResult.uri);
                  uploadResult = await uploadResponse.json();
@@ -211,7 +202,6 @@ export default {
           },
           // convertImage : async function(callback) {
           //   var 
-
           // },
         // postPhoto: async function() {
         //   var bodyFormData = new FormData();
@@ -255,18 +245,15 @@ export default {
         //     //}catch(e){
         //     // Alert.alert('Oupsi');
         //     //}
-
         //   }
         // },
         // takePhoto : async function () {
         //    const {
         //      status: cameraPerm
         //    } = await Permissions.askAsync(Permissions.CAMERA);
-
         //    const {
         //      status: cameraRollPerm
         //    } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
-
         //    // only if user allows permission to camera AND camera roll
         //    if (cameraPerm === 'granted' && cameraRollPerm === 'granted') {
         //      let pickerResult = await ImagePicker.launchCameraAsync({
@@ -287,7 +274,6 @@ export default {
         //          // console.log({ uploadResult });
         //          console.log({ e });
         //          Alert.alert('Upload failed, sorry :(');
-
         //        } finally {
         //            this.uploading = false;
         //        }
@@ -295,10 +281,8 @@ export default {
         //  },
         //  handleImagePicked : async function(pickerResult) {
         //     let uploadResponse, uploadResult;
-
         //     try {
         //       this.uploading = true;
-
         //       if (!pickerResult.cancelled) {
         //         uploadResponse = await uploadImageAsync(pickerResult.uri);
         //         // uploadResult = await uploadResponse.json();
@@ -313,15 +297,11 @@ export default {
         //       this.uploading= false;
         //     }
         //   }
-
     },
-
     mounted: function(){
        this.start();
     }
 }
-
-
 async function uploadImageAsync(uri){
     Alert.alert('uploading')
     return 0;

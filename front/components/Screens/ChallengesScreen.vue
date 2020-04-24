@@ -44,7 +44,7 @@ export default {
     return {
       styles: styles,
       baseURL: baseURL,
-      challenges: Object,
+      challenges: [],
     }
   },
 

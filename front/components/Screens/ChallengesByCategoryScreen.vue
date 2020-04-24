@@ -1,4 +1,3 @@
-<!-- TODO redefinir empty (peut-être?) se renseigner sur les else rapport à la propretré-->
 <template>
   <view class="container">
     <view class ="header">
@@ -9,8 +8,10 @@
       <image class="sad" :source="require('../../assets/images/categoryByScreen/sad.png')"/>
       <text class="empty-text">Il n'y a pas encore de défi dans cette catégorie.</text>
     </view>
+    <view v-else>
       <ChallengeListBools v-bind:challengesAndBool="challenges" v-bind:goToChallenge="goToChallenge"/>
     </view>
+  </view>
 </template>
 
 <style>
@@ -75,7 +76,7 @@ export default {
   data: function() {
     return {
       empty:false,
-      challenges:Object,
+      challenges:{},
       baseURL: baseURL,
       categoryInfo: {
         name:'',
@@ -90,8 +91,8 @@ export default {
         method: 'get',
         url: '/api/getChallengeByCategoryBool/'+self.navigation.state.params.categoryId
       }).then(function(response){
-        console.log('reponse->'+response);
         self.challenges = response.data;
+        self.empty = self.challenges.Challenge.length == 0;
       }).catch(function(error){
         console.log(error);
       })

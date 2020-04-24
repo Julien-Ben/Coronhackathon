@@ -1,6 +1,6 @@
 <template>
   <scroll-view class = "myScrollView">
-    <view class = "element-border" v-for="(challenge, index) in challengesAndBool.Challenge" :key="index">
+    <view class = "element-border" v-for="(challenge, index) in challenges" :key="index">
       <touchable-opacity class = "element-container" :on-press="() => goToChallenge(challenge)">
         <view class ="challenge-text">
           <text class = "challenge-title">{{challenge.name}}</text> 
@@ -63,7 +63,7 @@ import {baseURL} from '../api.js';
 
 export default {
     props: {
-        challengesAndBool: Object,
+        challenges: Array,
         goToChallenge: Function,
         
     },

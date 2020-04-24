@@ -2,17 +2,20 @@
   <scroll-view class = "myScrollView">
     <view class = "element-border" v-for="(challenge, index) in challengesAndBool.Challenge" :key="index">
       <touchable-opacity class = "element-container" :on-press="() => goToChallenge(challenge)">
-        <view class ="challenge-text">
+        <view class ="challenge-text" v-if="challengesAndBool.Completed[index]">
           <text class = "challenge-title">{{challenge.name}}</text> 
           <text class = "challenge-desc">{{challenge.description}}</text>
         </view>
-        <view>
-        <!--<view class="empty-container" v-if="challengesAndBool.Completed[index]">-->
-        <!-- if the challenge has already been done-->
-        <!-- <image class = "challenge-icon-done" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/> -->
-        <!-- if it has not been done -->
-        <image class = "challenge-icon" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
-        <!--</view>-->
+        <view class ="challenge-text" v-else>
+          <text class = "challenge-title-done">{{challenge.name + " (validé)"}}</text> 
+          <text class = "challenge-desc-done">{{challenge.description}}</text>
+        </view>
+        <view class="empty-container" v-if="challengesAndBool.Completed[index]">
+          <image class = "challenge-icon" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
+          <!--TODO : Mettre l'image uploadée lors de la validation ?-->
+        </view>
+        <view v-else>
+          <image class = "challenge-icon" :source="{uri: baseURL + '/static/image/jpg?path=' + challenge.imgPath}"/>
         </view>
       </touchable-opacity>
     </view> 
@@ -35,11 +38,9 @@
 }
 
 .challenge-text{
-  /* background-color: grey; */
   width:80%;
-  
-  
 }
+
 .challenge-title {
   font-size: 20;
   color: #3d9d84;
@@ -50,6 +51,16 @@
   color:#4e4e4e;
 }
 
+.challenge-title-done {
+  font-size: 20;
+  color: #4e4e4e;
+  padding-bottom:10;
+}
+
+.challenge-desc-done {
+  color:#4e4e4e;
+}
+
 .challenge-icon {
   width: 60;
   height: 60;
@@ -57,10 +68,9 @@
 }
 
 .challenge-icon-done {
-  color:honeydew;
   width: 60;
   height: 60;
-  border-radius: 25;
+  border-radius: 35;
 }
 </style>
 
