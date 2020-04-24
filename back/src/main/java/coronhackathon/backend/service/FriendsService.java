@@ -94,7 +94,6 @@ public class FriendsService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
         User user = ou.get();
         Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
-        //System.out.println(of.get());
         if (!of.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
                     "" + currentUser.getUsername() + " to be his/her friend.");
@@ -106,6 +105,22 @@ public class FriendsService {
             f.setCompleted(true);
             friendsRepository.save(f);
             return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are now friends";
+        }
+    }
+
+
+    public String refuseFriendRequest(User currentUser, long userId) {
+        Optional<User> ou = userRepository.findById(userId);
+        if (!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
+        User user = ou.get();
+        Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
+        if (!of.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
+                    "" + currentUser.getUsername() + " to be his/her friend.");
+        }else{
+            friendsRepository.deleteByUser1AndUser2(user, currentUser);
+            return "Request from " + user.getUsername() + " to " + currentUser.getUsername() + " deleted";
         }
     }
 
@@ -128,4 +143,5 @@ public class FriendsService {
         });
         return friends;
     }
+
 }

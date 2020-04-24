@@ -6,6 +6,7 @@ import coronhackathon.backend.repository.FriendsRepository;
 import coronhackathon.backend.service.FriendsService;
 import coronhackathon.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -75,6 +76,19 @@ public class FriendsController {
     @PostMapping("/api/acceptFriendRequest")
     public String acceptFriendRequest(Principal principal, @RequestParam long userId) {
         return friendsService.acceptFriendRequest(getCurrentUser(principal) ,userId);
+    }
+
+    /**
+     * Refuse the pending request previously done by the user given in argument
+     *
+     * @param principal needed to know who is the current user
+     * @param userId the userId of the user who previously made a friend request
+     * @return a comment on the post request
+     */
+    @Modifying
+    @PostMapping("/api/refuseFriendRequest")
+    public String refuseFriendRequest(Principal principal, @RequestParam long userId) {
+        return friendsService.refuseFriendRequest(getCurrentUser(principal) ,userId);
     }
 
     /**
