@@ -182,5 +182,4 @@ public class ChallengeController {
     public List<Challenge> getChallengesByTag(@PathVariable long tagId) {
         return tagOfChallengeService.getChallengesOfTag(tagId);
     }
-
 }

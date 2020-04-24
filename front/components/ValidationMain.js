@@ -1,31 +1,38 @@
 import * as React from 'react';
-import { Button, Image, View, TextInput,TouchableOpacity, Text ,StyleSheet} from 'react-native';
+import { ActivityIndicator, Image, View, TextInput,TouchableOpacity, Text ,StyleSheet} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
-import {request} from '../api.js';
+import {request, baseURL} from '../api.js';
 import palette from "../palette.js"
 
 export default class ImagePickerExample extends React.Component {
   state = {
+    previousImage:null,
     image: null,
+    commentary: "", // 'comment' is a keyword /!\
+    animating:false, // loading icon animation
   };
 
   render() {
     let { image } = this.state;
-
+    const animating = this.state.animating; //cannot call this.state in View 
+    const previousComment = this.state.commentary;
     return (
       <View style={styles.main}>
+        {/* text input for th euser's comment*/}
         <View style={styles.descContainer}>
-          <Text style={styles.inputTitle}></Text>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputText}  
               placeholder="Commente ce que tu as réalisé !" multiline
+              defaultValue={previousComment}
               placeholderTextColor="grey"
               textAlignVertical="top"
+              onChangeText={this.handleComment}
             />
           </View>
         </View>
+        {/* The image picker*/}
         <View style={styles.pickerContainer}>
           <View style={styles.picker}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -36,27 +43,64 @@ export default class ImagePickerExample extends React.Component {
             </View>
           </View>
         </View>
+        {/* Submit button*/}
         <TouchableOpacity style={[palette.defaultPrimaryColor, styles.containerBtn]} onPress={this._submitValidation}> 
           <Text  style={[palette.textPrimaryColor, styles.validationBtn]}>Valider !</Text>
         </TouchableOpacity>
+        <ActivityIndicator
+               animating = {animating}
+               color = '#3d9d84'
+               size = "large"
+        />
       </View>
     );
   }
 
+  handleComment = (text) => {
+    this.setState({ commentary: text })
+ }
+
+  //When the screen is mounted ask for permission
   componentDidMount() {
+    this.isAlreadyCompleted();
     this.getPermissionAsync();
   }
 
+  isAlreadyCompleted = async () =>{
+    const self = this
+    request({ 
+      method: 'GET',
+      url: "/api/getDataCompleted/"+this.props.challengeId, 
+    }).then(function(response){
+      console.log('Success !')
+      console.log(response.data);
+      if(response.data !== []){
+        self.setState({commentary: response.data[0]})
+        if(response.data.length > 1){
+          self.setState({image:{uri: baseURL + '/static/image/jpg?path=' +response.data[1]}})
+        }
+      }
+    }).catch(function(error){
+      console.log('Failure...')
+      console.log(error.response.data.status);
+
+    })
+  };
+
   getPermissionAsync = async () => {
-    if (Constants.platform.ios) {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       if (status !== 'granted') {
         alert('Nous avons besoin de ta permission pour ajouter une image!');
       }
-    }
   };
 
+  //Choose image in gallery, display it and store its uri + base64 representation
   _pickImage = async () => {
+    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Nous avons besoin de ta permission pour ajouter une image!');
+        return
+      }
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -68,58 +112,18 @@ export default class ImagePickerExample extends React.Component {
       if (!result.cancelled) {
         this.setState({ image: result });
       }
-      //  console.log(result.base64);
     } catch (E) {
       console.log(E);
     }
   };
 
- _uploadImage = async () => {
-    if(this.state.image == null){
-      return
-    }
-    
-    let uriParts = this.state.image.uri.split('.');
-    let fileType = uriParts[uriParts.length - 1];
-    fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
-    let bodyFormData = new FormData();
-    bodyFormData.append('imgData',this.state.image.base64);
-    request({
-      method: 'post',
-      url : '/api/uploadMyCompletedImage/'+fileType+'/'+this.props.challengeId,
-       data : bodyFormData,
-      headers: {'Content-Type':'image/jpeg'}
-    }).then(function(response){
-      console.log("Got here then!")
-      // console.log(response)
-
-      // this._submitValidation(response.path) // ??
-    }).catch(function(error){
-      console.log("Got here catch!")
-      console.log(error.response.data.status)
-      console.log(error.response.data.error)
-      console.log(error.response.data.message)
-    })
-
-    // let options = {
-    //   method: 'POST',
-    //   body: formData,
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': 'multipart/form-data',
-    //   },
-    // };
-
-    // return fetch(apiUrl, options);
-    // }
-
-  }
-
+  //Post the comment and the image base64 
   _submitValidation = async () => {
+    this.setState({animating: true })
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
-    bodyFormData.append('commentary',"Commentaire constructif 4");
-
+    bodyFormData.append('commentary',this.state.commentary);
+    console.log(this.state.commentary);
     if(this.state.image != null){
       let uriParts = this.state.image.uri.split('.');
       let fileType = uriParts[uriParts.length - 1];
@@ -131,21 +135,18 @@ export default class ImagePickerExample extends React.Component {
       bodyFormData.append('imgBase64',"");
       bodyFormData.append('imgFormat', ""); 
     }
-
+    const self = this;
     request({
       method: 'post',
       url : '/api/completeMyChallenge',
       data : bodyFormData,
       headers: {'Content-Type':'multipart/form-data'}
     }).then(function(response){
-
-      console.log("Got here then!")
-      console.log(response.status)
-      console.log(response.message)
-
+      self.setState({animating: false})
+      
     }).catch(function(error){
-
-      console.log("Got here catch!")
+      self.setState({animating: false})
+      console.log("Error while posting validation!")
       console.log(error.response.data.status)
       console.log(error.response.data.error)
       console.log(error.response.data.message)
@@ -164,8 +165,6 @@ const styles = StyleSheet.create({
   descContainer :{
     alignItems: 'center',
     width:'100%',
-    // minHeight:200,
-    // maxHeight:200,
     margin: 20,
     paddingBottom: 10,
   },

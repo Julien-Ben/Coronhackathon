@@ -1,6 +1,5 @@
 package coronhackathon.backend.entity;
 
-
 import javax.persistence.*;
 
 @Entity

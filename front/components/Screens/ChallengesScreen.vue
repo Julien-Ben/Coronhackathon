@@ -56,26 +56,7 @@ export default {
     return {
       styles: styles,
       baseURL: baseURL,
-      challenges: [
-          {
-          id: 1,
-          title : 'Prendre des nouvelles de ses voisins',
-          description : "En ce moment, certains n'ont pas la chance d'avoir des proches près d'eux ...",
-          image : 'https://www.materialui.co/materialIcons/communication/phone_black_192x192.png'
-        },
-          {
-          id: 2,
-          title : 'Faire une mousse au chocolat',
-          description : "Des oeufs, une tablette de chocolat dessert? Pourquoi ne pas essayer de reproduire chez vous ...",
-          image : 'https://icons-for-free.com/iconfiles/png/512/cake+48px-131987943060752100.png'
-        },
-          {
-          id: 3,
-          title : 'Un troisième challenge',
-          description : "Lorem ipsum je n'ai pas d'idée, de toute façons personne ne lira cette description. PERSONNE LIS TES PAVEEEES",
-          image : ''
-        },
-      ]
+      challenges: [],
     }
   },
 

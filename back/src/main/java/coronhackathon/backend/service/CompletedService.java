@@ -37,7 +37,7 @@ public class CompletedService {
     public long getNumberOfCompletedChallenges(long userId){
         return getCompletedChallenges(userId).size();
     }
-
+    
     public List<Challenge> getCompletedChallenges(long userId) {
         List<Challenge> l = new ArrayList<Challenge>();
         Optional<User> ou = userRepository.findById(userId);
@@ -92,10 +92,12 @@ public class CompletedService {
         User user = ou.get();
         Challenge challenge = oc.get();
 
+        HasCompleted hc;
         if(completedRepository.findByUserAndChallenge(user, challenge).isPresent())
-            return "User " + user.getUsername() + " has already completed " + challenge.getName();
-
-        HasCompleted hc = new HasCompleted();
+            hc = completedRepository.findByUserAndChallenge(user, challenge).get();
+        else {
+            hc = new HasCompleted();
+        }
         hc.setChallenge(challenge);
         hc.setUser(user);
         hc.setCommentary(commentary);
@@ -134,7 +136,6 @@ public class CompletedService {
         return l;
     }
 
-
     public List<Challenge> getCompletedChallengesByCategory(String username, long categoryId) {
         List<Challenge> l = new ArrayList<>();
         Optional<User> ou = userRepository.findByUsername(username);
@@ -147,24 +148,7 @@ public class CompletedService {
         }
         return l;
     }
-
-    public void setPath(long userId, long challengeId, String destinationPath) {
-        Optional<User> ou = userRepository.findById(userId);
-        Optional<Challenge> oc = challengeRepository.findById(challengeId);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
-
-        User user = ou.get();
-        Challenge challenge = oc.get();
-        Optional<HasCompleted> ohc = completedRepository.findByUserAndChallenge(user, challenge);
-        if (!ohc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "has completed not found");
-
-        else ohc.get().setPicture(destinationPath);
-    }
-
+    
     public List<Challenge> getCompletedChallengesByCategory(long userId, String name) {
         return getCompletedChallengesByCategory(userId, categoryService.getIdFromName(name));
     }
@@ -192,5 +176,25 @@ public class CompletedService {
         }
 
         return userAndComments;
+    }
+
+    public List<String> getDataCompleted(String name, long challengeId){
+        List<String> l = new ArrayList<>();
+
+        Optional<User> ou = userRepository.findByUsername(name);
+        if (!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with username : " + name + " not found");
+
+        Optional<Challenge> oc = challengeRepository.findById(challengeId);
+        if (!oc.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
+        Optional<HasCompleted> oh  = completedRepository.findByUserAndChallenge(ou.get(),oc.get());
+
+        if (!oh.isPresent()) //If the user didn't complete the challenge yet return an empty array
+            return l;
+        HasCompleted hc = oh.get();
+        l.add(hc.getCommentary());
+        l.add(hc.getPicture());
+        return l;
     }
 }

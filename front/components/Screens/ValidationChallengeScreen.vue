@@ -6,6 +6,7 @@
       <text class="title">{{challenge}}</text>
       <view class="sep"></view>
     </view>
+    <!-- Call react-native object consiting of the input, image picker and validation button -->
     <ValidationMain :challengeId="challengeId" />
 </view>
 </scroll-view>
@@ -39,70 +40,11 @@
   text-align: center;
 }
 
-.main{
-  /* justify-content: center;  */
-  align-items: center;
-  height:80%;
-  /* background-color: lightgrey; */
-}
-.desc-container{
-  align-items: center;
-  width:100%;
-  min-height:200;
-  max-height:200;
-  margin: 20;
-  padding-bottom: 10;
-}
-
-.input-title{
-  font-size:20;
-  color : #3d9d84;
-}
-
-.input-container{
-  width:90%;
-  min-height:30;
-  max-height:170;
-  border-color: #3d9d84;
-  border-radius:5;
-  border-width: 1;
-  padding:10;
-  
-}
-
-.input-text {
-  font-size: 18;
-  text-align: left;
-}
-
-.picker-container  {
-  min-height: 250;
-  width:100%;
-  font-size: 20;
-  margin-bottom: 20;
-}
-
-.container-btn {
-  border-radius: 25;
-  margin-bottom:30;
-}
-.validation-btn{
-    font-size: 20;
-    padding-top: 10;
-    padding-bottom: 10;
-    padding-left: 20;
-    padding-right: 20;
-}
-
 </style>
 
 
 <script>
-import { Alert } from 'react-native';
 import {request} from '../../api.js';
-import React from 'react';
-import {Text} from 'react-native';
-import ImagePicker from '../ImagePicker';
 import ValidationMain from '../ValidationMain';
 import styles from "../../palette.js"
 
@@ -113,50 +55,27 @@ export default {
       }
   },
   components: {
-    ImagePicker,
     ValidationMain
   },
     data:   function() {
       return {
           challengeId: this.navigation.state.params.challengeId,
           styles: styles,
-          response:{
-            commentary:"",
-            picture:null,
-          },
-          review:"",
-          challenge:"nom",
+          challenge:"",
       }
     },
     methods:{
 
+      //get the challenge name
       start: function(){
         const self=this;
       request({ //on suppose qu'on a déjà l'id
            method: 'get',
            url: '/api/getChallenge/'+this.navigation.state.params.challengeId,
           }).then(function(response){
-
-          self.challenge = response.data.name; 
+            self.challenge = response.data.name; 
         })
       },
-      //tout sauf l'image puis uid et cid dans l'url et que l'image
-      challengeValidation: function() {
-
-          var bodyFormData = new FormData();
-          bodyFormData.append('challengeId', this.navigation.state.params.challengeId);
-          bodyFormData.append('commentary',this.review);
-          bodyFormData.append('picture',""); //à changer
-          request({
-            method: 'post',
-            url : '/api/completeMyChallenge',
-            data : bodyFormData,
-            headers: {'Content-Type':'multipart/form-data'}
-        }).then(function(response){
-          }).catch(function(error){
-            console.log(error)
-          })
-        },
     },
     mounted: function() {
       this.start();

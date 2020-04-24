@@ -1,6 +1,5 @@
 package coronhackathon.backend.controller;
 
-import coronhackathon.backend.entity.Friends;
 import coronhackathon.backend.entity.User;
 import coronhackathon.backend.repository.FriendsRepository;
 import coronhackathon.backend.service.FriendsService;
