@@ -78,16 +78,13 @@ export default {
         const self = this;
         request({
         method: 'post',
-        url: '/register', //A modifier ?
+        url: '/register', 
         data: bodyFormData,
         headers: {'Content-Type': 'multipart/form-data' }
         }).then(function(response){
-           console.log(response.status)
           if(response != undefined && response.status == 200){
               self.login()
               
-          } else {
-
           }
         }).catch(function(error){
           self.loading = false
@@ -103,11 +100,6 @@ export default {
               self.pseudoTaken = false
             }
           }
-          
-          // console.log(error.response.data.status)
-          // console.log(error.response.data.message)
-          // console.log(error.response.headers)
-
         })
     },
 
