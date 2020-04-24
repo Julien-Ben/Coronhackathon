@@ -9,7 +9,7 @@
       <text class="empty-text">Il n'y a pas encore de défi dans cette catégorie.</text>
     </view>
     <view v-else>
-      <ChallengeListBools v-bind:challengesAndBool="challenges" v-bind:goToChallenge="goToChallenge"/>
+      <ChallengeList v-bind:challengesAndBool="challenges" v-bind:goToChallenge="goToChallenge"/>
     </view>
   </view>
 </template>
@@ -59,7 +59,7 @@
 </style>
 
 <script>
-import ChallengeListBools from '../ChallengeListBools';
+import ChallengeList from '../ChallengeList';
 import {request, baseURL} from '../../api.js';
 
 export default {
@@ -70,7 +70,7 @@ export default {
   },
   
   components: {
-    ChallengeListBools: ChallengeListBools,
+    ChallengeList: ChallengeList,
   },
     
   data: function() {

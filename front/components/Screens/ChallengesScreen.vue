@@ -5,7 +5,7 @@
         <text class="title" :style=styles.textPrimaryColor>Listes des Défis</text>
       </view>
       </view>
-        <ChallengeList :challenges="challenges" :goToChallenge="goToChallenge"/>
+        <ChallengeList :challengesAndBool="challenges" :goToChallenge="goToChallenge"/>
       </view>
 </template>
 
@@ -44,7 +44,7 @@ export default {
     return {
       styles: styles,
       baseURL: baseURL,
-      challenges: [],
+      challenges: {},
     }
   },
 
@@ -53,7 +53,7 @@ export default {
       const self = this;
       request({
         method: 'get',
-        url: '/api/allChallenges'
+        url: '/api/getChallengesBool'
       }).then(function(response){
         self.challenges = response.data
       })

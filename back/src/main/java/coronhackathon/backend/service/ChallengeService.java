@@ -95,4 +95,21 @@ public class ChallengeService {
         }
         return l;
     }
+
+    public Map<String, Object> getAllChallengesBool(String username){
+        List<Boolean> l = new ArrayList<>();
+        Optional<User> ou = userRepository.findByUsername(username);
+        if (!ou.isPresent())
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with name : " + username + " not found");
+        List<Challenge> completed = completedService.getCompletedChallenges(ou.get().getId());
+        List<Challenge> cs = challengeRepository.findAll();
+        // creates the lists of booleans corresponding to the given list of challenges cs
+        for (Challenge c : cs) {
+            l.add(completed.contains(c));
+        }
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("Challenge", cs);
+        map.put("Completed", l);
+        return map;
+    }
 }

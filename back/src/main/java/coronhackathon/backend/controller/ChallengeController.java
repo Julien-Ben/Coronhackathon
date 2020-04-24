@@ -163,6 +163,15 @@ public class ChallengeController {
     }
 
     /**
+     * Returns a list with all challenges, and a list of booleans that indicate if they were validated
+     * @return a map with all the challenges and their corresponding boolean
+     */
+    @RequestMapping(path = "/api/getChallengesBool", method = RequestMethod.GET)
+    public Map<String, Object> getChallengesBool(Principal principal) {
+        return challengeService.getAllChallengesBool(principal.getName());
+    }
+
+    /**
      * Returns the number of challenges
      *
      * @return the number of challenges
