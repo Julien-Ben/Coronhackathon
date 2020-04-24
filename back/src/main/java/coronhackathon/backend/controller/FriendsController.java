@@ -27,7 +27,7 @@ public class FriendsController {
      * @return A list with the friends of the current user ordered by the number of completed Challenges
      */
     @RequestMapping(path = "/api/getFriends", method = RequestMethod.GET)
-    public List<User> getFriendsOrderByCompletedChallenges(Principal principal) {
+    public List<FriendsService.UserAndNbChallenge> getFriendsOrderByCompletedChallenges(Principal principal) {
         User user = userService.getUserByUsername(principal.getName()).get();
         return friendsService.getFriendsOrderByCompletedChallenges(user);
     }
@@ -58,12 +58,12 @@ public class FriendsController {
      * The current user asks the user given in parameter to be his friend
      *
      * @param principal needed to now who is the current user
-     * @param userId the userId of the user to which we want to ask to be her/his friend
+     * @param username the username of the user to which we want to ask to be her/his friend
      * @return a comment on the post request
      */
     @PostMapping("/api/friendRequest")
-    public String friendRequest(Principal principal, @RequestParam long userId) {
-        return friendsService.friendRequest(getCurrentUser(principal) ,userId);
+    public String friendRequest(Principal principal, @RequestParam String username) {
+        return friendsService.friendRequest(getCurrentUser(principal) ,username);
     }
 
     /**
