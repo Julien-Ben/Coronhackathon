@@ -104,7 +104,6 @@ export default {
     },
 
     login(){
-        console.log("got here")
         this.loading = true
         var bodyFormData = new FormData();
         bodyFormData.append('username', this.pseudo);
