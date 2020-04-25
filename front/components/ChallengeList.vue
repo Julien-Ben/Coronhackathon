@@ -1,7 +1,7 @@
 <template>
   <scroll-view class = "myScrollView">
     <view v-for="(challenge, index) in challengesAndBool.Challenge" :key="index">
-      <view class = "element-border" v-if="challengesAndBool.Completed[index]">
+      <view class = "element-border" v-if="!challengesAndBool.Completed[index]">
         <touchable-opacity class = "element-container" :on-press="() => goToChallenge(challenge)">
           <view class ="challenge-text">
             <text class = "challenge-title">{{challenge.name}}</text> 
