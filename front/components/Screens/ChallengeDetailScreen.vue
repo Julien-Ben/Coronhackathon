@@ -32,7 +32,8 @@
       <view class="comments-container">
         <view class="comments" v-for="(commentaire, index) in commentaires" :key="index">
           <view class="comment-container">
-            <text class="comment">{{commentaire}}</text>
+            <text class="user">{{commentaire[0]}}</text>
+            <text class="comment">{{commentaire[1]}}</text>
           </view>
         </view>
       </view>
@@ -162,11 +163,15 @@
   padding:30;
   
 }
-
+.user{
+  font-size: 20;
+  color : #3d9d84;
+  margin-bottom:5;
+}
 .comment{
   color :#4e4e4e;
   font-size: 20;
-
+  /* padding-left:30; */
 }
 
 </style>
