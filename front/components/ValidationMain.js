@@ -72,11 +72,11 @@ export default class ImagePickerExample extends React.Component {
       method: 'GET',
       url: "/api/getDataCompleted/"+this.props.challengeId, 
     }).then(function(response){
-      console.log('Success !')
-      console.log(response.data);
+
+      // console.log(response.data);
       if(response.data !== []){
         self.setState({commentary: response.data[0]})
-        if(response.data.length > 1){
+        if(response.data.length > 1 && response.data[1] != ""){
           self.setState({image:{uri: baseURL + '/static/image/jpg?path=' +response.data[1]}})
         }
       }
@@ -119,12 +119,13 @@ export default class ImagePickerExample extends React.Component {
 
   //Post the comment and the image base64 
   _submitValidation = async () => {
+    console.log(this.state.image.base64 == null)
     this.setState({animating: true })
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
     bodyFormData.append('commentary',this.state.commentary);
-    console.log(this.state.commentary);
-    if(this.state.image != null){
+
+    if(this.state.image != null && this.state.image.base64 != null){
       let uriParts = this.state.image.uri.split('.');
       let fileType = uriParts[uriParts.length - 1];
       fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
