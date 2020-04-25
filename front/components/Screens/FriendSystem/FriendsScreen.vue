@@ -116,7 +116,7 @@ export default {
       },
 
       declineRequest(userId){
-        Alert.alert("Es-tu sûr de refuser cette demande d'ami ?",'',[
+        Alert.alert("Es-tu sûr de vouloir refuser cette demande d'ami ?",'',[
                     {text: 'Annuler'},
                     {text:'Refuser', onPress:() => this.answerRequest(userId,false)}
                 ])
