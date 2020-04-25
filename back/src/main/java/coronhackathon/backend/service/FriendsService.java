@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-//import sun.jvm.hotspot.memory.FreeChunk;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.*;
 
 @Service
@@ -72,8 +74,11 @@ public class FriendsService {
             Friends f2 = of2.get();
             if (f2.getCompleted())
                 return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are already friends";
-            else
+            else{
+                f2.setCompleted(true);
+                friendsRepository.save(f2);
                 return ""+currentUser.getUsername()+" and "+ou.get().getUsername()+" are now friends";
+            }
         }else { //if they never asked each other
             Friends friends = new Friends();
             friends.setUser1(currentUser);

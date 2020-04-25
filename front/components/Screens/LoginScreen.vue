@@ -4,9 +4,17 @@
         <text class="title" :style="styles.myred">CONSVID la TÊTE</text>
         
         <text class="text-container">Pseudo : </text>
-        <text-input class="input-container" placeholder="username" v-model="username"/>
+        <text-input class="input-container" 
+          placeholder="username" 
+          autoCapitalize="none"
+          v-model="username"
+        />
         <text class="text-container">Mot de passe :</text>
-        <text-input class="input-container" placeholder="password" secure-text-entry v-model="password"/>
+        <text-input class="input-container" 
+          placeholder="password" 
+          secure-text-entry 
+          autoCapitalize="none"
+          v-model="password"/>
         <text class="login-fail" v-if="loginFail">Mauvaise combinaison</text>
         <text class="login-fail" v-else></text>
         <view class="login-container"> 

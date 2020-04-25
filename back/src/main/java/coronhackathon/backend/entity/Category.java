@@ -1,12 +1,6 @@
 package coronhackathon.backend.entity;
 
-//import sun.reflect.generics.tree.Tree;
-
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
 
 @Entity
 public class Category {

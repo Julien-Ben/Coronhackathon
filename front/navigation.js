@@ -14,6 +14,9 @@ import ChallengeDetailScreen from "./components/Screens/ChallengeDetailScreen";
 import CategoryScreen from "./components/Screens/CategoryScreen";
 import ValidationChallengeScreen from "./components/Screens/ValidationChallengeScreen";
 import ChallengesByCategoryScreen from "./components/Screens/ChallengesByCategoryScreen";
+import FriendsScreen from "./components/Screens/FriendSystem/FriendsScreen";
+import FriendProfileScreen from "./components/Screens/FriendSystem/FriendProfileScreen";
+import FriendChallengeScreen from "./components/Screens/FriendSystem/FriendChallengeScreen";
 
 const Covid19Tab = createStackNavigator(
   {
@@ -34,11 +37,11 @@ const Covid19Tab = createStackNavigator(
     Details: {
       screen : DetailsScreen,
       navigationOptions: {
-        title: 'QUI SOMMES-NOUS',
+        title: 'DÉTAILS',
             headerStyle: {
-              backgroundColor: '#3d9d84',
+              backgroundColor: '#ffffff',
             },
-            headerTintColor: '#ffffff',
+            headerTintColor: '#grey',
             headerTitleStyle: {
               fontWeight: '200',
               fontSize: 30,
@@ -183,25 +186,55 @@ const ProfilTab = createStackNavigator(
 )
 
 
-// const DetailsTab = createStackNavigator(
-//   {
-//     Details: {
-//       screen: DetailsScreen,
-//       navigationOptions: {
-//         title: 'DÉTAILS',
-//         headerStyle: {
-//           backgroundColor: '#ffffff',
-//         },
-//         headerTintColor: 'black',
-//         headerTitleStyle: {
-//           fontWeight: '200',
-//           fontSize: 30,
-//         },
-//         animationTypeForReplace: "pop",
-//       }
-//     },
-//   },
-// )
+const FriendsTab = createStackNavigator(
+  {
+    Friends: {
+      screen: FriendsScreen,
+      navigationOptions: {
+        title: 'AMIS',
+        headerStyle: {
+          backgroundColor: '#3d9d84',
+        },
+        headerTintColor: 'white',
+        headerTitleStyle: {
+          fontWeight: '200',
+          fontSize: 30,
+        },
+        animationTypeForReplace: "pop",
+      }
+    },
+    FriendProfile: {
+      screen: FriendProfileScreen,
+      navigationOptions: {
+        title: '',
+        headerStyle: {
+          backgroundColor: '#3d9d84',
+        },
+        headerTintColor: 'white',
+        headerTitleStyle: {
+          fontWeight: '200',
+          fontSize: 30,
+        },
+        animationTypeForReplace: "pop",
+      }
+    },
+    FriendChallenge: {
+      screen: FriendChallengeScreen,
+      navigationOptions: {
+        title: '',
+        headerStyle: {
+          backgroundColor: '#3d9d84',
+        },
+        headerTintColor: 'white',
+        headerTitleStyle: {
+          fontWeight: '200',
+          fontSize: 30,
+        },
+        animationTypeForReplace: "pop",
+      }
+    },
+  },
+)
 
 const Tabs = createBottomTabNavigator(
     {
@@ -255,6 +288,16 @@ const Tabs = createBottomTabNavigator(
               },
             }
         },
+        "Amis": {
+          screen : FriendsTab,
+          navigationOptions: {
+            tabBarIcon: ({ focused}) => {
+              let iconName = 'team';
+              let color = focused ? '#fedff2' : 'gray';
+              return <AntDesign name={iconName} size={28} color={color}/>;
+            },
+          }
+      },
     },
     {
         tabBarOptions: {

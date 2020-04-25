@@ -5,38 +5,44 @@
             <activity-indicator v-if="loading" size="large" color="black"/>
         </view>
         <scroll-view v-if="!loading" class="top">
-                <view class ="header">
-                    <text class="title">{{username}}</text>
-                    <view class="sep"></view>
-                </view>
-
-            <view class="container">
+            <view class ="header">
+                <text class="title">{{username}}</text>
+                <view class="sep"></view>
+            </view>
+            <view >
                 <text class= "heading">{{nbAchieved}} Défis relevés parmi {{nbAll}} défis disponibles!</text>
-                
                 <view class="cat-container" v-for="(category,index) in res" :key="index">
-                    
                     <text  v-if="category.all!=0" class = "heading">{{category.catName}} : {{category.comp}} / {{category.all}}</text>
-
-                    <view class="icon-container" v-for="challenge in category.challenges" :key="challenge.id">
-                            <touchable-opacity :on-press="() => showChallengeDescription(challenge)">
+                    <view class="icon-container" v-if="category.challenges.length > 0" >
+                        <!-- v-for="challenge in category.challenges" :key="challenge.id" -->
+                            <touchable-opacity :on-press="() => showChallengeDescription(category.challenges[0])">
                                 <image class="badge"
-                                      :source="{uri: baseURL + '/static/image/png?path=' + category.logo}"
-                                    />
+                                    :source="{uri: baseURL + '/static/image/png?path=' + category.logo}"
+                                />
                             </touchable-opacity>
-                            <text class="description"> Badge obtenu pour la réalisation du challenge : {{challenge.name}}</text>
-
+                            <text class="description"> Badge obtenu pour la réalisation du challenge : {{category.challenges[0].name}}</text>
                     </view>
                 </view>
+                
+                
+                
             </view>
-
+            <view class="completed-container">
+                    <view class="sep"></view>
+                    <text class="completed-title" :style=styles.titlePrimaryColor>Défis réalisés:</text>
+                    <ChallengeCompletedList :challenges="completedChallenges" :goToChallenge="goToChallenge" />
+                </view>
         </scroll-view>
     </view>
 </template>
+
 
 <script>
 
 import {request, baseURL} from '../../api.js';
 import { Alert } from 'react-native';
+import ChallengeCompletedList from '../ChallengeCompletedList';
+import styles from '../../palette';
 import axios from "axios";
     export default {
         props: {
@@ -44,16 +50,20 @@ import axios from "axios";
                 type: Object
             }
         },
+        components:{
+            ChallengeCompletedList: ChallengeCompletedList,
+        },
         data: function() {
             return{
+                styles:styles,
                 baseURL: baseURL,
                 cats: [],
                 res: [],
-                username: 'John Doe',
+                username: '',
                 nbAchieved: 0,
                 nbAll: 0,
-                loading: true
-
+                loading: true,
+                completedChallenges:[],
             };
         },
         methods: {
@@ -64,7 +74,6 @@ import axios from "axios";
                     {text:'En savoir plus!', onPress:() => this.navigation.navigate("ChallengeDetail", {challengeId:challenge.id})}
                 ])
             },
-
 
             fetch : function(){
                 const self = this
@@ -104,7 +113,6 @@ import axios from "axios";
                         self.nbAchieved += nbComplet
                         
                         if(self.cats[index] != undefined){
-                            
                             if(self.cats != undefined && index == self.cats.length){
                                 console.log("everything loading at index : " + index)
                                 laoded = true;
@@ -117,24 +125,38 @@ import axios from "axios";
                                 logo:self.cats[index].logo
                             })
                         }
-                        if(self.cats.length - 1 == index){
-                            self.loading = false
-                        }
-                        if(index < self.cats.length){
+                        if(index < self.cats.length - 1){
                             self.getCatInfo(index + 1)
+                        } else{
+                            self.loading = false
                         }
                     }).catch(function(err){
                         console.log(err)
                     })
                 })
+            },
 
+            getCompletedChallenge(){
+                const self = this
+                request({ 
+                    method: 'GET',
+                    url: "/api/getMyCompleted",
+                }).then(function(response){
+                    // console.log(response)
+                    self.completedChallenges = response.data
+                }).catch(function(error){
+                    console.log(error.response.error.status)
+                })
+            },
+            
+            goToChallenge(challenge){
+                this.navigation.navigate("ChallengeDetail", {challengeId:challenge.id})
             }
-
-
         },
 
         mounted: function(){
             this.fetch()
+            this.getCompletedChallenge()
         }
 
 
@@ -154,32 +176,6 @@ import axios from "axios";
     align-items: center;
     flex:1;
 }
-/* .loadingCase{
-    background-color: #B0B0B0;
-    width: 100px;
-    height: 100px;
-    position: relative;
-} */
-/* .loading{
-    position: absolute;
-    left:0;
-    bottom:0;
-
-} */
-/* .header {
-  height : 20%;
-  justify-content: center;
-  align-items: center;
-  background-color: #3d9d84;
-  color:white;
-  flex-direction: row;
-  justify-content: space-around;
-}
-.title {
-  font-size: 40px;
-  font-weight: 200;
-  color: white;
-} */
 
 .header {
   justify-content: center;
@@ -192,10 +188,9 @@ import axios from "axios";
   align-items: center;
   border-color:#3d9d84;
   border-bottom-width: 2;
-  padding-bottom: 20;
-  
-  
+  padding-bottom: 20;  
 }
+
 .title {
   font-size: 40px;
   font-weight: 200;
@@ -205,12 +200,10 @@ import axios from "axios";
   text-align: center;
 }
 .container {
-  /* background-color: #b2ebcc; */
-  flex: 1;
-}
-.cat-container{
     align-items: center;
     justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 .icon-container{
     justify-content: center;
@@ -221,23 +214,18 @@ import axios from "axios";
     height: 30;
     width: 30;
 }
-.top{
-    /* align-items: center; */
-    /* background-color: #b2ebcc; */
-}
 
 .description{
     font-weight: 100;
     width: 70%;
 }
 
-
-
 .heading {
+
   font-size: 20;
   font-weight: bold;
-  color: black;
   margin: 20;
+  text-align: center;
 }
 
 .info-container{
@@ -246,6 +234,18 @@ import axios from "axios";
     border-radius: 10;
     align-items: center;
     flex-direction: row;
+}
+
+.completed-container{
+    justify-content: center;
+    align-items: center;
+}
+
+.completed-title{
+
+  font-size: 25;
+  margin: 20;
+  text-align: center;
 }
 
 </style>

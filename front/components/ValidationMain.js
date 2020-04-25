@@ -1,23 +1,26 @@
 import * as React from 'react';
 import { ActivityIndicator, Image, View, TextInput,TouchableOpacity, Text ,StyleSheet} from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import {request, baseURL} from '../api.js';
 import palette from "../palette.js"
 
-export default class ImagePickerExample extends React.Component {
+export default class ValidationMain extends React.Component {
   state = {
     previousImage:null,
     image: null,
     commentary: "", // 'comment' is a keyword /!\
     animating:false, // loading icon animation
+    validated:false,
   };
 
   render() {
     let { image } = this.state;
     const animating = this.state.animating; //cannot call this.state in View 
-    const previousComment = this.state.commentary;
+    const previousComment = this.state.commentary == undefined ? "" : this.state.commentary;
+    let validated = this.state.validated
     return (
       <View style={styles.main}>
         {/* text input for th euser's comment*/}
@@ -52,6 +55,9 @@ export default class ImagePickerExample extends React.Component {
                color = '#3d9d84'
                size = "large"
         />
+        <View style={{minHeight:100}}>
+          {this.state.validated  && <AntDesign name ="checkcircle" size="50" color='#3d9d84'/>}
+        </View>
       </View>
     );
   }
@@ -64,6 +70,7 @@ export default class ImagePickerExample extends React.Component {
   componentDidMount() {
     this.isAlreadyCompleted();
     this.getPermissionAsync();
+    console.log(this.state.validated)
   }
 
   isAlreadyCompleted = async () =>{
@@ -72,11 +79,11 @@ export default class ImagePickerExample extends React.Component {
       method: 'GET',
       url: "/api/getDataCompleted/"+this.props.challengeId, 
     }).then(function(response){
-
-      // console.log(response.data);
-      if(response.data !== []){
+      if(response.data.length > 0){
+        console.log(response.data)
+        self.setState({validated : true})
         self.setState({commentary: response.data[0]})
-        if(response.data.length > 1 && response.data[1] != ""){
+        if(response.data.length > 1 && response.data[1].length > 0){
           self.setState({image:{uri: baseURL + '/static/image/jpg?path=' +response.data[1]}})
         }
       }
@@ -143,6 +150,7 @@ export default class ImagePickerExample extends React.Component {
       headers: {'Content-Type':'multipart/form-data'}
     }).then(function(response){
       self.setState({animating: false})
+      self.setState({validated: true})
       
     }).catch(function(error){
       self.setState({animating: false})

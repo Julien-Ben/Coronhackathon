@@ -6,6 +6,8 @@ import coronhackathon.backend.entity.User;
 import coronhackathon.backend.service.*;
 import coronhackathon.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -20,10 +22,10 @@ public class UserController {
     private CompletedService completedService;
 
     @PostMapping("/register")
-    public Optional<User> showRegistrationForm(@RequestParam String username,
-                                               @RequestParam String hashPwd,
-                                               @RequestParam String hashPwd2) {
-        return userService.register(username, hashPwd, hashPwd2);
+    public ResponseEntity<String> showRegistrationForm(@RequestParam String username,
+                                                       @RequestParam String hashPwd,
+                                                       @RequestParam String hashPwd2) {
+        return new ResponseEntity<>(userService.register(username, hashPwd, hashPwd2), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/api/username", method = RequestMethod.GET)

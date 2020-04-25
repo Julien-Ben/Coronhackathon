@@ -1,17 +1,15 @@
 package coronhackathon.backend.service;
 
-import coronhackathon.backend.entity.Challenge;
-import coronhackathon.backend.entity.HasCompleted;
+
 import coronhackathon.backend.entity.User;
 import coronhackathon.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +43,7 @@ public class UserService {
      * Username must be unique and that the two hashes match
      * we must store encoded passwords as spring security expects
      */
-    public Optional<User> register(String username, String pwd, String pwdBis) {
+    public String register(String username, String pwd, String pwdBis) {
         //if passwords match
         if (pwdBis.equals(pwd)) {
             // if the username is new
@@ -57,12 +55,12 @@ public class UserService {
                 user.setPwdHash(passwordEncoder.encode(pwd));
 
                 insert(user);
-                return Optional.of(user);
+                return "user with username : " + username + " has been created";
             } else {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "user with username : " + username + " already exists");
+                throw new ResponseStatusException(HttpStatus.CONFLICT,"user with username : " + username + " already exists");
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "passwords dont match");
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "passwords don't match");
         }
     }
 }
