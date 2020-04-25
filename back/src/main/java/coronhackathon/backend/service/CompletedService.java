@@ -168,11 +168,12 @@ public class CompletedService {
         List<List<String>> userAndComments = new ArrayList<>();
         for (HasCompleted hc : completedRepository.findByChallenge(oc.get())) {
 
-            List<String> UserAndComment = new ArrayList<String>();
-            UserAndComment.add(hc.getUser().getUsername());
-            UserAndComment.add(hc.getCommentary());
-
-            userAndComments.add(UserAndComment);
+            if(hc.getCommentary().length() > 0) {
+                List<String> UserAndComment = new ArrayList<String>();
+                UserAndComment.add(hc.getUser().getUsername());
+                UserAndComment.add(hc.getCommentary());
+                userAndComments.add(UserAndComment);
+            }
         }
 
         return userAndComments;

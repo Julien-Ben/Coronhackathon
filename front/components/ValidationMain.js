@@ -83,7 +83,7 @@ export default class ValidationMain extends React.Component {
         self.setState({commentary: response.data[0]})
         if(response.data.length > 1 && response.data[1].length > 0){
           self.setState({image:{uri: baseURL + '/static/image/jpg?path=' +response.data[1]}})
-          console.log(response.data[1])
+          console.log(baseURL + '/static/image/jpg?path=' +response.data[1])
         }
       }
     }).catch(function(error){
@@ -128,12 +128,12 @@ export default class ValidationMain extends React.Component {
     this.setState({animating: true })
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
-    bodyFormData.append('commentary',this.state.commentary);
+    bodyFormData.append('commentary',this.state.commentary.trim());
     if(this.state.image != null && this.state.image.base64 != null){
       let uriParts = this.state.image.uri.split('.');
       let fileType = uriParts[uriParts.length - 1];
       fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
-      
+      console.log("Post a new image")
       bodyFormData.append('imgBase64',this.state.image.base64.replace(/(\r\n|\n|\r)/gm, "")); //Remove \n for android 
       bodyFormData.append('imgFormat', fileType); 
     } else{
