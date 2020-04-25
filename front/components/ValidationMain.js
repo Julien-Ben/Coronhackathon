@@ -56,7 +56,7 @@ export default class ValidationMain extends React.Component {
                size = "large"
         />
         <View style={{minHeight:100}}>
-          {this.state.validated  && <AntDesign name ="checkcircle" size="50" color='#3d9d84'/>}
+          {this.state.validated  && <AntDesign name ="checkcircle" size={50} color='#3d9d84'/>}
         </View>
       </View>
     );
@@ -130,7 +130,7 @@ export default class ValidationMain extends React.Component {
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
     bodyFormData.append('commentary',this.state.commentary);
-    console.log(this.state.commentary);
+    console.log(this.state.image);
     if(this.state.image != null){
       let uriParts = this.state.image.uri.split('.');
       let fileType = uriParts[uriParts.length - 1];
