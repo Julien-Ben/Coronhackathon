@@ -1,12 +1,9 @@
 <template>
   <view class="container" :style=styles.lightPrimaryColor>
-    <view class ="header" :style=styles.defaultPrimaryColor>
       <view>
-        <text class="title" :style=styles.textPrimaryColor>Listes des Défis</text>
-      </view>
-      </view>
         <ChallengeList :challengesAndBool="challenges" :goToChallenge="goToChallenge"/>
       </view>
+  </view>
 </template>
 
 <style>
