@@ -43,7 +43,7 @@ public class UserService {
      * Username must be unique and that the two hashes match
      * we must store encoded passwords as spring security expects
      */
-    public ResponseEntity<String> register(String username, String pwd, String pwdBis) {
+    public String register(String username, String pwd, String pwdBis) {
         //if passwords match
         if (pwdBis.equals(pwd)) {
             // if the username is new
@@ -55,12 +55,12 @@ public class UserService {
                 user.setPwdHash(passwordEncoder.encode(pwd));
 
                 insert(user);
-                return new ResponseEntity<>("user with username : " + username + " has been created", HttpStatus.CREATED);
+                return "user with username : " + username + " has been created";
             } else {
-                return new ResponseEntity("user with username : " + username + " already exists", HttpStatus.CONFLICT);
+                throw new ResponseStatusException(HttpStatus.CONFLICT,"user with username : " + username + " already exists");
             }
         } else {
-            return new ResponseEntity( "passwords don't match", HttpStatus.EXPECTATION_FAILED);
+            throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "passwords don't match");
         }
     }
 }
