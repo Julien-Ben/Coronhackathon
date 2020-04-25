@@ -119,7 +119,6 @@ export default class ImagePickerExample extends React.Component {
 
   //Post the comment and the image base64 
   _submitValidation = async () => {
-    console.log(this.state.image.base64 == null)
     this.setState({animating: true })
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
