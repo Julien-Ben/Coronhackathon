@@ -70,7 +70,6 @@ export default class ValidationMain extends React.Component {
   componentDidMount() {
     this.isAlreadyCompleted();
     this.getPermissionAsync();
-    console.log(this.state.validated)
   }
 
   isAlreadyCompleted = async () =>{
@@ -80,11 +79,11 @@ export default class ValidationMain extends React.Component {
       url: "/api/getDataCompleted/"+this.props.challengeId, 
     }).then(function(response){
       if(response.data.length > 0){
-        console.log(response.data)
         self.setState({validated : true})
         self.setState({commentary: response.data[0]})
         if(response.data.length > 1 && response.data[1].length > 0){
           self.setState({image:{uri: baseURL + '/static/image/jpg?path=' +response.data[1]}})
+          console.log(response.data[1])
         }
       }
     }).catch(function(error){
@@ -130,13 +129,12 @@ export default class ValidationMain extends React.Component {
     let bodyFormData = new FormData();
     bodyFormData.append('challengeId', this.props.challengeId);
     bodyFormData.append('commentary',this.state.commentary);
-    console.log(this.state.image);
-    if(this.state.image != null){
+    if(this.state.image != null && this.state.image.base64 != null){
       let uriParts = this.state.image.uri.split('.');
       let fileType = uriParts[uriParts.length - 1];
       fileType = ['jpg', 'png'].includes(fileType) ? fileType : 'jpg';
       
-      bodyFormData.append('imgBase64',this.state.image.base64);
+      bodyFormData.append('imgBase64',this.state.image.base64.replace(/(\r\n|\n|\r)/gm, "")); //Remove \n for android 
       bodyFormData.append('imgFormat', fileType); 
     } else{
       bodyFormData.append('imgBase64',"");
@@ -157,7 +155,7 @@ export default class ValidationMain extends React.Component {
       console.log("Error while posting validation!")
       console.log(error.response.data.status)
       console.log(error.response.data.error)
-      console.log(error.response.data.message)
+      // console.log(error.response.data.message)
     })
   }
 }
