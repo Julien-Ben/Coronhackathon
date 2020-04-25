@@ -38,10 +38,10 @@ public class ChallengeController {
      * Return a list with all the comment on a specified challenge
      *
      * @param challengeId the id of a challenge
-     * @return all the comment of a given challenge
+     * @return a list of (user, comment) pairs
      */
     @RequestMapping(path = "/api/getCommentsOfChallenge/{challengeId}", method = RequestMethod.GET)
-    public List<String> getCommentsOfChallenge(@PathVariable long challengeId) {
+    public List<List<String>> getCommentsOfChallenge(@PathVariable long challengeId) {
         return completedService.getCommentsOfChallenge(challengeId);
     }
 

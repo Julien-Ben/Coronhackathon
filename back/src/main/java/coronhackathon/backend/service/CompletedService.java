@@ -157,16 +157,25 @@ public class CompletedService {
         return getCompletedChallengesByCategory(username, categoryService.getIdFromName(name));
     }
 
-    public List<String> getCommentsOfChallenge(long challengeId) {
-        List<String> l = new ArrayList<>();
+    /**
+     * return a list of (user, comment) pairs
+     */
+    public List<List<String>> getCommentsOfChallenge(long challengeId) {
         Optional<Challenge> oc = challengeRepository.findById(challengeId);
         if (!oc.isPresent())
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
+
+        List<List<String>> userAndComments = new ArrayList<>();
         for (HasCompleted hc : completedRepository.findByChallenge(oc.get())) {
-            if(!hc.getCommentary().isEmpty())
-                l.add(hc.getCommentary());
+
+            List<String> UserAndComment = new ArrayList<String>();
+            UserAndComment.add(hc.getUser().getUsername());
+            UserAndComment.add(hc.getCommentary());
+
+            userAndComments.add(UserAndComment);
         }
-        return l;
+
+        return userAndComments;
     }
 
     public List<String> getDataCompleted(String name, long challengeId){
