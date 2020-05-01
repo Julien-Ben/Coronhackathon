@@ -145,7 +145,7 @@ export default class ValidationMain extends React.Component {
     const self = this;
     request({
       method: 'post',
-      url : '/api/completeMyChallenge/' + new Date(),
+      url : '/api/completeMyChallenge/',
       data : bodyFormData,
       headers: {'Content-Type':'multipart/form-data',
       'Cache-Control': 'no-store'}
