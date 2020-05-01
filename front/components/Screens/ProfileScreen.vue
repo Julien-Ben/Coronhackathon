@@ -12,15 +12,15 @@
             <view >
                 <text class= "heading">{{nbAchieved}} Défis relevés parmi {{nbAll}} défis disponibles!</text>
                 <view class="cat-container" v-for="(category,index) in res" :key="index">
-                    <text  v-if="category.all!=0" class = "heading">{{category.catName}} : {{category.comp}} / {{category.all}}</text>
+                    <text  v-if="category.comp!=0" class = "heading">{{category.catName}} : {{category.comp}} / {{category.all}}</text>
                     <view class="icon-container" v-if="category.challenges.length > 0" >
                         <!-- v-for="challenge in category.challenges" :key="challenge.id" -->
-                            <touchable-opacity :on-press="() => showChallengeDescription(category.challenges[0])">
+                            <touchable-opacity class="badge-container" :on-press="() => showChallengeDescription(category.challenges[0])">
                                 <image class="badge"
                                     :source="{uri: baseURL + '/static/image/png?path=' + category.logo}"
                                 />
+                                <text class="description"> Badge obtenu pour la réalisation du challenge : {{category.challenges[0].name}}</text>
                             </touchable-opacity>
-                            <text class="description"> Badge obtenu pour la réalisation du challenge : {{category.challenges[0].name}}</text>
                     </view>
                 </view>
                 
@@ -210,13 +210,18 @@ import axios from "axios";
     align-items: center;
     flex-direction: row;
 }
+
+.badge-container{
+    flex-direction: row;
+    max-width: 90%;
+}
 .badge {
-    height: 30;
-    width: 30;
+    height: 50;
+    width: 50;
 }
 
 .description{
-    font-weight: 100;
+    /* font-weight: 100; */
     width: 70%;
 }
 
