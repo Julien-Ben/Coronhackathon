@@ -56,7 +56,7 @@ export default class ValidationMain extends React.Component {
                size = "large"
         />
         <View style={{minHeight:100}}>
-          {this.state.validated  && <AntDesign name ="checkcircle" size={50} color='#3d9d84'/>}
+          {this.state.validated && !this.state.animating && <AntDesign name ="checkcircle" size={50} color='#3d9d84'/>}
         </View>
       </View>
     );
@@ -70,6 +70,7 @@ export default class ValidationMain extends React.Component {
   componentDidMount() {
     this.isAlreadyCompleted();
     this.getPermissionAsync();
+    console.log(new Date())
   }
 
   isAlreadyCompleted = async () =>{
@@ -77,6 +78,7 @@ export default class ValidationMain extends React.Component {
     request({ 
       method: 'GET',
       url: "/api/getDataCompleted/"+this.props.challengeId, 
+      headers: {'Cache-Control': 'no-store'},
     }).then(function(response){
       if(response.data.length > 0){
         self.setState({validated : true})
@@ -143,9 +145,11 @@ export default class ValidationMain extends React.Component {
     const self = this;
     request({
       method: 'post',
-      url : '/api/completeMyChallenge',
+      url : '/api/completeMyChallenge/' + new Date(),
       data : bodyFormData,
-      headers: {'Content-Type':'multipart/form-data'}
+      headers: {'Content-Type':'multipart/form-data',
+      'Cache-Control': 'no-store'}
+
     }).then(function(response){
       self.setState({animating: false})
       self.setState({validated: true})

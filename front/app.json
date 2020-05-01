@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "front",
-    "slug": "front",
+    "name": "consvid",
+    "slug": "consvid-la-tete",
     "platforms": [
       "ios",
       "android",
@@ -22,7 +22,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.abiskopains",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.abiskopains",
+      "versionCode": 1
     },
     "androidStatusBar": {
       "barStyle": "light-content",
