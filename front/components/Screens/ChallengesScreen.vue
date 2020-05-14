@@ -1,5 +1,5 @@
 <template>
-  <view class="container" :style=styles.lightPrimaryColor>
+  <view class="container">
       <view>
         <ChallengeList :challengesAndBool="challenges" :goToChallenge="goToChallenge"/>
       </view>
