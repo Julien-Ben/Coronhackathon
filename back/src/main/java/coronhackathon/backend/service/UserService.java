@@ -1,15 +1,17 @@
 package coronhackathon.backend.service;
 
 
+import coronhackathon.backend.DTO.UserDTO;
+
 import coronhackathon.backend.entity.User;
 import coronhackathon.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,12 +27,14 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public User getUserByUsername(String username) {
+        Optional<User> ou = userRepository.findByUsername(username);
+        return checkUserExists(ou, "username", username);
     }
 
-    public Optional<User> getUser(Long id) {
-        return userRepository.findById(id);
+    public User getUser(long id) {
+        Optional<User> ou = userRepository.findById(id);
+        return checkUserExists(ou, "id",""+id);
     }
 
     public void insert(User user) {
@@ -62,5 +66,12 @@ public class UserService {
         } else {
             throw new ResponseStatusException(HttpStatus.EXPECTATION_FAILED, "passwords don't match");
         }
+    }
+
+    private User checkUserExists(Optional<User> ou, String name, String value){
+        if(!ou.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with "+name+" : " + value + " not found");
+        }
+        return ou.get();
     }
 }

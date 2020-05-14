@@ -1,14 +1,16 @@
 package coronhackathon.backend.controller;
 
+import coronhackathon.backend.DTO.UserAndNbChallengeDTO;
+import coronhackathon.backend.DTO.UserDTO;
 import coronhackathon.backend.entity.User;
 import coronhackathon.backend.repository.FriendsRepository;
 import coronhackathon.backend.service.FriendsService;
 import coronhackathon.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,8 +28,8 @@ public class FriendsController {
      * @return A list with the friends of the current user ordered by the number of completed Challenges
      */
     @RequestMapping(path = "/api/getFriends", method = RequestMethod.GET)
-    public List<FriendsService.UserAndNbChallenge> getFriendsOrderByCompletedChallenges(Principal principal) {
-        User user = userService.getUserByUsername(principal.getName()).get();
+    public List<UserAndNbChallengeDTO> getFriendsOrderByCompletedChallenges(Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
         return friendsService.getFriendsOrderByCompletedChallenges(user);
     }
 
@@ -38,8 +40,11 @@ public class FriendsController {
      * @return the list of all the user that asks the current user to be friend
      */
     @RequestMapping(path = "/api/getFriendRequests", method = RequestMethod.GET)
-    public List<User> getFriendsRequests(Principal principal) {
-        return friendsService.getFriendsRequests(getCurrentUser(principal));
+    public List<UserDTO> getFriendsRequests(Principal principal) {
+        List<UserDTO> uDto = new ArrayList<>();
+        for(User u : friendsService.getFriendsRequests(getCurrentUser(principal)))
+            uDto.add(new UserDTO(u));
+        return uDto;
     }
 
     /**
@@ -93,6 +98,6 @@ public class FriendsController {
      * Return the current user
      */
     private User getCurrentUser(Principal principal){
-        return userService.getUserByUsername(principal.getName()).get();
+        return userService.getUserByUsername(principal.getName());
     }
 }

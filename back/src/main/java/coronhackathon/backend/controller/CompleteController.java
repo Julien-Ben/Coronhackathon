@@ -56,11 +56,8 @@ public class CompleteController {
      */
     @RequestMapping(path = "/api/getDataCompleted/{userId}/{challengeId}", method = RequestMethod.GET)
     public List<String> getDataCompleted(@PathVariable long userId, @PathVariable long challengeId) {
-        Optional<User> ou = userService.getUser(userId);
-        if(!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "User with user id "+userId+" unknown");
-
-        return completedService.getDataCompleted(ou.get().getUsername(),challengeId);
+        User u = userService.getUser(userId);
+        return completedService.getDataCompleted(u.getUsername(),challengeId);
     }
 
 }

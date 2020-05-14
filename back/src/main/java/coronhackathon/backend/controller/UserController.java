@@ -1,5 +1,6 @@
 package coronhackathon.backend.controller;
 
+import coronhackathon.backend.DTO.UserDTO;
 import coronhackathon.backend.entity.Challenge;
 
 import coronhackathon.backend.entity.User;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,25 +38,27 @@ public class UserController {
 
     @RequestMapping(value = "/api/userProfile", method = RequestMethod.GET)
     @ResponseBody
-    public Optional<User> currentUserProfile(Principal principal) {
-        return userService.getUserByUsername(principal.getName());
+    public UserDTO currentUserProfile(Principal principal) {
+        return new UserDTO(userService.getUserByUsername(principal.getName()));
     }
 
     @GetMapping("/api/allUsers")
-    public List<User> allUsers() {
-        return userService.getAllUsers();
+    public List<UserDTO> allUsers() {
+        List<UserDTO> uDto = new ArrayList<>();
+        for(User u  : userService.getAllUsers())
+            uDto.add(new UserDTO(u));
+        return uDto;
     }
 
 
     @RequestMapping(path = "/api/getUser/{userId}", method = RequestMethod.GET)
-    public Optional<User> getUser(@PathVariable long userId) {
-        return userService.getUser(userId);
+    public UserDTO getUser(@PathVariable long userId) {
+        return new UserDTO(userService.getUser(userId));
     }
 
     @RequestMapping(path = "/api/getUserByName/{username}", method = RequestMethod.GET)
-    public Optional<User> getUserByName(@PathVariable String username) {
-
-        return userService.getUserByUsername(username);
+    public UserDTO getUserByName(@PathVariable String username) {
+        return new UserDTO(userService.getUserByUsername(username));
     }
 
     /**

@@ -1,6 +1,7 @@
 package coronhackathon.backend.service;
 
 
+import coronhackathon.backend.DTO.UserAndNbChallengeDTO;
 import coronhackathon.backend.entity.Friends;
 import coronhackathon.backend.entity.User;
 import coronhackathon.backend.repository.FriendsRepository;
@@ -126,47 +127,24 @@ public class FriendsService {
     }
 
 
-    public List<UserAndNbChallenge> getFriendsOrderByCompletedChallenges(User user) {
-        List<UserAndNbChallenge> friends = new ArrayList<>();
+    public List<UserAndNbChallengeDTO> getFriendsOrderByCompletedChallenges(User user) {
+        List<UserAndNbChallengeDTO> friends = new ArrayList<>();
         for(Friends f : friendsRepository.findByUser1(user)) {
             if (f.getCompleted()) {
                 User u = f.getUser2();
-                friends.add(new UserAndNbChallenge(u.getId(), u.getUsername(),
+                friends.add(new UserAndNbChallengeDTO(u.getId(), u.getUsername(),
                         completedService.getNumberOfCompletedChallenges(u.getId())));
             }
         }
         for(Friends f : friendsRepository.findByUser2(user)) {
             if (f.getCompleted()) {
                 User u = f.getUser1();
-                friends.add(new UserAndNbChallenge(u.getId(), u.getUsername(),
+                friends.add(new UserAndNbChallengeDTO(u.getId(), u.getUsername(),
                         completedService.getNumberOfCompletedChallenges(u.getId())));
             }
         }
         friends.sort((x,y) -> x.getNbChall() == y.getNbChall()? 0 :
                 (x.getNbChall() > y.getNbChall() ? 1 : 0 ));
         return friends;
-    }
-
-    public class UserAndNbChallenge{
-        private long userId;
-        private String username;
-        private long nbChall;
-        private UserAndNbChallenge(long userId, String username, long nbChall){
-            this.userId = userId;
-            this.username = username;
-            this.nbChall = nbChall;
-        }
-
-        public long getNbChall() {
-            return nbChall;
-        }
-
-        public long getUserId() {
-            return userId;
-        }
-
-        public String getUsername() {
-            return username;
-        }
     }
 }

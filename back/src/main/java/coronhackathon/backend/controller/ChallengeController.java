@@ -1,5 +1,6 @@
 package coronhackathon.backend.controller;
 
+import coronhackathon.backend.DTO.UserDTO;
 import coronhackathon.backend.entity.Challenge;
 
 import coronhackathon.backend.entity.User;
@@ -30,7 +31,7 @@ public class ChallengeController {
      * @return completers as a list
      */
     @RequestMapping(path = "/api/getCompleters/{challengeId}", method = RequestMethod.GET)
-    public List<User> getCompletersOfChallenge(@PathVariable long challengeId) {
+    public List<UserDTO> getCompletersOfChallenge(@PathVariable long challengeId) {
         return completedService.getCompletersOfChallenge(challengeId);
     }
 

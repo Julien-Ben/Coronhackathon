@@ -1,6 +1,6 @@
 import axios from "axios";
 
-//18.234.142.249 is the AWS IP address (until I restart it :/)
+//34.202.239.1619 is the AWS IP address (shouldn't change on restart now)
 export const baseURL = 'http://34.202.239.161:8080';
 
 export const request = axios.create({
