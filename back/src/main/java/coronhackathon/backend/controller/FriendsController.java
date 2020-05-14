@@ -18,8 +18,6 @@ public class FriendsController {
     @Autowired
     private FriendsService friendsService;
     @Autowired
-    private FriendsRepository friendsRepository;
-    @Autowired
     private UserService userService;
     /**
      * Returns the list of all the friends of the current user ordered by the number of completed Challenges

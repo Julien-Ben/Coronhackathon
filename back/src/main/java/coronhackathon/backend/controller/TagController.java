@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 public class TagController {
@@ -33,7 +32,7 @@ public class TagController {
      * @return the tag with this associated Id
      */
     @RequestMapping(path = "/api/getTag/{tagId}", method = RequestMethod.GET)
-    public Optional<Tag> getTag(@PathVariable long tagId) {
+    public Tag getTag(@PathVariable long tagId) {
         return tagService.getTag(tagId);
     }
 
@@ -44,7 +43,7 @@ public class TagController {
      * @return the tag that has a given name
      */
     @RequestMapping(path = "/api/getTagByName/{tagName}", method = RequestMethod.GET)
-    public Optional<Tag> getTagByName(@PathVariable String tagName) {
+    public Tag getTagByName(@PathVariable String tagName) {
         return tagService.getTagByName(tagName);
     }
 

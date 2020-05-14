@@ -21,7 +21,7 @@ public class FriendsService {
     @Autowired
     private FriendsRepository friendsRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
     @Autowired
     private CompletedService completedService;
 
@@ -38,14 +38,8 @@ public class FriendsService {
     }
 
     public boolean isFriend(long user1Id, long user2Id) {
-        Optional<User> ou1 = userRepository.findById(user1Id);
-        if (!ou1.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + user1Id + " not found");
-        Optional<User> ou2 = userRepository.findById(user2Id);
-        if (!ou2.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + user2Id + " not found");
-
-        User user1 = ou1.get(), user2 = ou2.get();
+        User user1 = userService.getUser(user1Id);
+        User user2 = userService.getUser(user2Id);
         Optional<Friends> of = friendsRepository.findByUser1AndUser2(user1, user2);
         Optional<Friends> of2 = friendsRepository.findByUser1AndUser2(user2, user1);
         return (of.isPresent() && of.get().getCompleted())  ||
@@ -53,10 +47,7 @@ public class FriendsService {
     }
 
     public String friendRequest(User currentUser, String username) {
-        Optional<User> ou = userRepository.findByUsername(username);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with username : " + username + " not found");
-        User user = ou.get();
+        User user = userService.getUserByUsername(username);
         if(user.equals(currentUser))
             return "You cannot be friends with yourself";
 
@@ -66,7 +57,7 @@ public class FriendsService {
                                 //and user has or has not already answered
             Friends f1 = of1.get();
             if (f1.getCompleted())
-                return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are already friends";
+                return "" + currentUser.getUsername() + " and " + user.getUsername() + " are already friends";
             else
                 return "user : " + currentUser.getUsername() + " has already asked " +
                         "" + user.getUsername() + " to be his/her friend";
@@ -74,28 +65,25 @@ public class FriendsService {
                                     //and currentUser has or has not already answered
             Friends f2 = of2.get();
             if (f2.getCompleted())
-                return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are already friends";
+                return "" + currentUser.getUsername() + " and " + user.getUsername() + " are already friends";
             else{
                 f2.setCompleted(true);
                 friendsRepository.save(f2);
-                return ""+currentUser.getUsername()+" and "+ou.get().getUsername()+" are now friends";
+                return ""+currentUser.getUsername()+" and "+user.getUsername()+" are now friends";
             }
         }else { //if they never asked each other
             Friends friends = new Friends();
             friends.setUser1(currentUser);
-            friends.setUser2(ou.get());
+            friends.setUser2(user);
             friends.setCompleted(false);
             friendsRepository.save(friends);
-            return "" + currentUser.getUsername() + " asked " + ou.get().getUsername() + " to be his/her friend";
+            return "" + currentUser.getUsername() + " asked " + user.getUsername() + " to be his/her friend";
         }
     }
 
 
     public String acceptFriendRequest(User currentUser, long userId) {
-        Optional<User> ou = userRepository.findById(userId);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
-        User user = ou.get();
+        User user = userService.getUser(userId);
         Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
         if (!of.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +
@@ -107,15 +95,12 @@ public class FriendsService {
         else {
             f.setCompleted(true);
             friendsRepository.save(f);
-            return "" + currentUser.getUsername() + " and " + ou.get().getUsername() + " are now friends";
+            return "" + currentUser.getUsername() + " and " + user.getUsername() + " are now friends";
         }
     }
 
     public String refuseFriendRequest(User currentUser, long userId) {
-        Optional<User> ou = userRepository.findById(userId);
-        if (!ou.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "user with id : " + userId + " not found");
-        User user = ou.get();
+        User user = userService.getUser(userId);
         Optional<Friends> of = friendsRepository.findByUser1AndUser2(user, currentUser);
         if (!of.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "!!! Should not happen !!! Report this error !!! but it is because user : " + user.getUsername() + " has not asked " +

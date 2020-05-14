@@ -2,6 +2,7 @@ package coronhackathon.backend.service;
 
 import coronhackathon.backend.entity.Category;
 import coronhackathon.backend.entity.Challenge;
+import coronhackathon.backend.entity.User;
 import coronhackathon.backend.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,24 +17,20 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     public void addCategory(Category category) {
         categoryRepository.save(category);
     }
 
     public long getIdFromName(String name) {
-        Optional<Category> oc = categoryRepository.findByName(name);
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category with name : " + name + " does not exist");
-        return oc.get().getId();
+        return getCategoryByName(name).getId();
     }
 
-    public Optional<Category> getCategory(long id) {
-        return categoryRepository.findById(id);
+    public Category getCategory(long id) {
+        return checkCategoryExists(categoryRepository.findById(id),"id", ""+id);
     }
 
-    public Optional<Category> getCategoryByName(String name) {
-        return categoryRepository.findByName(name);
+    public Category getCategoryByName(String name) {
+        return checkCategoryExists(categoryRepository.findByName(name),"name", ""+name);
     }
 
     public List<Category> allCategories() {
@@ -44,4 +41,10 @@ public class CategoryService {
         return categoryRepository.count();
     }
 
+    private Category checkCategoryExists(Optional<Category> oc, String name, String value){
+        if(!oc.isPresent()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "category with "+name+" : " + value + " not found");
+        }
+        return oc.get();
+    }
 }

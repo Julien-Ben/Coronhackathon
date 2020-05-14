@@ -14,19 +14,17 @@ import java.util.Optional;
 @Service
 public class TagOfChallengeService {
     @Autowired
-    private TagRepository tagRepository;
+    private TagService tagService;
     @Autowired
-    private ChallengeRepository challengeRepository;
+    private ChallengeService challengeService;
     @Autowired
     private TagOfChallengeRepository tagOfChallengeRepository;
 
 
     public List<Challenge> getChallengesOfTag(long tagId) {
         List<Challenge> l = new ArrayList<>();
-        Optional<Tag> ot = tagRepository.findById(tagId);
-        if (!ot.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "tag with id : " + tagId + " not found");
-        for (TagOfChallenge toc : tagOfChallengeRepository.findByTag(ot.get())) {
+        Tag t = tagService.getTag(tagId);
+        for (TagOfChallenge toc : tagOfChallengeRepository.findByTag(t)) {
             l.add(toc.getChallenge());
         }
         return l;
@@ -34,27 +32,21 @@ public class TagOfChallengeService {
 
     public List<Tag> getTagsOfChallenge(long challengeId) {
         List<Tag> l = new ArrayList<>();
-        Optional<Challenge> oc = challengeRepository.findById(challengeId);
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
-        for (TagOfChallenge toc : tagOfChallengeRepository.findByChallenge(oc.get())) {
+        Challenge c = challengeService.getChallenge(challengeId);
+        for (TagOfChallenge toc : tagOfChallengeRepository.findByChallenge(c)) {
             l.add(toc.getTag());
         }
         return l;
     }
 
     public String addTagToChallenge(long tagId, long challengeId) {
-        Optional<Tag> ot = tagRepository.findById(tagId);
-        Optional<Challenge> oc = challengeRepository.findById(challengeId);
-        if (!ot.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "tag with id : " + tagId + " not found");
-        if (!oc.isPresent())
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "challenge with id : " + challengeId + " not found");
+        Tag t = tagService.getTag(tagId);
+        Challenge c = challengeService.getChallenge(challengeId);
         TagOfChallenge tagOfChallenge = new TagOfChallenge();
-        tagOfChallenge.setChallenge(oc.get());
-        tagOfChallenge.setTag(ot.get());
+        tagOfChallenge.setChallenge(c);
+        tagOfChallenge.setTag(t);
         tagOfChallengeRepository.save(tagOfChallenge);
-        return "Tag " + ot.get().getName() + " is a tag of challenge " + oc.get().getName();
+        return "Tag " + t.getName() + " is a tag of challenge " + c.getName();
     }
 
 

@@ -20,19 +20,11 @@ import java.util.Optional;
 public class MyUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     //
-    public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
-
-        Optional<User> ouser = userRepository.findByUsername(username);
-        if (!ouser.isPresent()) {
-            throw new UsernameNotFoundException(
-                    "No user found with username: " + username);
-        }
-        User user = ouser.get();
-
+    public UserDetails loadUserByUsername(String username) {
+        User user = userService.getUserByUsername(username);
         /*
         boolean enabled = true;
         boolean accountNonExpired = true;

@@ -1,6 +1,5 @@
 <template>
-  <view class="container" > 
-    <!-- :style=styles.lightPrimaryColor -->
+  <view class="container"> 
     <scroll-view class="scroll">
       <view class ="header">
       

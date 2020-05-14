@@ -24,7 +24,7 @@ public class CategoryController {
      * @return the category corresponding to the id
      */
     @RequestMapping(path = "/api/getCategory/{id}", method = RequestMethod.GET)
-    public Optional<Category> getCategory(@PathVariable long id) {
+    public Category getCategory(@PathVariable long id) {
         return categoryService.getCategory(id);
     }
 
@@ -33,7 +33,7 @@ public class CategoryController {
      * @return the category corresponding to the name
      */
     @RequestMapping(path = "/api/getCategoryByName/{name}", method = RequestMethod.GET)
-    public Optional<Category> getCategoryByName(@PathVariable String name) {
+    public Category getCategoryByName(@PathVariable String name) {
         return categoryService.getCategoryByName(name);
     }
 
