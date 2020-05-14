@@ -183,7 +183,7 @@ public class CompletedService {
         List<List<String>> userAndComments = new ArrayList<>();
         for (HasCompleted hc : completedRepository.findByChallenge(oc.get())) {
 
-            if(hc.getCommentary().length() > 0) {
+            if(hc.getCommentary() != null && hc.getCommentary().length() > 0) {
                 List<String> UserAndComment = new ArrayList<String>();
                 UserAndComment.add(hc.getUser().getUsername());
                 UserAndComment.add(hc.getCommentary());
