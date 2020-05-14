@@ -124,11 +124,8 @@ public class CompletedService {
 
             //Remove previous image
             File previousImage = new File("./src/main/"+hc.getPicture());
-            System.out.println(previousImage.isFile());
-            if(previousImage.delete()){
-                System.out.println("Success");
-            } else{
-                System.out.println("Failure");
+            if(previousImage.isFile()){
+                previousImage.delete()
             }
             hc.setPicture(destinationPath);
         }
