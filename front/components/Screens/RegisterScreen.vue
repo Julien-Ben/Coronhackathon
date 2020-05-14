@@ -82,9 +82,8 @@ export default {
         data: bodyFormData,
         headers: {'Content-Type': 'multipart/form-data' }
         }).then(function(response){
-          if(response != undefined && response.status == 200){
+          if(response != undefined && response.status == 201){
               self.login()
-              
           }
         }).catch(function(error){
           self.loading = false

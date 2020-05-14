@@ -25,9 +25,9 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> showRegistrationForm(@RequestParam String username,
-                                                       @RequestParam String hashPwd,
-                                                       @RequestParam String hashPwd2) {
-        return new ResponseEntity<>(userService.register(username, hashPwd, hashPwd2), HttpStatus.CREATED);
+                                                       @RequestParam String pwd,
+                                                       @RequestParam String pwd2) {
+        return new ResponseEntity<>(userService.register(username, pwd, pwd2), HttpStatus.CREATED);
     }
 
     @RequestMapping(value = "/api/username", method = RequestMethod.GET)
